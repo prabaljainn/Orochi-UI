@@ -1,0 +1,13 @@
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="en">
+  <file id="ngi18n">
+    <unit id="6805718923693239037">
+      <notes>
+        <note>src/app/modules/admin/example/example.component.html:8</note>
+      </notes>
+      <segment>
+        <source>TEST LOCALIZATION</source>
+        <target>TEST LOCALIZATION</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>
