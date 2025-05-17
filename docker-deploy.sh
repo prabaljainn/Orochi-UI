@@ -22,6 +22,25 @@ echo "Building Angular application..."
 npm install --force
 npm run build
 
+# Verify build output
+echo "Verifying build output..."
+if [ ! -d "dist" ]; then
+  echo "Error: dist/ directory not found. Build step may have failed."
+  exit 1
+fi
+
+# For Angular apps, the output is usually in dist/project-name
+BUILD_DIR="dist"
+if [ -d "dist/$IMAGE_NAME" ]; then
+  BUILD_DIR="dist/$IMAGE_NAME"
+  echo "Found Angular build output in $BUILD_DIR"
+elif [ ! -d "dist" ]; then
+  echo "No build output found in dist/. Please check your build configuration."
+  exit 1
+else
+  echo "Using build output from $BUILD_DIR"
+fi
+
 # Build Docker image
 echo "Building Docker image..."
 docker build -t $IMAGE_NAME:$TAG .

@@ -23,14 +23,24 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Verify build artifacts
+        run: |
+          ls -la dist || true
+          BUILD_DIR=$(find dist -type d -maxdepth 1 -not -path dist 2>/dev/null | head -1 || echo "dist")
+          echo "BUILD_DIR=$BUILD_DIR" >> $GITHUB_ENV
+          if [ ! -d "$BUILD_DIR" ]; then
+            echo "Error: Build directory not found. Build step may have failed."
+            exit 1
+          fi
+
       - name: Test
         run: npm run test -- --watch=false --browsers=ChromeHeadless
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v2
         with:
-          name: dist
-          path: dist/
+          name: dist-artifacts
+          path: ${{ env.BUILD_DIR }}
 
   build-and-push-docker:
     needs: build-and-test
@@ -41,8 +51,13 @@ jobs:
       - name: Download build artifacts
         uses: actions/download-artifact@v2
         with:
-          name: dist
-          path: dist/
+          name: dist-artifacts
+          path: dist/orochi-ui
+
+      - name: Verify downloaded artifacts
+        run: |
+          ls -la dist || true
+          ls -la dist/orochi-ui || true
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1

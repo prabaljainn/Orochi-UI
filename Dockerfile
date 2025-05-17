@@ -14,11 +14,25 @@ COPY . .
 # Build the application
 RUN npm run build
 
+# Determine the correct build output directory
+RUN if [ -d /app/dist/orochi-ui ]; then \
+      echo "Using /app/dist/orochi-ui"; \
+      mkdir -p /app/build; \
+      cp -r /app/dist/orochi-ui/* /app/build/; \
+    elif [ -d /app/dist ]; then \
+      echo "Using /app/dist"; \
+      mkdir -p /app/build; \
+      cp -r /app/dist/* /app/build/; \
+    else \
+      echo "No build output found!"; \
+      exit 1; \
+    fi
+
 # NGINX configuration
 FROM nginx:alpine
 
 # Copy the built app to nginx html directory
-COPY --from=build /app/dist/orochi-ui /usr/share/nginx/html
+COPY --from=build /app/build /usr/share/nginx/html
 
 # Copy our custom nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
