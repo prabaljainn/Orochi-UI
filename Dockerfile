@@ -33,12 +33,17 @@ FROM nginx:alpine
 
 # Copy the built app to nginx html directory
 COPY --from=build /app/build /usr/share/nginx/html
+COPY nginx/* /
 
-# Copy our custom nginx config
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+RUN chmod +x /docker-entry.sh
 
 # Expose port 80
 EXPOSE 80
 
-# Start NGINX
-CMD ["nginx", "-g", "daemon off;"]
+# use this if you need proxy, check: default.conf and box.conf
+# ENV NGINX_HOST=webui \
+#     NGINX_PORT=8081
+
+    # Use our custom entrypoint script
+ENTRYPOINT ["/docker-entry.sh"]
+# Remove the default CMD as our entrypoint script already starts nginx

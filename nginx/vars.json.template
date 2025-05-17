@@ -1,0 +1,10 @@
+{
+  "events": $EVENTS,
+  "calibration": $CALIBRATION,
+  "title": "$TITLE",
+  "loginLogo": "$LOGINLOGO",
+  "menuLogo": "$MENULOGO",
+  "experimental": $EXPERIMENTAL,
+  "menuBackground": "$MENUBACKGROUND",
+  "menuColor": "$MENUCOLOR"
+}
