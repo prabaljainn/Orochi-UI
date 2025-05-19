@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+[[ -z "$GOOGLE_APPLICATION_CREDENTIALS" ]] && echo "Need to set GOOGLE_APPLICATION_CREDENTIALS" && exit 1
+npm run translations
+[[ $? -ne 0 ]] && exit 1
+
+npm run xlf-translate
+[[ $? -ne 0 ]] && exit 1

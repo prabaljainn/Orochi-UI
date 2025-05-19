@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  orochi-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    command: npm run start -- --host 0.0.0.0

@@ -1,0 +1,103 @@
+image: node:20
+options:
+  docker: true
+  size: 2x
+definitions:
+  services:
+    docker:
+      memory: 4096
+  steps:
+    - step: &build-and-test
+        name: Build and Test
+        caches:
+          - node
+        script:
+          - npm install --force
+          - npm run build
+          - npm run test -- --watch=false --browsers=ChromeHeadless
+        artifacts:
+          - dist/**
+    - step: &build-docker
+        name: Build Docker Image
+        caches:
+          - docker
+        services:
+          - docker
+        script:
+          - docker build -t orochi-ui:${BITBUCKET_COMMIT} .
+          - docker save --output $BITBUCKET_CLONE_DIR/orochi-ui.docker orochi-ui:${BITBUCKET_COMMIT}
+        artifacts:
+          - orochi-ui.docker
+    - step: &deploy-dev
+        name: Deploy to Development
+        caches:
+          - docker
+        services:
+          - docker
+        script:
+          - docker load --input $BITBUCKET_CLONE_DIR/orochi-ui.docker
+          - docker tag orochi-ui:${BITBUCKET_COMMIT} ${DOCKER_REGISTRY}/orochi-ui:dev
+          - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}
+          - docker push ${DOCKER_REGISTRY}/orochi-ui:dev
+    - step: &deploy-staging
+        name: Deploy to Staging
+        caches:
+          - docker
+        services:
+          - docker
+        trigger: manual
+        script:
+          - docker load --input $BITBUCKET_CLONE_DIR/orochi-ui.docker
+          - docker tag orochi-ui:${BITBUCKET_COMMIT} ${DOCKER_REGISTRY}/orochi-ui:staging
+          - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}
+          - docker push ${DOCKER_REGISTRY}/orochi-ui:staging
+    - step: &deploy-prod
+        name: Deploy to Production
+        caches:
+          - docker
+        services:
+          - docker
+        trigger: manual
+        script:
+          - docker load --input $BITBUCKET_CLONE_DIR/orochi-ui.docker
+          - 'version=$(cat package.json | grep version | head -1 | awk -F: ''{ print $2 }'' | sed ''s/[", ]//g'')'
+          - docker tag orochi-ui:${BITBUCKET_COMMIT} ${DOCKER_REGISTRY}/orochi-ui:${version}
+          - docker tag orochi-ui:${BITBUCKET_COMMIT} ${DOCKER_REGISTRY}/orochi-ui:latest
+          - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}
+          - docker push ${DOCKER_REGISTRY}/orochi-ui:${version}
+          - docker push ${DOCKER_REGISTRY}/orochi-ui:latest
+
+pipelines:
+  default:
+    - step: *build-and-test
+  branches:
+    master:
+      - step: *build-and-test
+      - step: *build-docker
+      - step: *deploy-dev
+      - step: *deploy-staging
+      - step: *deploy-prod
+    develop:
+      - step: *build-and-test
+      - step: *build-docker
+      - step: *deploy-dev
+    staging:
+      - step: *build-and-test
+      - step: *build-docker
+      - step: *deploy-staging
+    feature/*:
+      - step: *build-and-test
+      - step: *build-docker
+      - step:
+          name: Deploy Feature Branch
+          caches:
+            - docker
+          services:
+            - docker
+          trigger: manual
+          script:
+            - docker load --input $BITBUCKET_CLONE_DIR/orochi-ui.docker
+            - branch=${BITBUCKET_BRANCH#feature/}
+            - docker tag orochi-ui:${BITBUCKET_COMMIT} ${DOCKER_REGISTRY}/orochi-ui:feature-${branch}
+            - docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD} ${DOCKER_REGISTRY}
+            - docker push ${DOCKER_REGISTRY}/orochi-ui:feature-${branch}
