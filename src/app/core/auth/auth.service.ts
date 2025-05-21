@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { AuthUtils } from 'app/core/auth/auth.utils';
+import { Router } from '@angular/router';
 import { UserService } from 'app/core/user/user.service';
-import { catchError, Observable, of, switchMap, throwError } from 'rxjs';
+import { catchError, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class AuthService
@@ -10,6 +10,9 @@ export class AuthService
     private _authenticated: boolean = false;
     private _httpClient = inject(HttpClient);
     private _userService = inject(UserService);
+	private _router = inject(Router);
+    private _lastCheckTime: number = 0;
+    private readonly CHECK_CACHE_DURATION = 5000; // 5 seconds cache
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -57,29 +60,27 @@ export class AuthService
      *
      * @param credentials
      */
-    signIn(credentials: { email: string; password: string }): Observable<any>
-    {
-        // Throw error, if the user is already logged in
-        if ( this._authenticated )
-        {
-            return throwError('User is already logged in.');
+	signIn(credentials: { username: string; password: string }): Observable<any> {
+        if (this._authenticated) {
+            return throwError(() => new Error('User is already logged in.'));
         }
 
-        return this._httpClient.post('api/auth/sign-in', credentials).pipe(
-            switchMap((response: any) =>
-            {
-                // Store the access token in the local storage
-                this.accessToken = response.accessToken;
-
-                // Set the authenticated flag to true
+        return this._httpClient.post(`/api/auth/login`, credentials, {
+            withCredentials: true
+        }).pipe(
+            switchMap(() => {
+                return this._httpClient.get(`/api/users/self`, {
+                    withCredentials: true
+                });
+            }),
+            tap(user => {
                 this._authenticated = true;
 
-                // Store the user on the user service
-                this._userService.user = response.user;
+                // Store user
+                this._userService.user = user;
 
-                // Return a new observable with the response
-                return of(response);
-            }),
+				console.log(user);
+            })
         );
     }
 
@@ -128,14 +129,18 @@ export class AuthService
      */
     signOut(): Observable<any>
     {
-        // Remove the access token from the local storage
-        localStorage.removeItem('accessToken');
-
-        // Set the authenticated flag to false
-        this._authenticated = false;
-
-        // Return the observable
-        return of(true);
+        return this._httpClient.post(`/api/auth/logout`, {}, {
+            withCredentials: true,
+            headers: {
+                'X-CSRFToken': this.getCookie('csrftoken')
+            }
+        }).pipe(
+            tap(() => {
+                this._authenticated = false;
+                this._userService.user = null;
+                this._router.navigate(['/sign-out']);
+            })
+        );
     }
 
     /**
@@ -161,27 +166,46 @@ export class AuthService
     /**
      * Check the authentication status
      */
-    check(): Observable<boolean>
-    {
-        // Check if the user is logged in
-        if ( this._authenticated )
-        {
+    check(): Observable<boolean> {
+        // If we already know user is authenticated, just return true
+        if (this._authenticated) {
             return of(true);
         }
 
-        // Check the access token availability
-        if ( !this.accessToken )
-        {
+        // If we've checked recently and failed, don't check again immediately
+        const now = Date.now();
+        if (!this._authenticated && (now - this._lastCheckTime) < this.CHECK_CACHE_DURATION) {
             return of(false);
         }
 
-        // Check the access token expire date
-        if ( AuthUtils.isTokenExpired(this.accessToken) )
-        {
-            return of(false);
-        }
+        this._lastCheckTime = now;
+        
+        // Otherwise, validate session by calling /users/self
+        return this._httpClient.get(`/api/users/self`, {
+            withCredentials: true
+        }).pipe(
+            map(() => {
+                this._authenticated = true;
+                return true;
+            }),
+            catchError(() => {
+                this._authenticated = false;
+                return of(false);
+            })
+        );
+    }
 
-        // If the access token exists, and it didn't expire, sign in using it
-        return this.signInUsingToken();
+    /**
+     * Get cookie value
+     *
+     * @param name
+     */
+    private getCookie(name: string): string {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) {
+            return parts.pop().split(';').shift();
+        }
+        return '';
     }
 }
