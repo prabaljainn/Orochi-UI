@@ -7,11 +7,12 @@
     "private": true,
     "scripts": {
         "ng": "ng",
-        "start": "ng serve",
-        "build": "ng build",
-        "watch": "ng build --watch --configuration development",
-        "test": "ng test",
-        "translations": "node --max-old-space-size=5120 ./node_modules/@angular/cli/bin/ng extract-i18n --output-path src/locale  --format=xlf2 --out-file messages.en.xlf2",
+        "start": "NODE_OPTIONS=--max-old-space-size=5120 ng serve -c en --configuration=hmr",
+        "start-te": "NODE_OPTIONS=--max-old-space-size=5120 ng serve -c te",
+        "start-ja": "NODE_OPTIONS=--max-old-space-size=5120 ng serve -c ja",
+        "build": "NODE_OPTIONS=--max-old-space-size=5120 ng build --configuration production",
+        "watch": "NODE_OPTIONS=--max-old-space-size=5120 ng build --watch --configuration development",
+        "translations": "node --max-old-space-size=5120 ./node_modules/@angular/cli/bin/ng extract-i18n --output-path src/locale --format=xlf2 --out-file messages.en.xlf2",
         "xlf-translate": "node translate/translate2.js --i18nPath=src/locale"
     },
     "dependencies": {
@@ -47,7 +48,7 @@
         "@angular-devkit/build-angular": "^19.0.0",
         "@angular/cli": "^19.0.0",
         "@angular/compiler-cli": "^19.0.0",
-        "@angular/localize": "^17.0.3",
+        "@angular/localize": "^19.0.0",
         "@tailwindcss/typography": "0.5.10",
         "@types/chroma-js": "2.4.3",
         "@types/crypto-js": "3.1.47",
