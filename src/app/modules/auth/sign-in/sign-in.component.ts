@@ -21,12 +21,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
-import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
+import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { DataService, MessageIds } from 'app/services/data.service';
-import { SnackbarComponent } from 'app/widgets/snackbar/snackbar.component';
+import { environment } from 'environments/environment';
 
 @Component({
     selector: 'auth-sign-in',
@@ -35,8 +35,6 @@ import { SnackbarComponent } from 'app/widgets/snackbar/snackbar.component';
     animations: fuseAnimations,
     standalone: true,
     imports: [
-        RouterLink,
-        FuseAlertComponent,
         NgIf,
         FormsModule,
         ReactiveFormsModule,
@@ -46,7 +44,6 @@ import { SnackbarComponent } from 'app/widgets/snackbar/snackbar.component';
         MatIconModule,
         MatCheckboxModule,
         MatProgressSpinnerModule,
-        SnackbarComponent,
     ],
 })
 export class AuthSignInComponent implements OnInit {
@@ -63,6 +60,8 @@ export class AuthSignInComponent implements OnInit {
 
     showCreateUser: WritableSignal<boolean> = signal<boolean>(false);
     showForgotPassword: WritableSignal<boolean> = signal<boolean>(false);
+
+    loginTitle = environment?.loginTitle ?? '';
 
     /**
      * Constructor
@@ -181,14 +180,15 @@ export class AuthSignInComponent implements OnInit {
                     });
                 },
                 error: () => {
-					this._dataService.changeMessage({
-						id: MessageIds.SNACKBAR_TRIGGERED,
-						data: {
-							type: 'error',
-							description: 'Something went wrong, please try again.',
-						},
-					});
-				},
+                    this._dataService.changeMessage({
+                        id: MessageIds.SNACKBAR_TRIGGERED,
+                        data: {
+                            type: 'error',
+                            description:
+                                'Something went wrong, please try again.',
+                        },
+                    });
+                },
             });
     }
 }
