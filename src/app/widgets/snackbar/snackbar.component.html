@@ -1,0 +1,52 @@
+@if (alerts.length){ @for (alert of alerts; track alert.id) {
+<div
+    class="w-96 flex gap-2 bg-white dark:bg-[#323741] shadow-md rounded-lg p-2 border slide-left"
+>
+    <div
+        class="max-w-1 flex-1 rounded-full"
+        [ngClass]="{
+			'bg-green-500': alert.type === 'success',
+			'bg-red-500': alert.type === 'error',
+			'bg-yellow-500': alert.type === 'warning',
+			'bg-blue-500': alert.type === 'info',
+		}"
+    ></div>
+
+    <div class="flex items-center">
+        <div
+            class="w-8 h-8 flex items-center justify-center p-2 shadow-md rounded-full bg-opacity-30"
+            [ngClass]="{
+				'bg-green-500': alert.type === 'success',
+				'bg-red-500': alert.type === 'error',
+				'bg-yellow-500': alert.type === 'warning',
+				'bg-blue-500': alert.type === 'info',
+			}"
+        >
+            <mat-icon
+                class="icon-size-6"
+                [ngClass]="{
+					'text-green-500': alert.type === 'success',
+					'text-red-500': alert.type === 'error',
+					'text-yellow-500': alert.type === 'warning',
+					'text-blue-500': alert.type === 'info',
+				}"
+                [svgIcon]="icon(alert.type)"
+            ></mat-icon>
+        </div>
+    </div>
+
+    <div class="flex flex-col justify-center w-72">
+        @if (alert.title) {
+        <div class="text-lg font-semibold">{{ alert.title }}</div>
+        } @if (alert.description) {
+        <div class="text-md opacity-80">{{ alert.description }}</div>
+        }
+    </div>
+
+    <mat-icon
+        class="icon-size-5 text-black dark:text-white cursor-pointer absolute right-2 top-2"
+        [svgIcon]="'heroicons_outline:x-circle'"
+		(click)="close(alert)"
+    ></mat-icon>
+</div>
+} }

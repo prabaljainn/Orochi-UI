@@ -42,7 +42,7 @@ export class AuthService
      */
     forgotPassword(email: string): Observable<any>
     {
-        return this._httpClient.post('api/auth/forgot-password', email);
+        return this._httpClient.post('api/auth/password/reset?org=', {email});
     }
 
     /**
@@ -129,7 +129,7 @@ export class AuthService
      */
     signOut(): Observable<any>
     {
-        return this._httpClient.post(`/api/auth/logout`, {}, {
+        return this._httpClient.post(`/api/auth/logout?org=`, {
             withCredentials: true,
             headers: {
                 'X-CSRFToken': this.getCookie('csrftoken')
