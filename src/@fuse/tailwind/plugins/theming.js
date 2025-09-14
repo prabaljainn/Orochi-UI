@@ -219,7 +219,7 @@ const theming = plugin.withOptions((options) => ({
                         background: {
                             light: {
                                 'bg-app-bar'   		: '#182230',
-                                'bg-default'   		: '#F5F5F5', 
+                                'bg-default'   		: '#EDEFF2', 
                                 'bg-card'      		: '#FFFFFF',
 								'bg-card-secondary' : '#F2F4F7',
 								'bg-card-third' 	: '#E4E7EC',
@@ -231,7 +231,7 @@ const theming = plugin.withOptions((options) => ({
                             },
                             dark : {
                                 'bg-app-bar'   		: '#0B0C10',
-                                'bg-default'   		: '#111217',
+                                'bg-default'        : "#181920",
                                 'bg-card'      		: '#111217',
                                 'bg-card-secondary' : '#1B1C21',
                                 'bg-card-third' 	: '#1E202C',

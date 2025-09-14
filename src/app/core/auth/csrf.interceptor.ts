@@ -8,7 +8,7 @@ export const csrfInterceptor = (
     next: HttpHandlerFn
 ): Observable<HttpEvent<unknown>> => {
     // Only add CSRF token for state-changing methods
-    const needsCsrfToken = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(
+    const needsCsrfToken = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].includes(
         req.method.toUpperCase()
     );
 
@@ -21,7 +21,6 @@ export const csrfInterceptor = (
             const csrfReq = req.clone({
                 headers: req.headers
                     .set('X-CSRFToken', csrfToken)
-                    .set('Referer', window.location.origin),
             });
             return next(csrfReq);
         }

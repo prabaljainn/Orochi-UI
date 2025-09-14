@@ -3,12 +3,34 @@
 /*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
 /* ----------------------------------------------------------------------------------------------------- */
 
+*::-webkit-scrollbar {
+    display: none;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 .sign-in-background {
     background: linear-gradient(
         180deg,
         rgba(0, 0, 0, 1) 0%,
         rgba(13, 94, 166, 1) 100%
     );
+}
+
+.filter-dropdown {
+	.mat-mdc-form-field-subscript-wrapper{
+		display: none !important;
+	}
 }
 
 /**
