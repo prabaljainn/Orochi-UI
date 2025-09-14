@@ -14,12 +14,14 @@ import { mockApiServices } from 'app/mock-api';
 import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
 import { API_BASE_HREF, getApiBase, getBaseLocation } from './services/base-url.service';
 import { authInterceptor } from './core/auth/auth.interceptor';
+import { csrfInterceptor } from './core/auth/csrf.interceptor';
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideAnimations(),
         provideHttpClient(
 			withInterceptors([
+				csrfInterceptor, 
                 authInterceptor
             ])
 		),

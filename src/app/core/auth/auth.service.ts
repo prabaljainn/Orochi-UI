@@ -129,12 +129,7 @@ export class AuthService
      */
     signOut(): Observable<any>
     {
-        return this._httpClient.post(`/api/auth/logout?org=`, {
-            withCredentials: true,
-            headers: {
-                'X-CSRFToken': this.getCookie('csrftoken')
-            }
-        }).pipe(
+        return this._httpClient.post(`/api/auth/logout?org=`, {}).pipe(
             tap(() => {
                 this._authenticated = false;
                 this._userService.user = null;
@@ -193,19 +188,5 @@ export class AuthService
                 return of(false);
             })
         );
-    }
-
-    /**
-     * Get cookie value
-     *
-     * @param name
-     */
-    private getCookie(name: string): string {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) {
-            return parts.pop().split(';').shift();
-        }
-        return '';
     }
 }
