@@ -1,51 +1,24 @@
 #!/usr/bin/env sh
 
+# Simple entry script for /dashboard/en/ structure
+# No BOX mode, no PREFIX - just simple /dashboard/en/
+
+echo "Starting Orochi UI with /dashboard/en/ structure..."
+
 # Create necessary directories
 mkdir -p /usr/share/nginx/html/assets
 
-# Handle BOX mode (with PREFIX) or default mode
-if [ "$BOX" = "true" ]; then
-    # Set default PREFIX if not provided in BOX mode
-    if [ -z "$PREFIX" ]; then
-        export PREFIX="orochi"
-    fi
-    # Update base href in all language versions for dashboard structure
-    if [ -f /usr/share/nginx/html/dashboard/en/index.html ]; then
-        sed -i.bak -r "s|base href=\"/dashboard/en/\"|base href=\"/$PREFIX/dashboard/en/\"|" /usr/share/nginx/html/dashboard/en/index.html
-    fi
-    if [ -f /usr/share/nginx/html/dashboard/ja/index.html ]; then
-        sed -i.bak -r "s|base href=\"/dashboard/ja/\"|base href=\"/$PREFIX/dashboard/ja/\"|" /usr/share/nginx/html/dashboard/ja/index.html
-    fi
-    if [ -f /usr/share/nginx/html/dashboard/ar/index.html ]; then
-        sed -i.bak -r "s|base href=\"/dashboard/ar/\"|base href=\"/$PREFIX/dashboard/ar/\"|" /usr/share/nginx/html/dashboard/ar/index.html
-    fi
-    if [ -f /usr/share/nginx/html/dashboard/es/index.html ]; then
-        sed -i.bak -r "s|base href=\"/dashboard/es/\"|base href=\"/$PREFIX/dashboard/es/\"|" /usr/share/nginx/html/dashboard/es/index.html
-    fi
-    if [ -f /usr/share/nginx/html/dashboard/te/index.html ]; then
-        sed -i.bak -r "s|base href=\"/dashboard/te/\"|base href=\"/$PREFIX/dashboard/te/\"|" /usr/share/nginx/html/dashboard/te/index.html
-    fi
-    if [ -f /usr/share/nginx/html/dashboard/hi/index.html ]; then
-        sed -i.bak -r "s|base href=\"/dashboard/hi/\"|base href=\"/$PREFIX/dashboard/hi/\"|" /usr/share/nginx/html/dashboard/hi/index.html
-    fi
+# Always use the standard dashboard structure configuration
+cp /nginx-dashboard-structure.conf /etc/nginx/nginx.conf
+echo "Using standard /dashboard/en/ structure"
 
-    # Use orochi-box.conf with PREFIX substitution
-    envsubst '$PREFIX $NGINX_HOST $NGINX_PORT' < /orochi-box.conf > /etc/nginx/nginx.conf
-    echo "Using BOX mode with PREFIX: $PREFIX"
-else
-    # Use the standard dashboard structure configuration
-    cp /nginx-dashboard-structure.conf /etc/nginx/nginx.conf
-    echo "Using standard dashboard structure"
-fi
-
-# Create a simple config file for the frontend (optional)
+# Create a simple config file for the frontend
 cat > /usr/share/nginx/html/assets/config.json << EOF
 {
-  "prefix": "$PREFIX",
   "apiUrl": "/api",
-  "environment": "${ENVIRONMENT:-production}"
+  "environment": "production"
 }
 EOF
 
-echo "Starting nginx with configuration..."
+echo "Starting nginx..."
 nginx -g "daemon off;"
