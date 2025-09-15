@@ -11,14 +11,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Dropdown } from 'app/models/common.types';
+import { Dropdown, VerdictMap } from 'app/models/common.types';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { TrainAnalyticsService } from 'app/services/train-analytics.service';
 import { DateTime } from 'luxon';
 import { debounceTime } from 'rxjs';
-import { KeyValuePipe } from '@angular/common';
+import { KeyValuePipe, NgClass } from '@angular/common';
 
 export interface TableAction {
     label: string;
@@ -41,6 +41,7 @@ export interface TableAction {
         MatPaginatorModule,
         MatSortModule,
         KeyValuePipe,
+		NgClass,
     ],
     templateUrl: './dashboard.component.html',
     encapsulation: ViewEncapsulation.None,
@@ -50,7 +51,9 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         'trainId',
         'timeAndDate',
         'status',
+		'verdict',
         'annotation',
+		'assignee',
         'action',
     ];
     dataSource = new MatTableDataSource<any>();
@@ -99,6 +102,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     verdictFilterControl: FormControl = new FormControl(
         this.verdictFilterList[0].key
     );
+	VerdictMap = VerdictMap;
 
     cardList: any = {
         totoal: {
@@ -217,7 +221,9 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                                     }
                                 )?.toFormat('hh:mm a dd/MM/yyyy') ?? '- -',
                             status: result?.status?.toUpperCase() ?? '- -',
+							verdict: result?.train_metadata?.verdict?.toUpperCase() ?? '- -',
                             annotation: `${result?.annotation_stats?.annotated_frames}/${result?.annotation_stats?.total_frames} FRAMES`,
+							assignee: result?.assignee ?? '- -',
                         });
                     });
                     this.dataSource = new MatTableDataSource(data);

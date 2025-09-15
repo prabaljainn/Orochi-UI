@@ -1,6 +1,6 @@
 <div class="w-full h-full p-6">
     <div
-        class="w-full h-full bg-card rounded-lg p-4 flex flex-col gap-4 shadow-md"
+        class="w-full h-auto bg-card rounded-lg p-4 flex flex-col gap-4 shadow-md"
     >
         <div
             class="w-full h-12 rounded-lg flex justify-between items-center gap-4"
@@ -35,21 +35,27 @@
                         class="text-default"
                         [svgIcon]="item.value.icon"
                     ></mat-icon>
-                    <div class="text-xl font-semibold">{{ item.value.title }}</div>
+                    <div class="text-xl font-semibold">
+                        {{ item.value.title }}
+                    </div>
                 </div>
                 <div
                     class="w-full h-1/2 flex justify-center items-center gap-2 bg-card rounded-lg"
                 >
-                    <div class="text-xl font-semibold">{{ item.value.value }}</div>
+                    <div class="text-xl font-semibold">
+                        {{ item.value.value }}
+                    </div>
                 </div>
             </div>
             }
         </div>
 
-        <div class="w-full h-[42rem] overflow-hidden rounded-lg flex flex-col">
+        <div
+            class="w-full max-h-[42rem] overflow-hidden rounded-lg flex flex-col border"
+        >
             <!-- filter container -->
             <div
-                class="w-full flex justify-between items-center gap-2 pb-4 flex-shrink-0"
+                class="w-full flex justify-between items-center gap-2 p-4 flex-shrink-0"
             >
                 <mat-form-field
                     class="fuse-mat-dense w-64"
@@ -123,6 +129,24 @@
                         </td>
                     </ng-container>
 
+                    <!-- Verdict Column -->
+                    <ng-container matColumnDef="verdict">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            VERDICT
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span
+                                [ngClass]="{
+									'text-green-500': element.verdict === 'AC',
+									'text-red-500': element.verdict === 'RJ',
+									'text-yellow-500': element.verdict === 'NA',
+								}"
+                            >
+                                {{ VerdictMap.get(element.verdict) ?? "- -" }}
+                            </span>
+                        </td>
+                    </ng-container>
+
                     <!-- Annotation Column -->
                     <ng-container matColumnDef="annotation">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -130,6 +154,16 @@
                         </th>
                         <td mat-cell *matCellDef="let element">
                             {{ element.annotation ?? "- -" }}
+                        </td>
+                    </ng-container>
+
+                    <!-- Assignee Column -->
+                    <ng-container matColumnDef="assignee">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+                            ASSIGNEE
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.assignee ?? "- -" }}
                         </td>
                     </ng-container>
 

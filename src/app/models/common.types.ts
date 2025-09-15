@@ -10,3 +10,9 @@ export type Dropdown = {
     displayValue: string;
     disabled?: boolean;
 };
+
+export const VerdictMap: Map<string, string> = new Map<string, string>([
+    ['AC', 'Accepted'],
+    ['RJ', 'Rejected'],
+    ['NA', 'Not Annotated'],
+]);
