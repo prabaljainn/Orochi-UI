@@ -11,39 +11,30 @@ RUN npm install --force
 # Copy the rest of the application
 COPY . .
 
-# Build the application
-RUN npm run build
+# Build the application with dashboard structure using the build script
+RUN chmod +x build-dashboard-structure.sh && ./build-dashboard-structure.sh
 
-# Determine the correct build output directory
-RUN if [ -d /app/dist/orochi-ui ]; then \
-      echo "Using /app/dist/orochi-ui"; \
-      mkdir -p /app/build; \
-      cp -r /app/dist/orochi-ui/* /app/build/; \
-    elif [ -d /app/dist ]; then \
-      echo "Using /app/dist"; \
-      mkdir -p /app/build; \
-      cp -r /app/dist/* /app/build/; \
-    else \
-      echo "No build output found!"; \
-      exit 1; \
-    fi
+# Create build directory for Docker with correct structure
+RUN mkdir -p /app/build && \
+    cp -r /app/dist/orochi-ui/* /app/build/ && \
+    echo "Build structure ready for /dashboard/en/ URLs"
 
 # NGINX configuration
 FROM nginx:alpine
 
-# Copy the built app to nginx html directory
+# Copy the built app to nginx html directory with dashboard structure
 COPY --from=build /app/build /usr/share/nginx/html
-COPY nginx/* /
+
+# Copy nginx configuration for dashboard structure
+COPY nginx-dashboard-structure.conf /etc/nginx/nginx.conf
+
+# Copy any additional nginx files (if needed)
+COPY nginx/docker-entry.sh /docker-entry.sh
 
 RUN chmod +x /docker-entry.sh
 
 # Expose port 80
 EXPOSE 80
 
-# use this if you need proxy, check: default.conf and box.conf
-# ENV NGINX_HOST=webui \
-#     NGINX_PORT=8081
-
-    # Use our custom entrypoint script
+# Use our custom entrypoint script
 ENTRYPOINT ["/docker-entry.sh"]
-# Remove the default CMD as our entrypoint script already starts nginx

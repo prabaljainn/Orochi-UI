@@ -11,6 +11,7 @@
         "start-te": "NODE_OPTIONS=--max-old-space-size=5120 ng serve -c te",
         "start-ja": "NODE_OPTIONS=--max-old-space-size=5120 ng serve -c ja",
         "build": "NODE_OPTIONS=--max-old-space-size=5120 ng build --configuration production",
+        "build-dashboard": "./build-dashboard-structure.sh",
         "watch": "NODE_OPTIONS=--max-old-space-size=5120 ng build --watch --configuration development",
         "translations": "node --max-old-space-size=5120 ./node_modules/@angular/cli/bin/ng extract-i18n --output-path src/locale --format=xlf2 --out-file messages.en.xlf2",
         "xlf-translate": "node translate/translate2.js --i18nPath=src/locale"
