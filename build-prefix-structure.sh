@@ -68,6 +68,21 @@ for lang in "${LANGUAGES[@]}"; do
                 mv "$OUTPUT_DIR/$lang" "$OUTPUT_DIR/$PREFIX/dashboard/$lang"
                 echo -e "${GREEN}✓ Moved $lang build to $PREFIX/dashboard/$lang directory${NC}"
             fi
+        else
+            # Fallback: if Angular didn't create separate language dirs, create them manually
+            echo -e "${YELLOW}⚠ Language directory $OUTPUT_DIR/$lang not found, creating manually...${NC}"
+            if [ "$PREFIX" = "dashboard" ]; then
+                mkdir -p "$OUTPUT_DIR/dashboard/$lang"
+                # Copy all files except directories to the language-specific folder
+                find "$OUTPUT_DIR" -maxdepth 1 -type f -exec cp {} "$OUTPUT_DIR/dashboard/$lang/" \;
+                find "$OUTPUT_DIR" -maxdepth 1 -type d -name "assets" -exec cp -r {} "$OUTPUT_DIR/dashboard/$lang/" \;
+                echo -e "${GREEN}✓ Created dashboard/$lang structure manually${NC}"
+            else
+                mkdir -p "$OUTPUT_DIR/$PREFIX/dashboard/$lang"
+                find "$OUTPUT_DIR" -maxdepth 1 -type f -exec cp {} "$OUTPUT_DIR/$PREFIX/dashboard/$lang/" \;
+                find "$OUTPUT_DIR" -maxdepth 1 -type d -name "assets" -exec cp -r {} "$OUTPUT_DIR/$PREFIX/dashboard/$lang/" \;
+                echo -e "${GREEN}✓ Created $PREFIX/dashboard/$lang structure manually${NC}"
+            fi
         fi
     else
         echo -e "${RED}✗ Build failed for $lang${NC}"
