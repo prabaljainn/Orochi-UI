@@ -3,13 +3,12 @@
 # Create necessary directories
 mkdir -p /usr/share/nginx/html/assets
 
-# Set default PREFIX if not provided
-if [ -z "$PREFIX" ]; then
-    export PREFIX="orochi"
-fi
-
 # Handle BOX mode (with PREFIX) or default mode
 if [ "$BOX" = "true" ]; then
+    # Set default PREFIX if not provided in BOX mode
+    if [ -z "$PREFIX" ]; then
+        export PREFIX="orochi"
+    fi
     # Update base href in all language versions for dashboard structure
     if [ -f /usr/share/nginx/html/dashboard/en/index.html ]; then
         sed -i.bak -r "s|base href=\"/dashboard/en/\"|base href=\"/$PREFIX/dashboard/en/\"|" /usr/share/nginx/html/dashboard/en/index.html

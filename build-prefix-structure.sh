@@ -15,7 +15,7 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PREFIX=${1:-"orochi"}  # Use provided PREFIX or default to "orochi"
+PREFIX=${1:-"dashboard"}  # Use provided PREFIX or default to "dashboard" (no PREFIX mode)
 OUTPUT_DIR="dist/orochi-ui"
 LANGUAGES=("en" "ja")
 
