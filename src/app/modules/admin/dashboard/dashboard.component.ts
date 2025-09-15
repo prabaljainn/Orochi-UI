@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    ChangeDetectorRef,
     Component,
     OnInit,
     ViewChild,
@@ -17,6 +18,7 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { TrainAnalyticsService } from 'app/services/train-analytics.service';
 import { DateTime } from 'luxon';
 import { debounceTime } from 'rxjs';
+import { KeyValuePipe } from '@angular/common';
 
 export interface TableAction {
     label: string;
@@ -38,6 +40,7 @@ export interface TableAction {
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,
+        KeyValuePipe,
     ],
     templateUrl: './dashboard.component.html',
     encapsulation: ViewEncapsulation.None,
@@ -97,28 +100,28 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         this.verdictFilterList[0].key
     );
 
-    cardList: Array<any> = [
-        {
+    cardList: any = {
+        totoal: {
             title: 'Total',
             value: 'N/A',
             icon: 'sudocode:total',
         },
-        {
+        accepted: {
             title: 'Accepted',
             value: 100,
             icon: 'sudocode:accepted',
         },
-        {
+        rejected: {
             title: 'Rejected',
             value: 100,
             icon: 'sudocode:rejected',
         },
-        {
+        notAnnotated: {
             title: 'Not Annotated',
             value: 100,
             icon: 'sudocode:not-verified',
         },
-    ];
+    };
 
     timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     fromTime = DateTime.now().startOf('day').setZone(this.timeZone).toISO();
@@ -127,7 +130,10 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     /**
      * Constructor
      */
-    constructor(private _trainAnalyticsService: TrainAnalyticsService) {}
+    constructor(
+        private _trainAnalyticsService: TrainAnalyticsService,
+        private _cdr: ChangeDetectorRef
+    ) {}
 
     ngAfterViewInit() {
         this.dataSource.paginator = this.paginator;
@@ -136,14 +142,13 @@ export class DashboardComponent implements AfterViewInit, OnInit {
 
     ngOnInit(): void {
         this._setupFormControls();
-        this.getSummary(this.fromTime, this.toTime);
         this.getTasks(
             this.pageIndex,
             this.pageSize,
-            this.verdictFilterControl.value,
-            this.searchInputControl.value,
             this.fromTime,
-            this.toTime
+            this.toTime,
+            this.verdictFilterControl.value,
+            this.searchInputControl.value
         );
     }
 
@@ -154,10 +159,10 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                 this.getTasks(
                     this.pageIndex,
                     this.pageSize,
-                    this.verdictFilterControl.value,
-                    value,
                     this.fromTime,
-                    this.toTime
+                    this.toTime,
+                    this.verdictFilterControl.value,
+                    value
                 );
             });
 
@@ -165,42 +170,43 @@ export class DashboardComponent implements AfterViewInit, OnInit {
             this.getTasks(
                 this.pageIndex,
                 this.pageSize,
-                value,
-                this.searchInputControl.value,
                 this.fromTime,
-                this.toTime
+                this.toTime,
+                value,
+                this.searchInputControl.value
             );
-        });
-    }
-
-    getSummary(fromTime: string, toTime: string) {
-        this._trainAnalyticsService.getSummary(fromTime, toTime).subscribe({
-            next: (res: any) => {
-                this.cardList[0].value = res.summary.total_tasks;
-                this.cardList[1].value = res.summary.ac_tasks;
-                this.cardList[2].value = res.summary.rj_tasks;
-                this.cardList[3].value = res.summary.na_tasks;
-            },
-            error: (err) => {
-                console.error(err);
-            },
         });
     }
 
     getTasks(
         page: number,
         pageSize: number,
+        fromTime: string,
+        toTime: string,
         verdict: string,
         search: string,
-        fromTime: string,
-        toTime: string
+        include_analytics: boolean = true
     ) {
         this._trainAnalyticsService
-            .getTasks(page, pageSize, verdict, search, fromTime, toTime)
+            .getTasks(
+                page,
+                pageSize,
+                fromTime,
+                toTime,
+                verdict,
+                search,
+                include_analytics
+            )
             .subscribe({
                 next: (res: any) => {
+                    let summary = res?.analytics?.summary;
+                    this.cardList.totoal.value = summary?.total_tasks;
+                    this.cardList.accepted.value = summary?.ac_tasks;
+                    this.cardList.rejected.value = summary?.rj_tasks;
+                    this.cardList.notAnnotated.value = summary?.na_tasks;
+
                     let data = [];
-                    res.results.forEach((result: any) => {
+                    res?.results?.forEach((result: any) => {
                         data.push({
                             trainId: result?.train_metadata?.train_id ?? '- -',
                             timeAndDate:
@@ -215,6 +221,10 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                         });
                     });
                     this.dataSource = new MatTableDataSource(data);
+                    setTimeout(() => {
+                        this.paginator.length = summary?.total_tasks || 0;
+                        this._cdr.detectChanges();
+                    }, 100);
                 },
             });
     }
@@ -251,14 +261,14 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                 .setZone(this.timeZone)
                 .toISO();
         }
-        this.getSummary(this.fromTime, this.toTime);
+
         this.getTasks(
             this.pageIndex,
             this.pageSize,
-            this.verdictFilterControl.value,
-            this.searchInputControl.value,
             this.fromTime,
-            this.toTime
+            this.toTime,
+            this.verdictFilterControl.value,
+            this.searchInputControl.value
         );
     }
 

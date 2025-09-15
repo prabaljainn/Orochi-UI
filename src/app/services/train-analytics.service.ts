@@ -27,10 +27,11 @@ export class TrainAnalyticsService {
     getTasks(
         page: number,
         page_size: number,
+		fromTime: string,
+        toTime: string,
         verdict: string,
         search: string,
-        fromTime: string,
-        toTime: string
+		include_analytics: boolean = false
     ) {
 		const params = new HttpParams()
             .set('page', page)
