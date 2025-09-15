@@ -28,7 +28,7 @@ for lang in "${LANGUAGES[@]}"; do
     echo "Base href: /dashboard/$lang/"
 
     # Build with specific base href for this language
-    NODE_OPTIONS=--max-old-space-size=5120 ng build \
+    NODE_OPTIONS=--max-old-space-size=5120 npx ng build \
         --configuration production \
         --localize=$lang \
         --base-href="/dashboard/$lang/" \

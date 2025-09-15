@@ -11,12 +11,30 @@ RUN npm install --force
 # Copy the rest of the application
 COPY . .
 
-# Build the application with dashboard structure using the build script
-RUN chmod +x build-dashboard-structure.sh && ./build-dashboard-structure.sh
+# Build the application with dashboard structure
+# Build each language with correct base href
+RUN NODE_OPTIONS=--max-old-space-size=5120 npx ng build \
+        --configuration production \
+        --localize=en \
+        --base-href="/dashboard/en/" \
+        --deploy-url="/dashboard/en/"
 
-# Create build directory for Docker with correct structure
-RUN mkdir -p /app/build && \
-    cp -r /app/dist/orochi-ui/* /app/build/ && \
+RUN NODE_OPTIONS=--max-old-space-size=5120 npx ng build \
+        --configuration production \
+        --localize=ja \
+        --base-href="/dashboard/ja/" \
+        --deploy-url="/dashboard/ja/"
+
+# Organize the build output for the dashboard structure
+RUN mkdir -p /app/build/dashboard && \
+    if [ -d /app/dist/orochi-ui/en ]; then \
+      mv /app/dist/orochi-ui/en /app/build/dashboard/en; \
+      echo "✓ Moved English build to dashboard/en"; \
+    fi && \
+    if [ -d /app/dist/orochi-ui/ja ]; then \
+      mv /app/dist/orochi-ui/ja /app/build/dashboard/ja; \
+      echo "✓ Moved Japanese build to dashboard/ja"; \
+    fi && \
     echo "Build structure ready for /dashboard/en/ URLs"
 
 # NGINX configuration
