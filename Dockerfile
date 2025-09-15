@@ -43,10 +43,11 @@ FROM nginx:alpine
 # Copy the built app to nginx html directory with dashboard structure
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Copy nginx configuration for dashboard structure
-COPY nginx-dashboard-structure.conf /etc/nginx/nginx.conf
+# Copy both nginx configurations
+COPY nginx-dashboard-structure.conf /nginx-dashboard-structure.conf
+COPY nginx/orochi-box.conf /orochi-box.conf
 
-# Copy any additional nginx files (if needed)
+# Copy the docker entry script
 COPY nginx/docker-entry.sh /docker-entry.sh
 
 RUN chmod +x /docker-entry.sh
