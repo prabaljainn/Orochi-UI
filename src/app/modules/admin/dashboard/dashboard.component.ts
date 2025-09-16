@@ -108,20 +108,24 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         totoal: {
             title: 'Total',
             value: 'N/A',
+            id: 'total',
             icon: 'sudocode:total',
         },
         accepted: {
             title: 'Accepted',
+            id: 'accepted',
             value: 100,
             icon: 'sudocode:accepted',
         },
         rejected: {
             title: 'Rejected',
+            id: 'rejected',
             value: 100,
             icon: 'sudocode:rejected',
         },
         notAnnotated: {
             title: 'Not Annotated',
+            id: 'not-annotated',
             value: 100,
             icon: 'sudocode:not-verified',
         },

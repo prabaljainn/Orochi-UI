@@ -1,11 +1,9 @@
-<div class="w-full h-full p-6">
-    <div
-        class="w-full h-auto bg-card rounded-lg p-4 flex flex-col gap-4 shadow-md"
-    >
+<div class="w-full h-full p-8 bg-[#205f951a]">
+    <div class="w-full h-auto rounded-lg p-4 flex flex-col gap-8">
         <div
             class="w-full h-12 rounded-lg flex justify-between items-center gap-4"
         >
-            <div class="text-xl font-semibold">Dashboard</div>
+            <div class="text-4xl font-semibold">Dashboard</div>
 
             <div class="flex items-center gap-4">
                 <div class="font-mono font-medium text-md">FILTER BY</div>
@@ -25,33 +23,39 @@
             </div>
         </div>
 
-        <div class="w-full h-32 rounded-lg grid grid-cols-4 gap-4">
+        <div class="w-full  rounded-lg grid grid-cols-4 gap-10">
             @for (item of cardList | keyvalue; track item.key) {
             <div
-                class="w-full h-full rounded-lg flex justify-between flex-col p-4 bg-card-secondary"
+                class="w-full main-card rounded-2xl flex justify-between shadow-md flex-col p-4 bg-card"
+                [ngClass]="item.value.id || ''"
             >
-                <div class="w-full h-1/2 flex justify-start items-center gap-2">
-                    <mat-icon
-                        class="text-default"
-                        [svgIcon]="item.value.icon"
-                    ></mat-icon>
-                    <div class="text-xl font-semibold">
-                        {{ item.value.title }}
+                <div class="w-full  flex flex-row justify-start items-start gap-2">
+                    <div  class="rounded-full p-4  icon-container flex justify-center items-center" [ngClass]="item.value.id || ''">
+                        <mat-icon
+                            class=""
+                            [svgIcon]="item.value.icon"
+                        ></mat-icon>
+                    </div>
+
+                    <div class="text-lg font-light flex flex-col gap-2">
+                        <div> {{ item.value.title }}</div>
+
+                        <div
+                        class="w-full h-1/2 flex justify-start items-center gap-2 rounded-lg"
+                    >
+                        <div class="text-4xl font-semibold">
+                            {{ item.value.value }}
+                        </div>
+                    </div>
                     </div>
                 </div>
-                <div
-                    class="w-full h-1/2 flex justify-center items-center gap-2 bg-card rounded-lg"
-                >
-                    <div class="text-xl font-semibold">
-                        {{ item.value.value }}
-                    </div>
-                </div>
+
             </div>
             }
         </div>
 
         <div
-            class="w-full max-h-[42rem] overflow-hidden rounded-lg flex flex-col border"
+            class="w-full max-h-[42rem] shadow-md bg-card overflow-hidden rounded-3xl flex flex-col border"
         >
             <!-- filter container -->
             <div
@@ -136,10 +140,11 @@
                         </th>
                         <td mat-cell *matCellDef="let element">
                             <span
+                                class="rounded-md px-2 py-1"
                                 [ngClass]="{
-									'text-green-500': element.verdict === 'AC',
-									'text-red-500': element.verdict === 'RJ',
-									'text-yellow-500': element.verdict === 'NA',
+									'text-green-500 bg-green-500/20': element.verdict === 'AC',
+									'text-red-500 bg-red-500/20': element.verdict === 'RJ',
+									'text-yellow-500 bg-yellow-500/20': element.verdict === 'NA',
 								}"
                             >
                                 {{ VerdictMap.get(element.verdict) ?? "- -" }}
@@ -171,8 +176,8 @@
                     <ng-container matColumnDef="action">
                         <th mat-header-cell *matHeaderCellDef>ACTION</th>
                         <td mat-cell *matCellDef="let element">
-                            <button class="underline text-primary">
-                                view details
+                            <button mat-icon-button class="underline text-primary flex justify-center items-center rounded-full p-2 w-[2rem] h-[2rem] border border-primary ">
+                                <mat-icon class="font-xs text-primary" [svgIcon]="'heroicons_outline:chevron-right'"></mat-icon>
                             </button>
                         </td>
                     </ng-container>
@@ -183,7 +188,7 @@
                         *matHeaderRowDef="displayedColumns"
                     ></tr>
                     <tr
-                        class="bg-card text-table text-md font-sans font-normal w-fit"
+                        class="text-md h-[4rem] even:bg-table-header  cursor-pointer bg-card font-sans font-normal w-fit"
                         mat-row
                         *matRowDef="let row; columns: displayedColumns"
                     ></tr>
