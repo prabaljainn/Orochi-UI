@@ -28,6 +28,16 @@ input[type="number"] {
 }
 
 .filter-dropdown {
+    .mdc-text-field--outlined .mat-mdc-form-field-infix,
+    .mdc-text-field--no-label .mat-mdc-form-field-infix {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0 !important;
+    }
+
+    .mat-mdc-form-field-infix {
+        min-height: 1rem !important;
+    }
+
     .mat-mdc-form-field-subscript-wrapper {
         display: none !important;
     }
@@ -166,46 +176,43 @@ input[type="number"] {
         rgba(38, 115, 145, 1) 100%
     );
 }
-.main-card{
-    &.total{
+.main-card {
+    &.total {
         border-left: 10px solid #c77c36;
     }
-    &.accepted{
+    &.accepted {
         border-left: 10px solid #5cd03c;
     }
-    &.rejected{
+    &.rejected {
         border-left: 10px solid #f86f5c;
     }
-    &.not-annotated{
+    &.not-annotated {
         border-left: 10px solid #f2d741;
     }
-    .icon-container{
-        &.total{
+    .icon-container {
+        &.total {
             background-color: #c77c3650;
-            .mat-icon{
+            .mat-icon {
                 color: #c77c36;
             }
         }
-        &.accepted{
+        &.accepted {
             background-color: #5cd03c50;
-            .mat-icon{
+            .mat-icon {
                 color: #5cd03c;
             }
-
         }
-        &.rejected{
+        &.rejected {
             background-color: #f86f5c50;
-            .mat-icon{
+            .mat-icon {
                 color: #f86f5c;
             }
-
         }
-        &.not-annotated{
+        &.not-annotated {
             background-color: #f2d74150;
-            .mat-icon{
+            .mat-icon {
                 color: #f2d741;
             }
-
         }
     }
 }

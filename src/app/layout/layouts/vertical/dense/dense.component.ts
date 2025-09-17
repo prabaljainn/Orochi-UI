@@ -1,5 +1,12 @@
-import { NgIf } from '@angular/common';
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { NgClass, NgIf } from '@angular/common';
+import {
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    signal,
+    ViewEncapsulation,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
@@ -8,6 +15,7 @@ import {
     FuseNavigationService,
     FuseVerticalNavigationComponent,
 } from '@fuse/components/navigation';
+import { FuseConfigService } from '@fuse/services/config';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { NavigationService } from 'app/core/navigation/navigation.service';
 import { Navigation } from 'app/core/navigation/navigation.types';
@@ -25,6 +33,7 @@ import { Subject, takeUntil } from 'rxjs';
         MatIconModule,
         NgIf,
         RouterOutlet,
+        NgClass,
     ],
 })
 export class DenseLayoutComponent implements OnInit, OnDestroy {
@@ -32,6 +41,8 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
     navigation: Navigation;
     navigationAppearance: 'default' | 'dense' = 'dense';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
+    isDarkMode = signal<boolean>(false);
+	
 
     /**
      * Constructor
@@ -41,7 +52,9 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
         private _router: Router,
         private _navigationService: NavigationService,
         private _fuseMediaWatcherService: FuseMediaWatcherService,
-        private _fuseNavigationService: FuseNavigationService
+        private _fuseNavigationService: FuseNavigationService,
+        private _fuseConfigService: FuseConfigService,
+        private _changeDetectorRef: ChangeDetectorRef
     ) {}
 
     // -----------------------------------------------------------------------------------------------------
@@ -82,6 +95,13 @@ export class DenseLayoutComponent implements OnInit, OnDestroy {
                     ? 'default'
                     : 'dense';
             });
+
+        // Subscribe to the FuseConfigService to get the current theme on component load
+        this._fuseConfigService.config$.subscribe((config) => {
+            this.isDarkMode.set(config.scheme === 'dark');
+            this._changeDetectorRef.detectChanges();
+        });
+
     }
 
     /**

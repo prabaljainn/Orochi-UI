@@ -10,7 +10,8 @@ const generatePalette = require(path.resolve(__dirname, ('src/@fuse/tailwind/uti
  * Tailwind-like color palettes automatically
  */
 const customPalettes = {
-    brand: generatePalette('#2196F3')
+    brandPrimary: generatePalette('#CD791D'),
+	brandAccent: generatePalette('#185CA7'),
 };
 
 /**
@@ -38,7 +39,8 @@ const themes = {
     // Rest of the themes will use the 'default' as the base
     // theme and will extend it with their given configuration.
     'brand' : {
-        primary: customPalettes.brand
+        primary: customPalettes.brandPrimary,
+		accent: customPalettes.brandAccent,
     },
     'teal'  : {
         primary: {

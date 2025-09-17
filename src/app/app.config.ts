@@ -15,6 +15,7 @@ import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
 import { API_BASE_HREF, getApiBase, getBaseLocation } from './services/base-url.service';
 import { authInterceptor } from './core/auth/auth.interceptor';
 import { csrfInterceptor } from './core/auth/csrf.interceptor';
+import {provideNativeDateAdapter} from '@angular/material/core';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -51,6 +52,7 @@ export const appConfig: ApplicationConfig = {
                 },
             },
         },
+		provideNativeDateAdapter(),
 
         // Transloco Config
         provideTransloco({
@@ -103,7 +105,7 @@ export const appConfig: ApplicationConfig = {
                     lg: '1280px',
                     xl: '1440px',
                 },
-                theme  : 'theme-default',
+                theme  : 'theme-brand',
                 themes : [
                     {
                         id  : 'theme-default',

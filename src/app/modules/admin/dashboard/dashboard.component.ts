@@ -3,10 +3,16 @@ import {
     ChangeDetectorRef,
     Component,
     OnInit,
+    signal,
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+    FormControl,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -19,13 +25,8 @@ import { TrainAnalyticsService } from 'app/services/train-analytics.service';
 import { DateTime } from 'luxon';
 import { debounceTime } from 'rxjs';
 import { KeyValuePipe, NgClass } from '@angular/common';
-
-export interface TableAction {
-    label: string;
-    icon?: string;
-    class?: string;
-    callback: (element: any) => void;
-}
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { PolarAreaChartComponent } from 'app/widgets/polar-area-chart/polar-area-chart.component';
 
 @Component({
     selector: 'dashboard',
@@ -41,7 +42,9 @@ export interface TableAction {
         MatPaginatorModule,
         MatSortModule,
         KeyValuePipe,
-		NgClass,
+        NgClass,
+        MatDatepickerModule,
+		PolarAreaChartComponent,
     ],
     templateUrl: './dashboard.component.html',
     encapsulation: ViewEncapsulation.None,
@@ -51,9 +54,9 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         'trainId',
         'timeAndDate',
         'status',
-		'verdict',
+        'verdict',
         'annotation',
-		'assignee',
+        'assignee',
         'action',
     ];
     dataSource = new MatTableDataSource<any>();
@@ -79,7 +82,12 @@ export class DashboardComponent implements AfterViewInit, OnInit {
             key: 'last7days',
             displayValue: 'Last 7 days',
         },
+        {
+            key: 'custom',
+            displayValue: 'Custom Date Range',
+        },
     ];
+    selectedFilterBy = signal<string>(this.filterByList[0].key as string);
 
     verdictFilterList: Array<Dropdown> = [
         {
@@ -102,7 +110,20 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     verdictFilterControl: FormControl = new FormControl(
         this.verdictFilterList[0].key
     );
-	VerdictMap = VerdictMap;
+    VerdictMap = VerdictMap;
+
+	verdictInfo = {
+		total : 0,
+		accepted : 0,
+		rejected : 0,
+		notAnnotated : 0,
+	}
+
+	verdictChartData = {
+		series: [],
+		labels: ['Total', 'Accepted', 'Rejected', 'Not Annotated'],
+		colors: ['#4D96FF', '#6BCB77', '#EB5353', '#FF9D23'],
+	}
 
     cardList: any = {
         totoal: {
@@ -134,6 +155,11 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     fromTime = DateTime.now().startOf('day').setZone(this.timeZone).toISO();
     toTime = DateTime.now().endOf('day').setZone(this.timeZone).toISO();
+
+    range: FormGroup = new FormGroup({
+        start: new FormControl<Date | null>(null),
+        end: new FormControl<Date | null>(null),
+    });
 
     /**
      * Constructor
@@ -184,6 +210,29 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                 this.searchInputControl.value
             );
         });
+
+        this.range.valueChanges.subscribe((value) => {
+            if (value.start && value.end) {
+                const formattedStart = DateTime.fromJSDate(value.start)
+					.startOf('day')
+                    .setZone(this.timeZone)
+                    .toISO();
+
+                const formattedEnd = DateTime.fromJSDate(value.end)
+					.endOf('day')
+                    .setZone(this.timeZone)
+                    .toISO();
+
+                this.getTasks(
+                    this.pageIndex,
+                    this.pageSize,
+                    formattedStart,
+                    formattedEnd,
+                    this.verdictFilterControl.value,
+                    this.searchInputControl.value
+                );
+            }
+        });
     }
 
     getTasks(
@@ -213,6 +262,13 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                     this.cardList.rejected.value = summary?.rj_tasks;
                     this.cardList.notAnnotated.value = summary?.na_tasks;
 
+					this.verdictInfo.total = summary?.total_tasks;
+					this.verdictInfo.accepted = summary?.ac_tasks;
+					this.verdictInfo.rejected = summary?.rj_tasks;
+					this.verdictInfo.notAnnotated = summary?.na_tasks;
+
+					this.verdictChartData.series = [summary?.total_tasks, summary?.ac_tasks, summary?.rj_tasks, summary?.na_tasks];
+
                     let data = [];
                     res?.results?.forEach((result: any) => {
                         data.push({
@@ -225,9 +281,11 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                                     }
                                 )?.toFormat('hh:mm a dd/MM/yyyy') ?? '- -',
                             status: result?.status?.toUpperCase() ?? '- -',
-							verdict: result?.train_metadata?.verdict?.toUpperCase() ?? '- -',
+                            verdict:
+                                result?.train_metadata?.verdict?.toUpperCase() ??
+                                '- -',
                             annotation: `${result?.annotation_stats?.annotated_frames}/${result?.annotation_stats?.total_frames} FRAMES`,
-							assignee: result?.assignee ?? '- -',
+                            assignee: result?.assignee ?? '- -',
                         });
                     });
                     this.dataSource = new MatTableDataSource(data);
@@ -240,6 +298,11 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     }
 
     onDateChange(value: any) {
+        this.selectedFilterBy.set(value);
+        if (value === 'custom') {
+            return;
+        }
+
         // default is today
         this.fromTime = DateTime.now()
             .startOf('day')

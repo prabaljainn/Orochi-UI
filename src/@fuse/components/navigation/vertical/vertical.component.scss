@@ -2,7 +2,3 @@
 @use 'styles/appearances/compact';
 @use 'styles/appearances/dense';
 @use 'styles/appearances/thin';
-
-.fuse-vertical-navigation-wrapper {
-    background-color: rgba(var(--fuse-bg-app-bar-rgb), 1) !important;
-}

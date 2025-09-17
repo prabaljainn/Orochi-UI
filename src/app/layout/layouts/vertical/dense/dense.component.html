@@ -3,20 +3,34 @@
 
 <!-- Navigation -->
 <fuse-vertical-navigation
-    class="dark bg-gray-900 print:hidden"
+    class="dark group print:hidden"
+    [ngClass]="isDarkMode() ? 'bg-[#0B0C10]' : 'bg-[#182230]'"
     [appearance]="navigationAppearance"
     [mode]="isScreenSmall ? 'over' : 'side'"
     [name]="'mainNavigation'"
     [navigation]="navigation.default"
-    [opened]="!isScreenSmall">
+    [opened]="!isScreenSmall"
+>
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>
         <!-- Logo -->
-        <div class="flex items-center justify-center h-20">
+        <div class="flex items-center justify-center h-20 relative">
             <img
                 class="w-8"
                 src="assets/images/logo/logo.svg"
-                alt="Logo image">
+                alt="Logo image"
+            />
+
+            <button
+                mat-icon-button
+                (click)="toggleNavigationAppearance()"
+                class="hidden group-hover:inline-flex absolute right-4 top-1/2 -translate-y-1/2"
+            >
+                <mat-icon
+                    class="text-white icon-size-5"
+                    [svgIcon]="'heroicons_outline:arrows-right-left'"
+                ></mat-icon>
+            </button>
         </div>
     </ng-container>
 </fuse-vertical-navigation>

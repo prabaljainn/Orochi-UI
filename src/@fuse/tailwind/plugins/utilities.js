@@ -58,6 +58,10 @@ module.exports = plugin(({
                 '--tw-bg-opacity': '1 !important',
                 backgroundColor  : 'rgba(var(--fuse-bg-input-rgb), var(--tw-bg-opacity)) !important',
             },
+            '.bg-icon' : {
+                '--tw-bg-opacity': '1 !important',
+                backgroundColor  : 'rgba(var(--fuse-bg-icon-rgb), var(--tw-bg-opacity)) !important',
+            },
             '.bg-default'     : {
                 '--tw-bg-opacity': '1 !important',
                 backgroundColor  : 'rgba(var(--fuse-bg-default-rgb), var(--tw-bg-opacity)) !important',
