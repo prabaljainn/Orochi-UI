@@ -7,7 +7,7 @@ export const defaultNavigation: FuseNavigationItem[] = [
         title: 'Dashboard',
         type : 'basic',
         icon : 'sudocode:dashboard',
-        link : '/home'
+        link : '/dashboard'
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [

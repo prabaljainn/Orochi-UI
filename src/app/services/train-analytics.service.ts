@@ -15,10 +15,7 @@ export class TrainAnalyticsService {
 
         return this.http.get('/api/custom/tasks-summary', { params }).pipe(
             catchError((err) => {
-                console.error(
-                    'Error: Failed to get tasks summary',
-                    err
-                );
+                console.error('Error: Failed to get tasks summary', err);
                 return throwError(() => err);
             })
         );
@@ -27,25 +24,42 @@ export class TrainAnalyticsService {
     getTasks(
         page: number,
         page_size: number,
-		fromTime: string,
+        fromTime: string,
         toTime: string,
         verdict: string,
         search: string,
-		include_analytics: boolean = false
+        includeAnalytics: boolean = false
     ) {
-		const params = new HttpParams()
+        const params = new HttpParams()
             .set('page', page)
             .set('page_size', page_size)
             .set('verdict', verdict)
             .set('search', search)
             .set('from_time', fromTime)
-            .set('to_time', toTime);
+            .set('to_time', toTime)
+            .set('include_analytics', includeAnalytics);
 
         return this.http.get('/api/custom/tasks-paginated', { params }).pipe(
             catchError((err) => {
-                console.error('Error: Failed to get train analytics tasks', err);
+                console.error(
+                    'Error: Failed to get train analytics tasks',
+                    err
+                );
                 return throwError(() => err);
             })
         );
-	}
+    }
+
+    getTaskAnalysis(projectId: string, taskId: string) {
+        const params = new HttpParams()
+            .set('project_id', projectId)
+            .set('task_id', taskId);
+
+        return this.http.get('/api/custom/task-analysis', { params }).pipe(
+            catchError((err) => {
+                console.error('Error: Failed to get task analysis', err);
+                return throwError(() => err);
+            })
+        );
+    }
 }

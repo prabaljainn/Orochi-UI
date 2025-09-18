@@ -17,7 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { Dropdown, VerdictMap } from 'app/models/common.types';
+import { Dropdown, TaskElement, VerdictMap } from 'app/models/common.types';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -27,6 +27,7 @@ import { debounceTime } from 'rxjs';
 import { KeyValuePipe, NgClass } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { PolarAreaChartComponent } from 'app/widgets/polar-area-chart/polar-area-chart.component';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'dashboard',
@@ -58,7 +59,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         'assignee',
         'action',
     ];
-    dataSource = new MatTableDataSource<any>();
+    dataSource = new MatTableDataSource<TaskElement>();
     noDataMsg: string = 'No data found';
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild('paginator') paginator: MatPaginator;
@@ -81,7 +82,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
             key: 'last7days',
             displayValue: 'Last 7 days',
         },
-		{
+        {
             key: 'last30days',
             displayValue: 'Last 30 days',
         },
@@ -142,7 +143,8 @@ export class DashboardComponent implements AfterViewInit, OnInit {
      */
     constructor(
         private _trainAnalyticsService: TrainAnalyticsService,
-        private _cdr: ChangeDetectorRef
+        private _cdr: ChangeDetectorRef,
+        private _router: Router
     ) {}
 
     ngAfterViewInit() {
@@ -200,7 +202,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                     .setZone(this.timeZone)
                     .toISO();
 
-				this.getTasksSummary(formattedStart, formattedEnd);
+                this.getTasksSummary(formattedStart, formattedEnd);
                 this.getTasks(
                     this.pageIndex,
                     this.pageSize,
@@ -213,24 +215,26 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         });
     }
 
-	getTasksSummary(fromTime: string, toTime: string) {
-		this._trainAnalyticsService.getTasksSummary(fromTime, toTime).subscribe({
-			next: (res: any) => {
-				let summary = res?.summary;
-				this.verdictInfo.total = summary?.total_tasks;
-				this.verdictInfo.accepted = summary?.ac_tasks;
-				this.verdictInfo.rejected = summary?.rj_tasks;
-				this.verdictInfo.notAnnotated = summary?.na_tasks;
+    getTasksSummary(fromTime: string, toTime: string) {
+        this._trainAnalyticsService
+            .getTasksSummary(fromTime, toTime)
+            .subscribe({
+                next: (res: any) => {
+                    let summary = res?.summary;
+                    this.verdictInfo.total = summary?.total_tasks;
+                    this.verdictInfo.accepted = summary?.ac_tasks;
+                    this.verdictInfo.rejected = summary?.rj_tasks;
+                    this.verdictInfo.notAnnotated = summary?.na_tasks;
 
-				this.verdictChartData.series = [
-					summary?.total_tasks,
-					summary?.ac_tasks,
-					summary?.rj_tasks,
-					summary?.na_tasks,
-				];
-			},
-		});
-	}
+                    this.verdictChartData.series = [
+                        summary?.total_tasks,
+                        summary?.ac_tasks,
+                        summary?.rj_tasks,
+                        summary?.na_tasks,
+                    ];
+                },
+            });
+    }
 
     getTasks(
         page: number,
@@ -253,9 +257,11 @@ export class DashboardComponent implements AfterViewInit, OnInit {
             )
             .subscribe({
                 next: (res: any) => {
-                    let data = [];
+                    let data: TaskElement[] = [];
                     res?.results?.forEach((result: any) => {
                         data.push({
+                            projectId: result?.project_id ?? '- -',
+                            taskId: result?.task_id ?? '- -',
                             trainId: result?.train_metadata?.train_id ?? '- -',
                             timeAndDate:
                                 DateTime?.fromISO(
@@ -274,7 +280,8 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                     });
                     this.dataSource = new MatTableDataSource(data);
                     setTimeout(() => {
-						let totalTasks = res?.analytics?.summary?.total_tasks || 0;
+                        let totalTasks =
+                            res?.analytics?.summary?.total_tasks || 0;
                         this.paginator.length = totalTasks;
                         this._cdr.detectChanges();
                     }, 100);
@@ -330,7 +337,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                 .toISO();
         }
 
-		this.getTasksSummary(this.fromTime, this.toTime);
+        this.getTasksSummary(this.fromTime, this.toTime);
         this.getTasks(
             this.pageIndex,
             this.pageSize,
@@ -344,5 +351,13 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     onPageChange(event: any) {
         this.pageIndex = event.pageIndex;
         this.pageSize = event.pageSize;
+    }
+
+    gotoTaskDetails(task: TaskElement) {
+        this._router.navigate([
+            'dashboard/task-details',
+            task.projectId,
+            task.taskId,
+        ]);
     }
 }
