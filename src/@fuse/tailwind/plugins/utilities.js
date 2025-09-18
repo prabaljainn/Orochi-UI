@@ -31,6 +31,14 @@ module.exports = plugin(({
                 '--tw-text-opacity': '1 !important',
                 color              : 'rgba(var(--fuse-text-disabled-rgb), var(--tw-text-opacity)) !important',
             },
+			'.text-table-header' : {
+				'--tw-text-opacity': '1 !important',
+				color              : 'rgba(var(--fuse-text-table-header-rgb), var(--tw-text-opacity)) !important',
+			},
+			'.text-table' : {
+				'--tw-text-opacity': '1 !important',
+				color              : 'rgba(var(--fuse-text-table-rgb), var(--tw-text-opacity)) !important',
+			},
             '.divider'        : {
                 color: 'var(--fuse-divider) !important',
             },

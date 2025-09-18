@@ -8,15 +8,15 @@ import { catchError, throwError } from 'rxjs';
 export class TrainAnalyticsService {
     constructor(private http: HttpClient) {}
 
-    getSummary(fromTime: string, toTime: string) {
+    getTasksSummary(fromTime: string, toTime: string) {
         const params = new HttpParams()
             .set('from_time', fromTime)
             .set('to_time', toTime);
 
-        return this.http.get('/api/custom/train-analytics', { params }).pipe(
+        return this.http.get('/api/custom/tasks-summary', { params }).pipe(
             catchError((err) => {
                 console.error(
-                    'Error: Failed to get train analytics summary',
+                    'Error: Failed to get tasks summary',
                     err
                 );
                 return throwError(() => err);

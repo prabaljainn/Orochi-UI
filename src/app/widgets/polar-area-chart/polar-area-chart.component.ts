@@ -1,4 +1,12 @@
-import { Component, effect, input, ViewChild } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    effect,
+    input,
+    signal,
+    ViewChild,
+} from '@angular/core';
+import { FuseConfigService } from '@fuse/services/config';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 
 import {
@@ -35,33 +43,43 @@ export type ChartOptions = {
     templateUrl: './polar-area-chart.component.html',
 })
 export class PolarAreaChartComponent {
-	series = input<number[]>([]);
-	labels = input<string[]>([]);
-	colors = input<string[]>([]);
-	size = input<number>(300);
+    series = input<number[]>([]);
+    labels = input<string[]>([]);
+    colors = input<string[]>([]);
+    size = input<number>(300);
 
     @ViewChild('chart') chart: ChartComponent;
-    public chartOptions: Partial<ChartOptions>;
+    public chartOptions: Partial<ChartOptions> = {};
+    isDarkMode = signal<boolean>(false);
 
-    constructor() {
-		effect(() => {
-			this.initChart();
-		});
+    constructor(
+        private _fuseConfigService: FuseConfigService,
+        private _changeDetectorRef: ChangeDetectorRef
+    ) {
+        this.initChart();
+
+        effect(() => {
+            this.initChart();
+        });
     }
 
-	ngOnInit(): void {
-		this.initChart();
-	}
+    ngOnInit(): void {
+        // Subscribe to the FuseConfigService to get the current theme on component load
+        this._fuseConfigService.config$.subscribe((config) => {
+            this.isDarkMode.set(config.scheme === 'dark');
+            this._changeDetectorRef.detectChanges();
+        });
+    }
 
-	initChart() {
-		this.chartOptions = {
-            series: this.series(),
+    initChart() {
+        this.chartOptions = {
+            series: this.series() || [],
             chart: {
                 width: this.size(),
                 type: 'polarArea',
             },
-            labels: this.labels(),
-			colors: this.colors(),
+            labels: this.labels() || [],
+            colors: this.colors() || [],
             fill: {
                 opacity: 1,
             },
@@ -74,6 +92,9 @@ export class PolarAreaChartComponent {
             },
             legend: {
                 position: 'right',
+                labels: {
+                    colors: this.isDarkMode() ? '#F9FAFB' : '#344054',
+                },
             },
             plotOptions: {
                 polarArea: {
@@ -85,10 +106,10 @@ export class PolarAreaChartComponent {
             theme: {
                 monochrome: {
                     //    enabled: true,
-                    shadeTo: 'light',
+                    shadeTo: this.isDarkMode() ? 'dark' : 'light',
                     shadeIntensity: 0.6,
                 },
             },
         };
-	}
+    }
 }

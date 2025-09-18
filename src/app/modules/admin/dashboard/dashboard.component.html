@@ -1,7 +1,7 @@
 <div class="flex flex-col flex-auto w-full min-w-0">
     <!-- Header -->
     <div
-        class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-app-bar print:hidden"
+        class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:-b bg-card dark:bg-app-bar print:hidden"
     >
         <div class="flex items-center pr-2 space-x-2">
             <div class="text-xl text-default font-semibold">Dashboard</div>
@@ -59,11 +59,11 @@
     <div class="flex flex-col flex-auto gap-4 p-6">
         <div class="grid grid-cols-12 gap-4">
             <div
-                class="col-span-9 w-full flex flex-col gap-4 border-[1px] bg-card p-4 rounded-md"
+                class="col-span-9 w-full flex flex-col gap-4 bg-card p-4 rounded-lg shadow-md"
             >
                 <div class="flex gap-2 items-center justify-start">
                     <div
-                        class="bg-icon w-8 h-8 p-1 flex items-center justify-center rounded-md"
+                        class="bg-icon w-8 h-8 p-1 flex items-center justify-center rounded-lg"
                     >
                         <mat-icon
                             class="icon-size-5 text-white"
@@ -74,39 +74,55 @@
                         Verdicts
                     </div>
                 </div>
-                <div
-                    class="grid grid-cols-4 gap-2 divide-x divide-gray-300 dark:divide-gray-700 bg-card-third p-4 rounded-md"
-                >
-                    <div class="flex flex-col gap-2">
-                        <div class="text-[0.8rem] font-normal">Total</div>
-                        <div class="text-[1.4rem] font-semibold">
-                            {{ verdictInfo.total ?? "--" }}
+                <div class="grid grid-cols-4 gap-2">
+                    <div class="flex gap-2 bg-card-third p-2 rounded-lg">
+                        <div
+                            class="max-w-1 flex-1 rounded-full bg-[#4D96FF]"
+                        ></div>
+                        <div class="flex flex-col gap-2 p-2">
+                            <div class="text-md font-normal">Total</div>
+                            <div class="text-3xl font-semibold">
+                                {{ verdictInfo?.total ?? "--" }}
+                            </div>
                         </div>
                     </div>
-                    <div class="flex flex-col gap-2 pl-4">
-                        <div class="text-[0.8rem] font-normal">Accepted</div>
-                        <div class="text-[1.4rem] font-semibold">
-                            {{ verdictInfo.accepted ?? "--" }}
+                    <div class="flex gap-2 bg-card-third p-2 rounded-lg">
+                        <div
+                            class="max-w-1 flex-1 rounded-full bg-[#6BCB77]"
+                        ></div>
+                        <div class="flex flex-col gap-2 p-2">
+                            <div class="text-md font-normal">Accepted</div>
+                            <div class="text-3xl font-semibold">
+                                {{ verdictInfo?.accepted ?? "- -" }}
+                            </div>
                         </div>
                     </div>
-                    <div class="flex flex-col gap-2 pl-4">
-                        <div class="text-[0.8rem] font-normal">Rejected</div>
-                        <div class="text-[1.4rem] font-semibold">
-                            {{ verdictInfo.rejected ?? "--" }}
+                    <div class="flex gap-2 bg-card-third p-2 rounded-lg">
+                        <div
+                            class="max-w-1 flex-1 rounded-full bg-[#EB5353]"
+                        ></div>
+                        <div class="flex flex-col gap-2 p-2">
+                            <div class="text-md font-normal">Rejected</div>
+                            <div class="text-3xl font-semibold">
+                                {{ verdictInfo?.rejected ?? "- -" }}
+                            </div>
                         </div>
                     </div>
-                    <div class="flex flex-col gap-2 pl-4">
-                        <div class="text-[0.8rem] font-normal">
-                            Not Annotated
-                        </div>
-                        <div class="text-[1.4rem] font-semibold">
-                            {{ verdictInfo.notAnnotated ?? "--" }}
+                    <div class="flex gap-2 bg-card-third p-2 rounded-lg">
+                        <div
+                            class="max-w-1 flex-1 rounded-full bg-[#FF9D23]"
+                        ></div>
+                        <div class="flex flex-col gap-2 p-2">
+                            <div class="text-md font-normal">Not Annotated</div>
+                            <div class="text-3xl font-semibold">
+                                {{ verdictInfo?.notAnnotated ?? "- -" }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div
-                class="col-span-3 w-full flex justify-center items-center border-[1px] bg-card rounded-md"
+                class="col-span-3 w-full flex justify-center items-center bg-card rounded-lg shadow-md"
             >
                 <app-polar-area-chart
                     [series]="verdictChartData.series"
@@ -116,9 +132,9 @@
             </div>
         </div>
 
-		<!-- Table -->
+        <!-- Table -->
         <div
-            class="w-full max-h-[42rem] shadow-md bg-card overflow-hidden rounded-lg flex flex-col border"
+            class="w-full max-h-[41rem] bg-card overflow-hidden rounded-lg flex flex-col shadow-md"
         >
             <!-- filter container -->
             <div
@@ -203,7 +219,7 @@
                         </th>
                         <td mat-cell *matCellDef="let element">
                             <span
-                                class="rounded-md px-2 py-1"
+                                class="rounded-lg px-2 py-1"
                                 [ngClass]="{
 									'text-green-500 bg-green-500/20': element.verdict === 'AC',
 									'text-red-500 bg-red-500/20': element.verdict === 'RJ',
@@ -259,7 +275,7 @@
                         *matHeaderRowDef="displayedColumns"
                     ></tr>
                     <tr
-                        class="text-md even:bg-table-header cursor-pointer bg-card font-sans font-normal w-fit"
+                        class="text-md bg-card font-sans font-normal w-fit"
                         mat-row
                         *matRowDef="let row; columns: displayedColumns"
                     ></tr>
@@ -273,248 +289,7 @@
                                 class="w-full h-full flex justify-center items-center p-4 my-8"
                             >
                                 <div
-                                    class="text-[0.8rem] font-sans font-[500] text-table"
-                                >
-                                    {{ noDataMsg }}
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-
-            <!-- Paginator -->
-            <mat-paginator
-                #paginator
-                class="flex-shrink-0 w-full flex justify-end rounded bg-card"
-                [pageSizeOptions]="pageSizeOptions"
-                [pageSize]="pageSize"
-                [pageIndex]="pageIndex"
-                (page)="onPageChange($event)"
-                showFirstLastButtons
-            >
-            </mat-paginator>
-        </div>
-    </div>
-</div>
-
-<div class="hidden w-full h-full p-8 bg-[#205f951a]">
-    <div class="w-full h-auto rounded-lg p-4 flex flex-col gap-8">
-        <div
-            class="w-full h-12 rounded-lg flex justify-between items-center gap-4"
-        >
-            <div class="text-4xl font-semibold">Dashboard</div>
-
-            <div class="flex items-center gap-4">
-                <div class="font-mono font-medium text-md">FILTER BY</div>
-                <mat-form-field class="filter-dropdown w-36">
-                    <mat-select
-                        placeholder="Select"
-                        [value]="filterByList[0].key"
-                        (selectionChange)="onDateChange($event.value)"
-                    >
-                        @for (item of filterByList; track item.key) {
-                        <mat-option [value]="item.key">{{
-                            item.displayValue
-                        }}</mat-option>
-                        }
-                    </mat-select>
-                </mat-form-field>
-            </div>
-        </div>
-
-        <div class="w-full rounded-lg grid grid-cols-4 gap-10">
-            @for (item of cardList | keyvalue; track item.key) {
-            <div
-                class="w-full main-card rounded-2xl flex justify-between shadow-md flex-col p-4 bg-card"
-                [ngClass]="item.value.id || ''"
-            >
-                <div
-                    class="w-full flex flex-row justify-start items-start gap-2"
-                >
-                    <div
-                        class="rounded-full p-4 icon-container flex justify-center items-center"
-                        [ngClass]="item.value.id || ''"
-                    >
-                        <mat-icon
-                            class=""
-                            [svgIcon]="item.value.icon"
-                        ></mat-icon>
-                    </div>
-
-                    <div class="text-lg font-light flex flex-col gap-2">
-                        <div>{{ item.value.title }}</div>
-
-                        <div
-                            class="w-full h-1/2 flex justify-start items-center gap-2 rounded-lg"
-                        >
-                            <div class="text-4xl font-semibold">
-                                {{ item.value.value }}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            }
-        </div>
-
-        <div
-            class="w-full max-h-[42rem] shadow-md bg-card overflow-hidden rounded-3xl flex flex-col border"
-        >
-            <!-- filter container -->
-            <div
-                class="w-full flex justify-between items-center gap-2 p-4 flex-shrink-0"
-            >
-                <mat-form-field
-                    class="fuse-mat-dense w-64"
-                    [subscriptSizing]="'dynamic'"
-                >
-                    <mat-icon
-                        class="icon-size-5"
-                        matPrefix
-                        [svgIcon]="'heroicons_solid:magnifying-glass'"
-                    ></mat-icon>
-                    <input
-                        matInput
-                        [formControl]="searchInputControl"
-                        [autocomplete]="'off'"
-                        placeholder="Search"
-                    />
-                </mat-form-field>
-
-                <div class="flex items-center gap-4">
-                    <div class="font-mono font-medium text-md">FILTER BY</div>
-                    <mat-form-field class="filter-dropdown w-36">
-                        <mat-select
-                            placeholder="Select"
-                            [formControl]="verdictFilterControl"
-                        >
-                            @for (item of verdictFilterList; track item.key) {
-                            <mat-option [value]="item.key">{{
-                                item.displayValue
-                            }}</mat-option>
-                            }
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-
-            <!-- table container -->
-            <div class="flex-1 overflow-auto">
-                <table
-                    class="bg-card w-full"
-                    mat-table
-                    [dataSource]="dataSource"
-                    matSort
-                >
-                    <!-- Train Id Column -->
-                    <ng-container matColumnDef="trainId">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            TRAIN ID
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element.trainId ?? "- -" }}
-                        </td>
-                    </ng-container>
-
-                    <!-- Time And Date Column -->
-                    <ng-container matColumnDef="timeAndDate">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            TIME AND DATE
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element.timeAndDate ?? "- -" }}
-                        </td>
-                    </ng-container>
-
-                    <!-- Status Column -->
-                    <ng-container matColumnDef="status">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            STATUS
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element.status ?? "- -" }}
-                        </td>
-                    </ng-container>
-
-                    <!-- Verdict Column -->
-                    <ng-container matColumnDef="verdict">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            VERDICT
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            <span
-                                class="rounded-md px-2 py-1"
-                                [ngClass]="{
-									'text-green-500 bg-green-500/20': element.verdict === 'AC',
-									'text-red-500 bg-red-500/20': element.verdict === 'RJ',
-									'text-yellow-500 bg-yellow-500/20': element.verdict === 'NA',
-								}"
-                            >
-                                {{ VerdictMap.get(element.verdict) ?? "- -" }}
-                            </span>
-                        </td>
-                    </ng-container>
-
-                    <!-- Annotation Column -->
-                    <ng-container matColumnDef="annotation">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            ANNOTATION
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element.annotation ?? "- -" }}
-                        </td>
-                    </ng-container>
-
-                    <!-- Assignee Column -->
-                    <ng-container matColumnDef="assignee">
-                        <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            ASSIGNEE
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element.assignee ?? "- -" }}
-                        </td>
-                    </ng-container>
-
-                    <!-- Action Column -->
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef>ACTION</th>
-                        <td mat-cell *matCellDef="let element">
-                            <button
-                                mat-icon-button
-                                class="underline text-primary flex justify-center items-center rounded-full p-2 w-[2rem] h-[2rem] border border-primary"
-                            >
-                                <mat-icon
-                                    class="font-xs text-primary"
-                                    [svgIcon]="
-                                        'heroicons_outline:chevron-right'
-                                    "
-                                ></mat-icon>
-                            </button>
-                        </td>
-                    </ng-container>
-
-                    <tr
-                        class="bg-table-header text-table-header text-md font-sans font-normal sticky top-0 z-10"
-                        mat-header-row
-                        *matHeaderRowDef="displayedColumns"
-                    ></tr>
-                    <tr
-                        class="text-md h-[4rem] even:bg-table-header cursor-pointer bg-card font-sans font-normal w-fit"
-                        mat-row
-                        *matRowDef="let row; columns: displayedColumns"
-                    ></tr>
-
-                    <tr class="mat-row" *matNoDataRow>
-                        <td
-                            class="mat-cell bg-card"
-                            [attr.colspan]="displayedColumns.length"
-                        >
-                            <div
-                                class="w-full h-full flex justify-center items-center p-4 my-8"
-                            >
-                                <div
-                                    class="text-[0.8rem] font-sans font-[500] text-table"
+                                    class="text-md font-sans font-[500] text-table"
                                 >
                                     {{ noDataMsg }}
                                 </div>

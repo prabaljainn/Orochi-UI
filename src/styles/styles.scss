@@ -28,6 +28,8 @@ input[type="number"] {
 }
 
 .filter-dropdown {
+    height: 2.5rem;
+
     .mdc-text-field--outlined .mat-mdc-form-field-infix,
     .mdc-text-field--no-label .mat-mdc-form-field-infix {
         padding-top: 0.5rem !important;
@@ -165,54 +167,5 @@ input[type="number"] {
     100% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
-    }
-}
-.gradient-bg {
-    background: #369ec7;
-    background: radial-gradient(
-        circle,
-        rgba(54, 158, 199, 1) 0%,
-        rgba(49, 131, 163, 1) 50%,
-        rgba(38, 115, 145, 1) 100%
-    );
-}
-.main-card {
-    &.total {
-        border-left: 10px solid #c77c36;
-    }
-    &.accepted {
-        border-left: 10px solid #5cd03c;
-    }
-    &.rejected {
-        border-left: 10px solid #f86f5c;
-    }
-    &.not-annotated {
-        border-left: 10px solid #f2d741;
-    }
-    .icon-container {
-        &.total {
-            background-color: #c77c3650;
-            .mat-icon {
-                color: #c77c36;
-            }
-        }
-        &.accepted {
-            background-color: #5cd03c50;
-            .mat-icon {
-                color: #5cd03c;
-            }
-        }
-        &.rejected {
-            background-color: #f86f5c50;
-            .mat-icon {
-                color: #f86f5c;
-            }
-        }
-        &.not-annotated {
-            background-color: #f2d74150;
-            .mat-icon {
-                color: #f2d741;
-            }
-        }
     }
 }

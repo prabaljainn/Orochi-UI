@@ -41,10 +41,9 @@ import { PolarAreaChartComponent } from 'app/widgets/polar-area-chart/polar-area
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,
-        KeyValuePipe,
         NgClass,
         MatDatepickerModule,
-		PolarAreaChartComponent,
+        PolarAreaChartComponent,
     ],
     templateUrl: './dashboard.component.html',
     encapsulation: ViewEncapsulation.None,
@@ -82,6 +81,10 @@ export class DashboardComponent implements AfterViewInit, OnInit {
             key: 'last7days',
             displayValue: 'Last 7 days',
         },
+		{
+            key: 'last30days',
+            displayValue: 'Last 30 days',
+        },
         {
             key: 'custom',
             displayValue: 'Custom Date Range',
@@ -112,44 +115,17 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     );
     VerdictMap = VerdictMap;
 
-	verdictInfo = {
-		total : 0,
-		accepted : 0,
-		rejected : 0,
-		notAnnotated : 0,
-	}
+    verdictInfo = {
+        total: 0,
+        accepted: 0,
+        rejected: 0,
+        notAnnotated: 0,
+    };
 
-	verdictChartData = {
-		series: [],
-		labels: ['Total', 'Accepted', 'Rejected', 'Not Annotated'],
-		colors: ['#4D96FF', '#6BCB77', '#EB5353', '#FF9D23'],
-	}
-
-    cardList: any = {
-        totoal: {
-            title: 'Total',
-            value: 'N/A',
-            id: 'total',
-            icon: 'sudocode:total',
-        },
-        accepted: {
-            title: 'Accepted',
-            id: 'accepted',
-            value: 100,
-            icon: 'sudocode:accepted',
-        },
-        rejected: {
-            title: 'Rejected',
-            id: 'rejected',
-            value: 100,
-            icon: 'sudocode:rejected',
-        },
-        notAnnotated: {
-            title: 'Not Annotated',
-            id: 'not-annotated',
-            value: 100,
-            icon: 'sudocode:not-verified',
-        },
+    verdictChartData = {
+        series: [],
+        labels: ['Total', 'Accepted', 'Rejected', 'Not Annotated'],
+        colors: ['#4D96FF', '#6BCB77', '#EB5353', '#FF9D23'],
     };
 
     timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -176,6 +152,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
 
     ngOnInit(): void {
         this._setupFormControls();
+        this.getTasksSummary(this.fromTime, this.toTime);
         this.getTasks(
             this.pageIndex,
             this.pageSize,
@@ -214,15 +191,16 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         this.range.valueChanges.subscribe((value) => {
             if (value.start && value.end) {
                 const formattedStart = DateTime.fromJSDate(value.start)
-					.startOf('day')
+                    .startOf('day')
                     .setZone(this.timeZone)
                     .toISO();
 
                 const formattedEnd = DateTime.fromJSDate(value.end)
-					.endOf('day')
+                    .endOf('day')
                     .setZone(this.timeZone)
                     .toISO();
 
+				this.getTasksSummary(formattedStart, formattedEnd);
                 this.getTasks(
                     this.pageIndex,
                     this.pageSize,
@@ -234,6 +212,25 @@ export class DashboardComponent implements AfterViewInit, OnInit {
             }
         });
     }
+
+	getTasksSummary(fromTime: string, toTime: string) {
+		this._trainAnalyticsService.getTasksSummary(fromTime, toTime).subscribe({
+			next: (res: any) => {
+				let summary = res?.summary;
+				this.verdictInfo.total = summary?.total_tasks;
+				this.verdictInfo.accepted = summary?.ac_tasks;
+				this.verdictInfo.rejected = summary?.rj_tasks;
+				this.verdictInfo.notAnnotated = summary?.na_tasks;
+
+				this.verdictChartData.series = [
+					summary?.total_tasks,
+					summary?.ac_tasks,
+					summary?.rj_tasks,
+					summary?.na_tasks,
+				];
+			},
+		});
+	}
 
     getTasks(
         page: number,
@@ -256,19 +253,6 @@ export class DashboardComponent implements AfterViewInit, OnInit {
             )
             .subscribe({
                 next: (res: any) => {
-                    let summary = res?.analytics?.summary;
-                    this.cardList.totoal.value = summary?.total_tasks;
-                    this.cardList.accepted.value = summary?.ac_tasks;
-                    this.cardList.rejected.value = summary?.rj_tasks;
-                    this.cardList.notAnnotated.value = summary?.na_tasks;
-
-					this.verdictInfo.total = summary?.total_tasks;
-					this.verdictInfo.accepted = summary?.ac_tasks;
-					this.verdictInfo.rejected = summary?.rj_tasks;
-					this.verdictInfo.notAnnotated = summary?.na_tasks;
-
-					this.verdictChartData.series = [summary?.total_tasks, summary?.ac_tasks, summary?.rj_tasks, summary?.na_tasks];
-
                     let data = [];
                     res?.results?.forEach((result: any) => {
                         data.push({
@@ -290,7 +274,8 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                     });
                     this.dataSource = new MatTableDataSource(data);
                     setTimeout(() => {
-                        this.paginator.length = summary?.total_tasks || 0;
+						let totalTasks = res?.analytics?.summary?.total_tasks || 0;
+                        this.paginator.length = totalTasks;
                         this._cdr.detectChanges();
                     }, 100);
                 },
@@ -333,8 +318,19 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                 .endOf('day')
                 .setZone(this.timeZone)
                 .toISO();
+        } else if (value === 'last30days') {
+            this.fromTime = DateTime.now()
+                .minus({ days: 30 })
+                .startOf('day')
+                .setZone(this.timeZone)
+                .toISO();
+            this.toTime = DateTime.now()
+                .endOf('day')
+                .setZone(this.timeZone)
+                .toISO();
         }
 
+		this.getTasksSummary(this.fromTime, this.toTime);
         this.getTasks(
             this.pageIndex,
             this.pageSize,
