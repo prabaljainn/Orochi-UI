@@ -20,7 +20,7 @@ export class FrameApiService {
         quality: string = 'compressed'
     ) {
         return this.http.get(
-            `/api/jobs/${jobId}/data?number=${frameNumber.toString()}&type=${type}&quality=${quality}&org=`,
+            `${this.baseUrl}api/jobs/${jobId}/data?number=${frameNumber.toString()}&type=${type}&quality=${quality}&org=`,
             {
                 withCredentials: true,
                 responseType: 'blob',
@@ -30,7 +30,7 @@ export class FrameApiService {
 
     getMeta(job_id: number, frame_number: number): Observable<FrameData> {
         return this.http.get<FrameData>(
-            `/api/custom/jobs/${job_id}/frame/${frame_number}`
+            `${this.baseUrl}api/custom/jobs/${job_id}/frame/${frame_number}`
         );
     }
 }
