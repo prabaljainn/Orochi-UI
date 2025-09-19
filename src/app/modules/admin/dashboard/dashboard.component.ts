@@ -24,10 +24,11 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { TrainAnalyticsService } from 'app/services/train-analytics.service';
 import { DateTime } from 'luxon';
 import { debounceTime } from 'rxjs';
-import { KeyValuePipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { PolarAreaChartComponent } from 'app/widgets/polar-area-chart/polar-area-chart.component';
 import { Router } from '@angular/router';
+import { TopBarComponent } from 'app/widgets/top-bar/top-bar.component';
 
 @Component({
     selector: 'dashboard',
@@ -45,6 +46,7 @@ import { Router } from '@angular/router';
         NgClass,
         MatDatepickerModule,
         PolarAreaChartComponent,
+        TopBarComponent,
     ],
     templateUrl: './dashboard.component.html',
     encapsulation: ViewEncapsulation.None,
@@ -91,7 +93,6 @@ export class DashboardComponent implements AfterViewInit, OnInit {
             displayValue: 'Custom Date Range',
         },
     ];
-    selectedFilterBy = signal<string>(this.filterByList[0].key as string);
 
     verdictFilterList: Array<Dropdown> = [
         {
@@ -132,11 +133,6 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
     fromTime = DateTime.now().startOf('day').setZone(this.timeZone).toISO();
     toTime = DateTime.now().endOf('day').setZone(this.timeZone).toISO();
-
-    range: FormGroup = new FormGroup({
-        start: new FormControl<Date | null>(null),
-        end: new FormControl<Date | null>(null),
-    });
 
     /**
      * Constructor
@@ -188,30 +184,6 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                 value,
                 this.searchInputControl.value
             );
-        });
-
-        this.range.valueChanges.subscribe((value) => {
-            if (value.start && value.end) {
-                const formattedStart = DateTime.fromJSDate(value.start)
-                    .startOf('day')
-                    .setZone(this.timeZone)
-                    .toISO();
-
-                const formattedEnd = DateTime.fromJSDate(value.end)
-                    .endOf('day')
-                    .setZone(this.timeZone)
-                    .toISO();
-
-                this.getTasksSummary(formattedStart, formattedEnd);
-                this.getTasks(
-                    this.pageIndex,
-                    this.pageSize,
-                    formattedStart,
-                    formattedEnd,
-                    this.verdictFilterControl.value,
-                    this.searchInputControl.value
-                );
-            }
         });
     }
 
@@ -289,8 +261,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
             });
     }
 
-    onDateChange(value: any) {
-        this.selectedFilterBy.set(value);
+    onFilterByChange(value: any) {
         if (value === 'custom') {
             return;
         }
@@ -336,6 +307,21 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                 .setZone(this.timeZone)
                 .toISO();
         }
+
+        this.getTasksSummary(this.fromTime, this.toTime);
+        this.getTasks(
+            this.pageIndex,
+            this.pageSize,
+            this.fromTime,
+            this.toTime,
+            this.verdictFilterControl.value,
+            this.searchInputControl.value
+        );
+    }
+
+    onDateRangeChange(value: any) {
+        this.fromTime = value.start;
+        this.toTime = value.end;
 
         this.getTasksSummary(this.fromTime, this.toTime);
         this.getTasks(

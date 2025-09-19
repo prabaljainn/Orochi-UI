@@ -1,59 +1,13 @@
 <div class="flex flex-col flex-auto w-full min-w-0">
     <!-- Header -->
-    <div
-        class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:-b bg-card dark:bg-app-bar print:hidden"
-    >
-        <div class="flex items-center pr-2 space-x-2">
-            <div class="text-xl text-default font-semibold">Dashboard</div>
-        </div>
-        <div class="flex items-center pl-2 ml-auto space-x-0.5 sm:space-x-2">
-            <mat-form-field
-                class="filter-dropdown w-36 h-10"
-                appearance="outline"
-            >
-                <mat-select
-                    placeholder="Filter By"
-                    [value]="selectedFilterBy()"
-                    (selectionChange)="onDateChange($event.value)"
-                >
-                    @for (item of filterByList; track item.key) {
-                    <mat-option [value]="item.key">{{
-                        item.displayValue
-                    }}</mat-option>
-                    }
-                </mat-select>
-            </mat-form-field>
-
-            @if (selectedFilterBy() === 'custom') {
-            <mat-form-field
-                class="filter-dropdown w-52 h-10"
-                appearance="outline"
-            >
-                <!-- <mat-label>Enter a date range</mat-label> -->
-                <mat-date-range-input
-                    [rangePicker]="picker"
-                    [formGroup]="range"
-                >
-                    <input
-                        matStartDate
-                        formControlName="start"
-                        placeholder="Start date"
-                    />
-                    <input
-                        matEndDate
-                        formControlName="end"
-                        placeholder="End date"
-                    />
-                </mat-date-range-input>
-                <mat-datepicker-toggle
-                    matIconSuffix
-                    [for]="picker"
-                ></mat-datepicker-toggle>
-                <mat-date-range-picker #picker></mat-date-range-picker>
-            </mat-form-field>
-            }
-        </div>
-    </div>
+    <app-top-bar
+        [title]="'Dashboard'"
+        [filterByList]="filterByList"
+        [showDateRange]="true"
+        [timeZone]="timeZone"
+        (onDateRangeChange)="onDateRangeChange($event)"
+        (onFilterByChange)="onFilterByChange($event)"
+    ></app-top-bar>
 
     <!-- Content -->
     <div class="flex flex-col flex-auto gap-4 p-6">

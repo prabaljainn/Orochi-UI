@@ -1,0 +1,290 @@
+<div class="frame-annotator-container">
+    <!-- Loading State -->
+    @if (loading) {
+    <div class="loading-overlay">
+        <div class="spinner">Loading frame...</div>
+    </div>
+    }
+
+    <!-- Error State -->
+    @if (error) {
+    <div class="error-message">
+        {{ error }}
+    </div>
+    }
+
+    <!-- Main Content -->
+    @if (frameData && !loading) {
+    <div class="annotation-viewer">
+        <!-- Base Image -->
+        <div
+            class="image-container"
+            [style.width.px]="displayWidth"
+            [style.height.px]="displayHeight"
+        >
+            <img
+                [src]="frameImageUrl"
+                [style.width.px]="displayWidth"
+                [style.height.px]="displayHeight"
+                class="base-image"
+                alt="Frame {{ frameNumber() }}"
+            />
+
+            <!-- SVG Annotation Overlay -->
+            <svg
+                class="annotation-overlay"
+                [attr.width]="displayWidth"
+                [attr.height]="displayHeight"
+                [attr.viewBox]="'0 0 ' + displayWidth + ' ' + displayHeight"
+            >
+                <!-- Rectangles -->
+                <g class="rectangles-group">
+                    @for (shape of rectangles; track trackByShapeId) {
+                    <g
+                        [attr.data-shape-id]="shape.id"
+                        [attr.data-label]="shape.label"
+                    >
+                        <rect
+                            [attr.x]="getRectangleProps(shape).x"
+                            [attr.y]="getRectangleProps(shape).y"
+                            [attr.width]="getRectangleProps(shape).width"
+                            [attr.height]="getRectangleProps(shape).height"
+                            [attr.stroke]="shape.color"
+                            [attr.stroke-width]="2"
+                            [attr.fill]="shape.color"
+                            [attr.fill-opacity]="0.1"
+                            [class.occluded]="shape.occluded"
+                            class="annotation-rectangle"
+                        />
+
+                        <!-- Rectangle Label -->
+                        <text
+                            [attr.x]="getRectangleProps(shape).x"
+                            [attr.y]="getRectangleProps(shape).y - 5"
+                            [attr.fill]="shape.color"
+                            class="annotation-label"
+                        >
+                            {{ shape.label }}
+                        </text>
+                    </g>
+                    }
+                </g>
+
+                <!-- Polygons -->
+                <g class="polygons-group">
+                    @for (shape of polygons; track trackByShapeId) {
+                    <g [attr.data-shape-id]="shape.id">
+                        <path
+                            [attr.d]="shape.svgPath"
+                            [attr.stroke]="shape.color"
+                            [attr.stroke-width]="2"
+                            [attr.fill]="shape.color"
+                            [attr.fill-opacity]="0.1"
+                            [class.occluded]="shape.occluded"
+                            class="annotation-polygon"
+                        />
+
+                        <!-- Polygon Label -->
+                        <text
+                            [attr.x]="shape.scaledPoints[0]"
+                            [attr.y]="shape.scaledPoints[1] - 5"
+                            [attr.fill]="shape.color"
+                            class="annotation-label"
+                        >
+                            {{ shape.label }}
+                        </text>
+                    </g>
+                    }
+                </g>
+
+                <!-- Polylines -->
+                <g class="polylines-group">
+                    @for(shape of polylines; track trackByShapeId) {
+                    <g [attr.data-shape-id]="shape.id">
+                        <path
+                            [attr.d]="shape.svgPath"
+                            [attr.stroke]="shape.color"
+                            [attr.stroke-width]="2"
+                            [attr.fill]="none"
+                            [class.occluded]="shape.occluded"
+                            class="annotation-polyline"
+                        />
+
+                        <!-- Polyline Label -->
+                        <text
+                            [attr.x]="shape.scaledPoints[0]"
+                            [attr.y]="shape.scaledPoints[1] - 5"
+                            [attr.fill]="shape.color"
+                            class="annotation-label"
+                        >
+                            {{ shape.label }}
+                        </text>
+                    </g>
+                    }
+                </g>
+
+                <!-- Points -->
+                <g class="points-group">
+                    @for (shape of points; track trackByShapeId) {
+                    <g [attr.data-shape-id]="shape.id">
+                        @for (point of getPointPairs(shape.scaledPoints); let i
+                        = $index; track trackByShapeId) {
+                        <g>
+                            <circle
+                                [attr.cx]="point.x"
+                                [attr.cy]="point.y"
+                                [attr.r]="4"
+                                [attr.fill]="shape.color"
+                                [attr.stroke]="'white'"
+                                [attr.stroke-width]="1"
+                                [class.occluded]="shape.occluded"
+                                class="annotation-point"
+                            />
+
+                            <!-- Point number -->
+                            <text
+                                [attr.x]="point.x + 8"
+                                [attr.y]="point.y + 4"
+                                [attr.fill]="shape.color"
+                                class="point-number"
+                            >
+                                {{ i + 1 }}
+                            </text>
+                        </g>
+                        }
+
+                        <!-- Points Label -->
+                        <text
+                            [attr.x]="shape.scaledPoints[0]"
+                            [attr.y]="shape.scaledPoints[1] - 10"
+                            [attr.fill]="shape.color"
+                            class="annotation-label"
+                        >
+                            {{ shape.label }}
+                        </text>
+                    </g>
+                    }
+                </g>
+
+                <!-- Ellipses -->
+                <g class="ellipses-group">
+                    @for (shape of ellipses; track trackByShapeId) {
+                    <g [attr.data-shape-id]="shape.id">
+                        <ellipse
+                            [attr.cx]="getEllipseProps(shape).cx"
+                            [attr.cy]="getEllipseProps(shape).cy"
+                            [attr.rx]="getEllipseProps(shape).rx"
+                            [attr.ry]="getEllipseProps(shape).ry"
+                            [attr.stroke]="shape.color"
+                            [attr.stroke-width]="2"
+                            [attr.fill]="shape.color"
+                            [attr.fill-opacity]="0.1"
+                            [class.occluded]="shape.occluded"
+                            class="annotation-ellipse"
+                        />
+
+                        <!-- Ellipse Label -->
+                        <text
+                            [attr.x]="getEllipseProps(shape).cx"
+                            [attr.y]="
+                                getEllipseProps(shape).cy -
+                                getEllipseProps(shape).ry -
+                                5
+                            "
+                            [attr.fill]="shape.color"
+                            [attr.text-anchor]="middle"
+                            class="annotation-label"
+                        >
+                            {{ shape.label }}
+                        </text>
+                    </g>
+                    }
+                </g>
+
+                <!-- Cuboids -->
+                <g class="cuboids-group">
+                    @for (shape of cuboids; track trackByShapeId) {
+                    <g [attr.data-shape-id]="shape.id">
+                        <path
+                            [attr.d]="shape.svgPath"
+                            [attr.stroke]="shape.color"
+                            [attr.stroke-width]="2"
+                            [attr.fill]="none"
+                            [class.occluded]="shape.occluded"
+                            class="annotation-cuboid"
+                        />
+
+                        <!-- Cuboid Label -->
+                        <text
+                            [attr.x]="shape.scaledPoints[0]"
+                            [attr.y]="shape.scaledPoints[1] - 5"
+                            [attr.fill]="shape.color"
+                            class="annotation-label"
+                        >
+                            {{ shape.label }}
+                        </text>
+                    </g>
+                    }
+                </g>
+
+                <!-- Track Indicators (for tracked shapes) -->
+                <g class="track-indicators">
+                    @for (track of scaledTracks; track trackByTrackId) {
+                    <g>
+                        <circle
+                            [attr.cx]="track.scaledPoints[0]"
+                            [attr.cy]="track.scaledPoints[1]"
+                            [attr.r]="6"
+                            [attr.fill]="track.color"
+                            [attr.stroke]="white"
+                            [attr.stroke-width]="2"
+                            class="track-indicator"
+                        >
+                            <title>Track {{ track.trackId }}</title>
+                        </circle>
+
+                        <text
+                            [attr.x]="track.scaledPoints[0]"
+                            [attr.y]="track.scaledPoints[1] + 4"
+                            [attr.text-anchor]="middle"
+                            [attr.fill]="white"
+                            class="track-id"
+                        >
+                            {{ track.trackId }}
+                        </text>
+                    </g>
+                    }
+                </g>
+            </svg>
+
+            <!-- Frame Info Overlay -->
+            <div class="frame-info">
+                <span>Frame: {{ frameNumber() }}</span>
+                <span>Annotations: {{ frameData.annotation_count }}</span>
+                <span
+                    >Size: {{ frameData.frame_meta.width }}x{{
+                        frameData.frame_meta.height
+                    }}</span
+                >
+            </div>
+        </div>
+
+        <!-- Tags Display -->
+        @if (frameData.annotations.tags.length > 0) {
+        <div class="tags-container">
+            <h4>Frame Tags:</h4>
+            <div class="tags-list">
+                @for (tag of frameData.annotations.tags; track trackByTagId) {
+                <span
+                    class="tag-chip"
+                    [style.background-color]="getLabelColor(tag.label)"
+                >
+                    {{ tag.label }}
+                </span>
+                }
+            </div>
+        </div>
+        }
+    </div>
+    }
+</div>

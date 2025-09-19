@@ -1,19 +1,20 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
+import { API_BASE_HREF } from './base-url.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TrainAnalyticsService {
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, @Inject(API_BASE_HREF) private baseUrl: string) {}
 
     getTasksSummary(fromTime: string, toTime: string) {
         const params = new HttpParams()
             .set('from_time', fromTime)
             .set('to_time', toTime);
 
-        return this.http.get('/api/custom/tasks-summary', { params }).pipe(
+        return this.http.get(this.baseUrl + 'api/custom/tasks-summary', { params }).pipe(
             catchError((err) => {
                 console.error('Error: Failed to get tasks summary', err);
                 return throwError(() => err);
@@ -39,7 +40,7 @@ export class TrainAnalyticsService {
             .set('to_time', toTime)
             .set('include_analytics', includeAnalytics);
 
-        return this.http.get('/api/custom/tasks-paginated', { params }).pipe(
+        return this.http.get(this.baseUrl + 'api/custom/tasks-paginated', { params }).pipe(
             catchError((err) => {
                 console.error(
                     'Error: Failed to get train analytics tasks',
@@ -55,7 +56,7 @@ export class TrainAnalyticsService {
             .set('project_id', projectId)
             .set('task_id', taskId);
 
-        return this.http.get('/api/custom/task-analysis', { params }).pipe(
+        return this.http.get(this.baseUrl + 'api/custom/task-analysis', { params }).pipe(
             catchError((err) => {
                 console.error('Error: Failed to get task analysis', err);
                 return throwError(() => err);

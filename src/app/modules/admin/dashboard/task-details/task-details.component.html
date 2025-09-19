@@ -1,1 +1,13 @@
-<p>task-details works!</p>
+<div class="flex flex-col flex-auto w-full min-w-0">
+    <!-- Header -->
+    <app-top-bar [title]="'Task Details'"></app-top-bar>
+
+    <!-- Content -->
+    <div class="flex flex-col flex-auto gap-4 p-6">
+        <app-frame-annotator
+            [jobId]="jobId"
+            [frameNumber]="currentFrame"
+        >
+        </app-frame-annotator>
+    </div>
+</div>
