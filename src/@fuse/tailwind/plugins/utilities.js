@@ -31,12 +31,44 @@ module.exports = plugin(({
                 '--tw-text-opacity': '1 !important',
                 color              : 'rgba(var(--fuse-text-disabled-rgb), var(--tw-text-opacity)) !important',
             },
+			'.text-table-header' : {
+				'--tw-text-opacity': '1 !important',
+				color              : 'rgba(var(--fuse-text-table-header-rgb), var(--tw-text-opacity)) !important',
+			},
+			'.text-table' : {
+				'--tw-text-opacity': '1 !important',
+				color              : 'rgba(var(--fuse-text-table-rgb), var(--tw-text-opacity)) !important',
+			},
             '.divider'        : {
                 color: 'var(--fuse-divider) !important',
+            },
+			'.bg-app-bar' : {
+                '--tw-bg-opacity': '1 !important',
+                backgroundColor  : 'rgba(var(--fuse-bg-app-bar-rgb), var(--tw-bg-opacity)) !important',
             },
             '.bg-card'        : {
                 '--tw-bg-opacity': '1 !important',
                 backgroundColor  : 'rgba(var(--fuse-bg-card-rgb), var(--tw-bg-opacity)) !important',
+            },
+            '.bg-card-secondary' : {
+                '--tw-bg-opacity': '1 !important',
+                backgroundColor  : 'rgba(var(--fuse-bg-card-secondary-rgb), var(--tw-bg-opacity)) !important',
+            },
+            '.bg-card-third' : {
+                '--tw-bg-opacity': '1 !important',
+                backgroundColor  : 'rgba(var(--fuse-bg-card-third-rgb), var(--tw-bg-opacity)) !important',
+            },
+            '.bg-table-header' : {
+                '--tw-bg-opacity': '1 !important',
+                backgroundColor  : 'rgba(var(--fuse-bg-table-header-rgb), var(--tw-bg-opacity)) !important',
+            },
+            '.bg-input' : {
+                '--tw-bg-opacity': '1 !important',
+                backgroundColor  : 'rgba(var(--fuse-bg-input-rgb), var(--tw-bg-opacity)) !important',
+            },
+            '.bg-icon' : {
+                '--tw-bg-opacity': '1 !important',
+                backgroundColor  : 'rgba(var(--fuse-bg-icon-rgb), var(--tw-bg-opacity)) !important',
             },
             '.bg-default'     : {
                 '--tw-bg-opacity': '1 !important',

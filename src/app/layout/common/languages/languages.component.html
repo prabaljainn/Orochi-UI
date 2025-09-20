@@ -1,8 +1,21 @@
 <!-- Button -->
-<button
+<!-- <button
     mat-icon-button
     [matMenuTriggerFor]="languages">
     <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: activeLang}"></ng-container>
+</button> -->
+
+<button
+	mat-icon-button
+	[matMenuTriggerFor]="languages">
+	<span class="relative">
+		<div>
+			<mat-icon
+				class="cursor-pointer text-[#94A3B8] icon-size-5"
+				[svgIcon]="'heroicons_solid:language'"
+			></mat-icon>
+		</div>
+	</span>
 </button>
 
 <!-- Language menu -->

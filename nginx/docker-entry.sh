@@ -1,17 +1,24 @@
 #!/usr/bin/env sh
-mkdir -p /usr/share/nginx/html/assets
-if [ "$BOX" = "true" ]; then
-	sed -i.bak -r "s/base href=\"(.*)\"/base  href=\"\/$PREFIX\1\"/" /usr/share/nginx/html/index.html
-	sed -i.bak -r "s/base href=\"(.*)\"/base  href=\"\/$PREFIX\1\"/" /usr/share/nginx/html/en/index.html
-	sed -i.bak -r "s/base href=\"(.*)\"/base  href=\"\/$PREFIX\1\"/" /usr/share/nginx/html/es/index.html
-	sed -i.bak -r "s/base href=\"(.*)\"/base  href=\"\/$PREFIX\1\"/" /usr/share/nginx/html/ja/index.html
-	sed -i.bak -r "s/base href=\"(.*)\"/base  href=\"\/$PREFIX\1\"/" /usr/share/nginx/html/ar/index.html
-	sed -i.bak -r "s/base href=\"(.*)\"/base  href=\"\/$PREFIX\1\"/" /usr/share/nginx/html/te/index.html
-	envsubst '$PREFIX $NGINX_HOST $NGINX_PORT' <box.conf >/etc/nginx/nginx.conf
-	envsubst '$EVENTS $CALIBRATION $LOGINLOGO $MENULOGO $TITLE $EXPERIMENTAL $MENUBACKGROUND $MENUCOLOR' <vars.json.template >/usr/share/nginx/html/assets/vars.json
-else
-	envsubst '$NGINX_HOST $NGINX_PORT' <default.conf >/etc/nginx/nginx.conf
-	envsubst '$EVENTS $CALIBRATION $LOGINLOGO $MENULOGO $TITLE $EXPERIMENTAL $MENUBACKGROUND $MENUCOLOR' <vars.json.template >/usr/share/nginx/html/assets/vars.json
-fi
 
+# Simple entry script for /dashboard/en/ structure
+# No BOX mode, no PREFIX - just simple /dashboard/en/
+
+echo "Starting Orochi UI with /dashboard/en/ structure..."
+
+# Create necessary directories
+mkdir -p /usr/share/nginx/html/assets
+
+# Always use the standard dashboard structure configuration
+cp /nginx-dashboard-structure.conf /etc/nginx/nginx.conf
+echo "Using standard /dashboard/en/ structure"
+
+# Create a simple config file for the frontend
+cat > /usr/share/nginx/html/assets/config.json << EOF
+{
+  "apiUrl": "/api",
+  "environment": "production"
+}
+EOF
+
+echo "Starting nginx..."
 nginx -g "daemon off;"

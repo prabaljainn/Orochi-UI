@@ -3,20 +3,34 @@
 
 <!-- Navigation -->
 <fuse-vertical-navigation
-    class="dark bg-gray-900 print:hidden"
+    class="dark group print:hidden"
+    [ngClass]="isDarkMode() ? 'bg-[#0B0C10]' : 'bg-[#182230]'"
     [appearance]="navigationAppearance"
     [mode]="isScreenSmall ? 'over' : 'side'"
     [name]="'mainNavigation'"
     [navigation]="navigation.default"
-    [opened]="!isScreenSmall">
+    [opened]="!isScreenSmall"
+>
     <!-- Navigation header hook -->
     <ng-container fuseVerticalNavigationContentHeader>
         <!-- Logo -->
-        <div class="flex items-center justify-center h-20">
+        <div class="flex items-center justify-center h-20 relative">
             <img
                 class="w-8"
                 src="assets/images/logo/logo.svg"
-                alt="Logo image">
+                alt="Logo image"
+            />
+
+            <button
+                mat-icon-button
+                (click)="toggleNavigationAppearance()"
+                class="hidden group-hover:inline-flex absolute right-4 top-1/2 -translate-y-1/2"
+            >
+                <mat-icon
+                    class="text-white icon-size-5"
+                    [svgIcon]="'heroicons_outline:arrows-right-left'"
+                ></mat-icon>
+            </button>
         </div>
     </ng-container>
 </fuse-vertical-navigation>
@@ -25,7 +39,7 @@
 <div class="flex flex-col flex-auto w-full min-w-0">
 
     <!-- Header -->
-    <div class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
+    <div class="relative hidden flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:border-b bg-card dark:bg-transparent print:hidden">
         <div class="flex items-center pr-2 space-x-2">
             <!-- Navigation toggle button -->
             <button
@@ -43,7 +57,7 @@
         </div>
         <!-- Components -->
         <div class="flex items-center pl-2 ml-auto space-x-0.5 sm:space-x-2">
-            <languages></languages>
+            <!-- <languages></languages>
             <fuse-fullscreen class="hidden md:block"></fuse-fullscreen>
             <search [appearance]="'bar'"></search>
             <shortcuts></shortcuts>
@@ -55,23 +69,23 @@
                 (click)="quickChat.toggle()">
                 <mat-icon [svgIcon]="'heroicons_outline:chat-bubble-left-right'"></mat-icon>
             </button>
-            <user></user>
+            <user></user> -->
         </div>
     </div>
 
     <!-- Content -->
-    <div class="flex flex-col flex-auto">
+    <div class="flex flex-col flex-auto relative">
         <!-- *ngIf="true" hack is required here for router-outlet to work correctly.
              Otherwise, layout changes won't be registered and the view won't be updated! -->
         <router-outlet *ngIf="true"></router-outlet>
     </div>
 
     <!-- Footer -->
-    <div class="relative flex flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
+    <div class="relative hidden flex-0 items-center justify-start w-full h-14 px-4 md:px-6 z-49 border-t bg-card dark:bg-transparent print:hidden">
         <span class="font-medium text-secondary">Fuse &copy; {{currentYear}}</span>
     </div>
 
 </div>
 
 <!-- Quick chat -->
-<quick-chat #quickChat="quickChat"></quick-chat>
+<!-- <quick-chat #quickChat="quickChat"></quick-chat> -->
