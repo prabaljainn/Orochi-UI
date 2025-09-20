@@ -30,8 +30,8 @@ export const appConfig: ApplicationConfig = {
             withPreloading(PreloadAllModules),
             withInMemoryScrolling({scrollPositionRestoration: 'enabled'}),
         ),
+		{ provide: API_BASE_HREF, useFactory: getBaseLocation },
         { provide: API_BASE_HREF, useFactory: getApiBase },
-
         // Material Date Adapter
         {
             provide : DateAdapter,
