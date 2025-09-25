@@ -1,13 +1,109 @@
 <div class="flex flex-col flex-auto w-full min-w-0">
     <!-- Header -->
-    <app-top-bar [title]="'Task Details'"></app-top-bar>
+    <app-top-bar
+        class="sticky top-0 z-50"
+        [title]="'Task Details'"
+        [showBackButton]="true"
+        (onBackButtonClick)="onBackButtonClick()"
+    ></app-top-bar>
 
     <!-- Content -->
-    <div class="flex flex-col flex-auto gap-4 p-6">
-        <app-frame-annotator
-            [jobId]="jobId"
-            [frameNumber]="currentFrame"
-        >
-        </app-frame-annotator>
+    <div class="flex flex-auto gap-4 p-6">
+        <div class="w-3/4 h-full flex flex-col gap-4">
+            <div class="w-full h-3/4 bg-card shadow-md rounded-lg p-2 relative">
+                <div
+                    class="w-full h-full rounded-lg overflow-hidden flex items-center justify-center"
+                    #frameAnnotator
+                >
+                    @if (selectedFrames().length > 0) {
+                    <app-frame-annotator
+                        [jobId]="jobId()"
+                        [frameNumber]="currentFrame()"
+                        [labelNameToLabelMap]="labelNameToLabelMap()"
+                    >
+                    </app-frame-annotator>
+                    } @else {
+                    <div class="w-full h-full flex items-center justify-center">
+                        <span class="text-default text-base font-medium"
+                            >No Annotated Frames.</span
+                        >
+                    </div>
+                    }
+                </div>
+
+                <button
+                    class="absolute top-1/2 -translate-y-1/2 left-2 bg-card-secondary rounded-full p-2 w-10 h-10 flex justify-center items-center hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    (click)="getPreviousFrame()"
+                    [disabled]="currentFrame() === selectedFrames()[0]"
+                >
+                    <mat-icon
+                        class="icon-size-4 stroke-current text-primary"
+                        [svgIcon]="'heroicons_outline:chevron-left'"
+                    ></mat-icon>
+                </button>
+
+                <button
+                    class="absolute top-1/2 -translate-y-1/2 right-2 bg-card-secondary rounded-full p-2 w-10 h-10 flex justify-center items-center hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    (click)="getNextFrame()"
+                    [disabled]="
+                        currentFrame() ===
+                        selectedFrames()[selectedFrames().length - 1]
+                    "
+                >
+                    <mat-icon
+                        class="icon-size-4 stroke-current text-primary"
+                        [svgIcon]="'heroicons_outline:chevron-right'"
+                    ></mat-icon>
+                </button>
+            </div>
+
+            <div class="w-full h-1/4 bg-card shadow-md rounded-lg p-2">
+                <fieldset class="border rounded-lg p-4 w-full h-full">
+                    <legend class="px-2 text-md font-medium text-default">
+                        Comments
+                    </legend>
+                    <div class="text-default">Some comments here...</div>
+                </fieldset>
+            </div>
+        </div>
+
+        <div class="w-1/4 h-full flex flex-col gap-4">
+            <div class="w-full h-1/4 bg-card shadow-md rounded-lg p-2">
+                <fieldset class="border rounded-lg p-4 w-full h-full">
+                    <legend class="px-2 text-md font-medium text-default">
+                        Details
+                    </legend>
+                    <div class="text-default">Some details here...</div>
+                </fieldset>
+            </div>
+
+            <div class="w-full h-3/4 bg-card shadow-md rounded-lg p-2">
+                <fieldset class="border rounded-lg p-4 w-full h-full">
+                    <legend class="px-2 text-md font-medium text-default">
+                        Labels
+                    </legend>
+                    <div class="flex flex-wrap gap-2">
+                        @for (label of labelNameToLabelMap() | keyvalue; track
+                        label) {
+                        <button
+                            class="px-2 py-1 rounded-md text-white bg-opacity-40 flex items-center justify-center gap-2"
+                            [style.background]="label.value.label_color"
+                            (click)="onLabelClick(label.value)"
+                        >
+                            @if
+                            (selectedLabels().includes(label.value.label_name))
+                            {
+                            <mat-icon
+                                [svgIcon]="'heroicons_outline:check'"
+                                class="icon-size-4 stroke-current text-white"
+                            ></mat-icon>
+                            }
+                            <span>{{ label.value.label_name }}</span>
+                        </button>
+                        }
+                    </div>
+                </fieldset>
+            </div>
+        </div>
     </div>
 </div>

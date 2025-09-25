@@ -1,14 +1,21 @@
 import { CommonModule } from '@angular/common';
 import {
     Component,
+    effect,
     input,
     Input,
     OnChanges,
     OnInit,
+    signal,
     SimpleChanges,
 } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FrameData, ScaledShape, ShapeType } from 'app/models/annotation.types';
+import {
+    FrameData,
+    Label,
+    ScaledShape,
+    ShapeType,
+} from 'app/models/annotation.types';
 import { FrameApiService } from 'app/services/frame-api.service';
 import { forkJoin } from 'rxjs';
 
@@ -19,10 +26,12 @@ import { forkJoin } from 'rxjs';
     styleUrl: './frame-annotator.component.scss',
 })
 export class FrameAnnotatorComponent implements OnInit {
-	jobId = input<number>();
+    jobId = input<number>();
     frameNumber = input<number>();
-    displayWidth: number = 800;
-    displayHeight: number = 600;
+    labelNameToLabelMap = input<Map<string, Label>>();
+
+    displayWidth = signal<number>(800);
+    displayHeight = signal<number>(600);
 
     frameData: FrameData | null = null;
     frameImageUrl: SafeUrl;
@@ -42,10 +51,15 @@ export class FrameAnnotatorComponent implements OnInit {
     constructor(
         private _frameApiService: FrameApiService,
         private _sanitizer: DomSanitizer
-    ) {}
+    ) {
+        effect(() => {
+            this.loadFrameData();
+			console.log('label map in frame annotator', this.labelNameToLabelMap());
+        });
+    }
 
     ngOnInit() {
-        this.loadFrameData();
+        // this.loadFrameData();
     }
 
     async loadFrameData() {
@@ -55,7 +69,10 @@ export class FrameAnnotatorComponent implements OnInit {
         this.error = null;
 
         forkJoin({
-            meta: this._frameApiService.getMeta(this.jobId(), this.frameNumber()),
+            meta: this._frameApiService.getMeta(
+                this.jobId(),
+                this.frameNumber()
+            ),
             imageBlob: this._frameApiService.getFrameImageUrl(
                 this.jobId(),
                 this.frameNumber()
@@ -64,8 +81,8 @@ export class FrameAnnotatorComponent implements OnInit {
             next: ({ meta, imageBlob }) => {
                 // Meta assignment
                 this.frameData = meta;
-				this.displayWidth = meta.frame_meta.width;
-				this.displayHeight = meta.frame_meta.height;
+                this.displayWidth.set(meta.frame_meta.width);
+                this.displayHeight.set(meta.frame_meta.height);
 
                 // Image processing
                 const fileType = imageBlob.type;
@@ -114,7 +131,7 @@ export class FrameAnnotatorComponent implements OnInit {
 
     private createScaledShape(shape: any, trackId?: number): ScaledShape {
         const scaledPoints = this.scaleCoordinates(shape.points);
-        const color = this.getLabelColor(shape.label);
+        const color = this.labelNameToLabelMap()?.get(shape.label)?.label_color;
 
         return {
             ...shape,
@@ -128,8 +145,8 @@ export class FrameAnnotatorComponent implements OnInit {
     private scaleCoordinates(points: number[]): number[] {
         if (!this.frameData || points.length === 0) return points;
 
-        const scaleX = this.displayWidth / this.frameData.frame_meta.width;
-        const scaleY = this.displayHeight / this.frameData.frame_meta.height;
+        const scaleX = this.displayWidth() / this.frameData.frame_meta.width;
+        const scaleY = this.displayHeight() / this.frameData.frame_meta.height;
 
         return points.map((point, index) =>
             index % 2 === 0 ? point * scaleX : point * scaleY
@@ -209,29 +226,6 @@ export class FrameAnnotatorComponent implements OnInit {
         this.points = shapes.filter((s) => s.type === 'points');
         this.ellipses = shapes.filter((s) => s.type === 'ellipse');
         this.cuboids = shapes.filter((s) => s.type === 'cuboid');
-    }
-
-    private getLabelColor(label: string): string {
-        // Generate consistent colors for labels
-        const colors = [
-            '#FF6B6B',
-            '#4ECDC4',
-            '#45B7D1',
-            '#96CEB4',
-            '#FFEAA7',
-            '#DDA0DD',
-            '#98D8C8',
-            '#F7DC6F',
-            '#BB8FCE',
-            '#85C1E9',
-        ];
-
-        let hash = 0;
-        for (let i = 0; i < label.length; i++) {
-            hash = label.charCodeAt(i) + ((hash << 5) - hash);
-        }
-
-        return colors[Math.abs(hash) % colors.length];
     }
 
     // Template helper methods

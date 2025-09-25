@@ -58,3 +58,17 @@ export interface ScaledShape extends Shape {
     color: string;
     svgPath?: string;
 }
+
+export interface Label {
+    label_id: number;
+    label_name: string;
+    label_color: string;
+    annotated_frames: number[];
+    frame_count: number;
+    annotation_counts: {
+        shapes: number;
+        tracks: number;
+        tags: number;
+        total: number;
+    };
+}
