@@ -1,14 +1,15 @@
-<div class="frame-annotator-container">
+<div class="frame-annotator-container relative">
     <!-- Loading State -->
     @if (loading) {
-    <div class="loading-overlay">
-        <div class="spinner">Loading frame...</div>
-    </div>
+    <mat-progress-spinner
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 icon-size-10"
+        mode="indeterminate"
+    ></mat-progress-spinner>
     }
 
     <!-- Error State -->
     @if (error) {
-    <div class="error-message">
+    <div class="error-message absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
         {{ error }}
     </div>
     }

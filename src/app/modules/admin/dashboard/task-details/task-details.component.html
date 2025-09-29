@@ -10,7 +10,9 @@
     <!-- Content -->
     <div class="flex flex-auto gap-4 p-6">
         <div class="w-3/4 h-full flex flex-col gap-4">
-            <div class="w-full h-3/4 bg-card shadow-md rounded-lg p-2 relative">
+            <div
+                class="w-full h-[88%] bg-card shadow-md rounded-lg p-2 relative"
+            >
                 <div
                     class="w-full h-full rounded-lg overflow-hidden flex items-center justify-center"
                     #frameAnnotator
@@ -24,9 +26,9 @@
                     </app-frame-annotator>
                     } @else {
                     <div class="w-full h-full flex items-center justify-center">
-                        <span class="text-default text-base font-medium"
-                            >No Annotated Frames.</span
-                        >
+                        <span class="text-default text-base font-medium">
+                            No Annotated Frames.
+                        </span>
                     </div>
                     }
                 </div>
@@ -57,52 +59,86 @@
                 </button>
             </div>
 
-            <div class="w-full h-1/4 bg-card shadow-md rounded-lg p-2">
-                <fieldset class="border rounded-lg p-4 w-full h-full">
-                    <legend class="px-2 text-md font-medium text-default">
-                        Comments
-                    </legend>
-                    <div class="text-default">Some comments here...</div>
-                </fieldset>
+            <div
+                class="w-full h-[12%] bg-card shadow-md rounded-lg p-4 flex flex-col gap-4"
+            >
+                <div class="text-lg font-semibold text-default">Labels</div>
+                <div class="flex gap-2 overflow-x-auto scrollbar-hide w-full">
+                    @for (label of labelNameToLabelMap() | keyvalue; track
+                    label) {
+                    <button
+                        class="px-2 py-1 rounded-md flex items-center justify-center gap-1 bg-opacity-40 border w-fit"
+                        [ngStyle]="{
+                            background: getBgColor(label.value.label_color),
+                            color: label.value.label_color,
+                            'border-color': label.value.label_color
+                        }"
+                        (click)="onLabelClick(label.value)"
+                    >
+                        @if (selectedLabels().includes(label.value.label_name))
+                        {
+                        <mat-icon
+                            [svgIcon]="'heroicons_outline:check'"
+                            class="icon-size-4 stroke-current"
+                            [ngStyle]="{ color: label.value.label_color }"
+                        ></mat-icon>
+                        }
+                        <span>{{ label.value.label_name }}</span>
+                    </button>
+                    }
+                </div>
             </div>
         </div>
 
         <div class="w-1/4 h-full flex flex-col gap-4">
-            <div class="w-full h-1/4 bg-card shadow-md rounded-lg p-2">
-                <fieldset class="border rounded-lg p-4 w-full h-full">
-                    <legend class="px-2 text-md font-medium text-default">
-                        Details
-                    </legend>
-                    <div class="text-default">Some details here...</div>
-                </fieldset>
+            <div
+                class="w-full h-1/4 bg-card shadow-md rounded-lg p-4 flex flex-col gap-4"
+            >
+                <div class="text-lg font-semibold text-default">Details</div>
+                <div class="grid grid-cols-[auto,1fr] gap-2">
+                    <!-- Project Name -->
+                    <div class="text-default text-base font-normal mr-2">
+                        Project Name
+                    </div>
+                    <div class="text-default text-base font-medium">
+                        {{ taskDetails()?.projectName }}
+                    </div>
+                    <!-- Owner -->
+                    <div class="text-default text-base font-normal mr-2">
+                        Owner
+                    </div>
+                    <div class="text-default text-base font-medium">
+                        {{ taskDetails()?.owner }}
+                    </div>
+                    <!-- Assignee -->
+                    <div class="text-default text-base font-normal mr-2">
+                        Assignee
+                    </div>
+                    <div class="text-default text-base font-medium">
+                        {{ taskDetails()?.assignee }}
+                    </div>
+                    <!-- Status -->
+                    <div class="text-default text-base font-normal mr-2">
+                        Status
+                    </div>
+                    <div class="text-default text-base font-medium">
+                        {{ taskDetails()?.status }}
+                    </div>
+                    <!-- Create Date -->
+                    <div class="text-default text-base font-normal mr-2">
+                        Create Date
+                    </div>
+                    <div class="text-default text-base font-medium">
+                        {{ taskDetails()?.createDate }}
+                    </div>
+                </div>
             </div>
 
-            <div class="w-full h-3/4 bg-card shadow-md rounded-lg p-2">
-                <fieldset class="border rounded-lg p-4 w-full h-full">
-                    <legend class="px-2 text-md font-medium text-default">
-                        Labels
-                    </legend>
-                    <div class="flex flex-wrap gap-2">
-                        @for (label of labelNameToLabelMap() | keyvalue; track
-                        label) {
-                        <button
-                            class="px-2 py-1 rounded-md text-white bg-opacity-40 flex items-center justify-center gap-2"
-                            [style.background]="label.value.label_color"
-                            (click)="onLabelClick(label.value)"
-                        >
-                            @if
-                            (selectedLabels().includes(label.value.label_name))
-                            {
-                            <mat-icon
-                                [svgIcon]="'heroicons_outline:check'"
-                                class="icon-size-4 stroke-current text-white"
-                            ></mat-icon>
-                            }
-                            <span>{{ label.value.label_name }}</span>
-                        </button>
-                        }
-                    </div>
-                </fieldset>
+            <div class="w-full h-3/4 bg-card shadow-md rounded-lg p-4 flex flex-col gap-4">
+				<div class="text-lg font-semibold text-default">Task Comments</div>
+				<div class="flex flex-1 flex-col gap-2">
+
+				</div>
             </div>
         </div>
     </div>

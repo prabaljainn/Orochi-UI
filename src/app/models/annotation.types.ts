@@ -72,3 +72,11 @@ export interface Label {
         total: number;
     };
 }
+
+export interface TaskDetails {
+    projectName: string;
+	owner: string;
+	assignee: string;
+	createDate: string;
+	status: string;
+}

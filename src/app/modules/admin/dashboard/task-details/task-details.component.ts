@@ -4,9 +4,10 @@ import { TrainAnalyticsService } from 'app/services/train-analytics.service';
 import { TopBarComponent } from 'app/widgets/top-bar/top-bar.component';
 import { FrameAnnotatorComponent } from '../frame-annotator/frame-annotator.component';
 import { FormsModule } from '@angular/forms';
-import { Label } from 'app/models/annotation.types';
-import { KeyValuePipe } from '@angular/common';
+import { Label, TaskDetails } from 'app/models/annotation.types';
+import { KeyValuePipe, NgStyle } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { DateTime } from 'luxon';
 
 @Component({
     selector: 'app-task-details',
@@ -16,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
         FormsModule,
         KeyValuePipe,
         MatIconModule,
+        NgStyle,
     ],
     templateUrl: './task-details.component.html',
 })
@@ -32,6 +34,8 @@ export class TaskDetailsComponent implements OnInit {
     allFrames = signal<number[]>([]);
     selectedFrames = signal<number[]>([]);
 
+    taskDetails = signal<TaskDetails | null>(null);
+
     constructor(
         private _trainAnalyticsService: TrainAnalyticsService,
         private _activatedRoute: ActivatedRoute,
@@ -45,6 +49,7 @@ export class TaskDetailsComponent implements OnInit {
         });
 
         this.getTaskAnalysis();
+        this.getTaskComments();
     }
 
     getTaskAnalysis() {
@@ -74,7 +79,29 @@ export class TaskDetailsComponent implements OnInit {
                         });
                     });
                 }
+
+                const createDate = DateTime.fromISO(res?.create_date).toFormat(
+                    'dd/MM/yyyy HH:mm:ss'
+                );
+                this.taskDetails.set({
+                    projectName: res?.project_name ?? 'N/A',
+                    owner: res?.owner?.username ?? 'N/A',
+                    assignee: res?.assignee ?? 'N/A',
+                    createDate: createDate ?? 'N/A',
+                    status: res?.status?.toUpperCase() ?? 'N/A',
+                });
             });
+    }
+
+    getTaskComments() {
+        this._trainAnalyticsService.getTaskComments(this.taskId()).subscribe({
+            next: (res: any) => {
+                console.log(res);
+            },
+            error: (err) => {
+                console.error('Error: Failed to get task comments', err);
+            },
+        });
     }
 
     getNextFrame() {
@@ -93,27 +120,33 @@ export class TaskDetailsComponent implements OnInit {
         );
     }
 
-	onLabelClick(label: Label) {
-		if (this.selectedLabels().includes(label.label_name)) {
-			this.selectedLabels.update((currentLabels) =>
-				currentLabels.filter((l) => l !== label.label_name)
-			);
-		} else {
-			this.selectedLabels.update((currentLabels) => [...currentLabels, label.label_name]);
-		}
+    onLabelClick(label: Label) {
+        if (this.selectedLabels().includes(label.label_name)) {
+            this.selectedLabels.update((currentLabels) =>
+                currentLabels.filter((l) => l !== label.label_name)
+            );
+        } else {
+            this.selectedLabels.update((currentLabels) => [
+                ...currentLabels,
+                label.label_name,
+            ]);
+        }
 
-		if (this.selectedLabels().length === 0) {
-			this.selectedFrames.set(this.allFrames());
-			this.currentFrame.set(this.selectedFrames()[0]);
-		} else {
-			let frames = [];
-			this.selectedLabels().forEach((label) => {
-				frames.push(...this.labelNameToLabelMap().get(label)?.annotated_frames ?? []);
-			});
-			frames.sort((a, b) => a - b);
-			this.selectedFrames.set(frames);
-			this.currentFrame.set(this.selectedFrames()[0]);
-		}
+        if (this.selectedLabels().length === 0) {
+            this.selectedFrames.set(this.allFrames());
+            this.currentFrame.set(this.selectedFrames()[0]);
+        } else {
+            let frames = [];
+            this.selectedLabels().forEach((label) => {
+                frames.push(
+                    ...(this.labelNameToLabelMap().get(label)
+                        ?.annotated_frames ?? [])
+                );
+            });
+            frames.sort((a, b) => a - b);
+            this.selectedFrames.set(frames);
+            this.currentFrame.set(this.selectedFrames()[0]);
+        }
     }
 
     range(start: number, end: number): number[] {
@@ -122,5 +155,13 @@ export class TaskDetailsComponent implements OnInit {
 
     onBackButtonClick() {
         this._router.navigate(['dashboard']);
+    }
+
+    getBgColor(color: string) {
+        const r = parseInt(color.slice(1, 3), 16);
+        const g = parseInt(color.slice(3, 5), 16);
+        const b = parseInt(color.slice(5, 7), 16);
+
+        return `linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(${r}, ${g}, ${b}, 0.5) 100%)`;
     }
 }

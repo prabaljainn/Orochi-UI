@@ -18,8 +18,8 @@ export const VerdictMap: Map<string, string> = new Map<string, string>([
 ]);
 
 export interface TaskElement {
-	projectId: string;
-	taskId: string;
+    projectId: string;
+    taskId: string;
     trainId: string;
     timeAndDate: string;
     status: string;
@@ -27,4 +27,22 @@ export interface TaskElement {
     annotation: string;
     assignee: string;
     action?: string;
+}
+
+export const CommentTypeMap: Map<string, string> = new Map<string, string>([
+    ['GEN', 'General'],
+    ['ISS', 'Issue'],
+    ['Q', 'Question'],
+    ['FB', 'Feedback'],
+    ['REV', 'Review'],
+    ['Note', 'Note'],
+]);
+
+export type CommentType = 'GEN' | 'ISS' | 'Q' | 'FB' | 'REV' | 'Note';
+
+export interface TaskComment {
+    task: string;
+    message: string;
+    comment_type: CommentType;
+    parent_comment?: string;
 }

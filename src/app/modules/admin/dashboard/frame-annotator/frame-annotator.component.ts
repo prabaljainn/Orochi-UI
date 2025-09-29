@@ -9,6 +9,8 @@ import {
     signal,
     SimpleChanges,
 } from '@angular/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
     FrameData,
@@ -21,7 +23,7 @@ import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-frame-annotator',
-    imports: [CommonModule],
+    imports: [CommonModule, MatProgressSpinnerModule],
     templateUrl: './frame-annotator.component.html',
     styleUrl: './frame-annotator.component.scss',
 })
