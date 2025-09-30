@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { catchError, throwError } from 'rxjs';
 import { API_BASE_HREF } from './base-url.service';
-import { TaskComment } from 'app/models/common.types';
+import { TaskCommentPayload } from 'app/models/common.types';
 
 @Injectable({
     providedIn: 'root',
@@ -85,7 +85,7 @@ export class TrainAnalyticsService {
             );
     }
 
-    createTaskComment(comment: TaskComment) {
+    createTaskComment(comment: TaskCommentPayload) {
         return this.http
             .post(this.baseUrl + `api/custom/task-comments/create/?org=`, {
                 comment,

@@ -29,6 +29,15 @@ export interface TaskElement {
     action?: string;
 }
 
+export enum CommentType {
+	GEN = 'GEN',
+	ISS = 'ISS',
+	Q = 'Q',
+	FB = 'FB',
+	REV = 'REV',
+	Note = 'Note',
+}
+
 export const CommentTypeMap: Map<string, string> = new Map<string, string>([
     ['GEN', 'General'],
     ['ISS', 'Issue'],
@@ -38,11 +47,31 @@ export const CommentTypeMap: Map<string, string> = new Map<string, string>([
     ['Note', 'Note'],
 ]);
 
-export type CommentType = 'GEN' | 'ISS' | 'Q' | 'FB' | 'REV' | 'Note';
+// export type CommentType = 'GEN' | 'ISS' | 'Q' | 'FB' | 'REV' | 'Note';
 
-export interface TaskComment {
+export interface TaskCommentPayload {
     task: string;
     message: string;
     comment_type: CommentType;
     parent_comment?: string;
+}
+
+export interface TaskComment {
+    id: number;
+    author: {
+        id: number;
+        username: string;
+        first_name: string;
+        last_name: string;
+    };
+    message: string;
+    comment_type: CommentType;
+    comment_type_display: string;
+    parent_comment: number | null;
+    is_reply: boolean;
+    reply_count: number;
+    created_date: string;
+    updated_date: string;
+    is_edited: boolean;
+    replies: Comment[];
 }

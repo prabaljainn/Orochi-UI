@@ -3,13 +3,9 @@ import {
     Component,
     effect,
     input,
-    Input,
-    OnChanges,
     OnInit,
     signal,
-    SimpleChanges,
 } from '@angular/core';
-import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
@@ -55,8 +51,8 @@ export class FrameAnnotatorComponent implements OnInit {
         private _sanitizer: DomSanitizer
     ) {
         effect(() => {
-            this.loadFrameData();
 			console.log('label map in frame annotator', this.labelNameToLabelMap());
+            this.loadFrameData();
         });
     }
 

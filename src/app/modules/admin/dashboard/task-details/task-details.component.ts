@@ -8,6 +8,7 @@ import { Label, TaskDetails } from 'app/models/annotation.types';
 import { KeyValuePipe, NgStyle } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { DateTime } from 'luxon';
+import { CommentsComponent } from './comments/comments.component';
 
 @Component({
     selector: 'app-task-details',
@@ -18,6 +19,7 @@ import { DateTime } from 'luxon';
         KeyValuePipe,
         MatIconModule,
         NgStyle,
+		CommentsComponent,
     ],
     templateUrl: './task-details.component.html',
 })
@@ -49,7 +51,6 @@ export class TaskDetailsComponent implements OnInit {
         });
 
         this.getTaskAnalysis();
-        this.getTaskComments();
     }
 
     getTaskAnalysis() {
@@ -91,17 +92,6 @@ export class TaskDetailsComponent implements OnInit {
                     status: res?.status?.toUpperCase() ?? 'N/A',
                 });
             });
-    }
-
-    getTaskComments() {
-        this._trainAnalyticsService.getTaskComments(this.taskId()).subscribe({
-            next: (res: any) => {
-                console.log(res);
-            },
-            error: (err) => {
-                console.error('Error: Failed to get task comments', err);
-            },
-        });
     }
 
     getNextFrame() {

@@ -1,0 +1,116 @@
+<div class="w-full h-full flex flex-col gap-4">
+    <div class="flex justify-between items-center gap-2">
+        <div class="text-lg font-semibold text-default">Task Comments</div>
+        <div class="flex justify-end items-center gap-2">
+            <button
+                class="bg-primary text-md text-on-primary font-medium rounded-md px-4 py-2 flex items-center gap-1 hover:bg-primary/90 transition-all duration-300"
+                (click)="getComments()"
+            >
+                <mat-icon
+                    class="icon-size-4 text-white"
+                    svgIcon="heroicons_outline:arrow-path-rounded-square"
+                ></mat-icon>
+                Refresh
+            </button>
+        </div>
+    </div>
+    <div class="flex flex-col gap-2">
+        @for (comment of comments(); track comment.id) {
+        <div class="flex flex-col gap-2">
+            <div class="flex flex-col gap-2">
+                <div class="flex flex-row gap-2">
+                    <div class="flex flex-col gap-2">
+                        <div class="text-md font-medium">
+                            {{ comment.author.first_name }}
+                            {{ comment.author.last_name }}
+                        </div>
+                        <div class="text-sm text-gray-500">
+                            {{ comment.created_date }}
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <div class="text-md font-medium">
+                            {{ comment.message }}
+                        </div>
+                    </div>
+                    <div class="flex flex-row gap-2">
+                        <mat-icon
+                            class="cursor-pointer"
+                            svgIcon="heroicons_outline:arrow-uturn-right"
+                        ></mat-icon>
+                        <mat-icon
+                            class="cursor-pointer"
+                            svgIcon="heroicons_outline:trash"
+                            (click)="deleteComment(comment)"
+                        ></mat-icon>
+                    </div>
+                </div>
+                @if (comment.replies.length > 0) {
+                <div class="flex flex-col gap-2 pl-8">
+                    @for (reply of comment.replies; track reply.id) {
+                    <div class="flex flex-col gap-2">
+                        <div class="flex flex-row gap-2">
+                            <div class="flex flex-col gap-2">
+                                <div class="text-md font-medium">
+                                    {{ reply.author.first_name }}
+                                    {{ reply.author.last_name }}
+                                </div>
+                                <div class="text-sm text-gray-500">
+                                    {{ reply.created_date }}
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <div class="text-md font-medium">
+                                    {{ reply.message }}
+                                </div>
+                            </div>
+
+                            <mat-icon
+                                class="cursor-pointer"
+                                svgIcon="heroicons_outline:trash"
+                                (click)="deleteComment(reply)"
+                            ></mat-icon>
+                        </div>
+                    </div>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+
+    <div class="flex flex-col gap-2">
+        <form [formGroup]="commentForm">
+            <mat-form-field class="w-full" floatLabel="always">
+                <mat-select formControlName="comment_type">
+                    @for (commentType of commentTypeList; track commentType.key)
+                    {
+                    <mat-option [value]="commentType.key">{{
+                        commentType.displayValue
+                    }}</mat-option>
+                    }
+                </mat-select>
+            </mat-form-field>
+
+            <mat-form-field class="w-full" floatLabel="always">
+                <input
+                    type="text"
+                    matInput
+                    formControlName="message"
+                    placeholder="Enter your comment"
+                />
+            </mat-form-field>
+        </form>
+        <button
+            class="w-fit bg-primary text-md text-on-primary font-medium rounded-md px-4 py-2 flex items-center gap-1 hover:bg-primary/90 transition-all duration-300"
+            (click)="createComment()"
+        >
+            <mat-icon
+                class="icon-size-4 text-white"
+                svgIcon="heroicons_outline:paper-airplane"
+            ></mat-icon>
+            Create
+        </button>
+    </div>
+</div>
