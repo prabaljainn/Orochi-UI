@@ -45,6 +45,12 @@ input[type="number"] {
     }
 }
 
+.task-comments-input-wrapper {
+	.mat-mdc-form-field-subscript-wrapper {
+        display: none !important;
+    }
+}
+
 /**
  * ----------------------------------------
  * animation slide-right

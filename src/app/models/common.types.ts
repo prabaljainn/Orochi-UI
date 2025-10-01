@@ -50,10 +50,10 @@ export const CommentTypeMap: Map<string, string> = new Map<string, string>([
 // export type CommentType = 'GEN' | 'ISS' | 'Q' | 'FB' | 'REV' | 'Note';
 
 export interface TaskCommentPayload {
-    task: string;
+    task: number;
     message: string;
     comment_type: CommentType;
-    parent_comment?: string;
+    parent_comment?: number;
 }
 
 export interface TaskComment {

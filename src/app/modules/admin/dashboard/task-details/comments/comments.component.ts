@@ -1,3 +1,4 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { Component, effect, input, signal } from '@angular/core';
 import {
     FormControl,
@@ -16,17 +17,19 @@ import {
     TaskComment,
     TaskCommentPayload,
 } from 'app/models/common.types';
+import { DataService, MessageIds } from 'app/services/data.service';
 import { TrainAnalyticsService } from 'app/services/train-analytics.service';
 
 @Component({
     selector: 'app-comments',
     imports: [
         MatIconModule,
-		FormsModule,
+        FormsModule,
         ReactiveFormsModule,
         MatFormFieldModule,
         MatSelectModule,
         MatInputModule,
+        NgTemplateOutlet,
     ],
     templateUrl: './comments.component.html',
     styleUrl: './comments.component.scss',
@@ -59,7 +62,12 @@ export class CommentsComponent {
         message: new FormControl(''),
     });
 
-    constructor(private _trainAnalyticsService: TrainAnalyticsService) {
+    parentCommentId = signal<number | null>(null);
+
+    constructor(
+        private _trainAnalyticsService: TrainAnalyticsService,
+        private _dataService: DataService
+    ) {
         effect(() => {
             if (this.taskId()) {
                 this.getComments();
@@ -101,21 +109,77 @@ export class CommentsComponent {
     }
 
     createComment() {
+        if (!this.commentForm.value.message?.trim()) {
+            return;
+        }
+
         let payload: TaskCommentPayload = {
-            task: this.taskId(),
+            task: Number(this.taskId()),
             message: this.commentForm.value.message,
             comment_type: this.commentForm.value.comment_type,
         };
-        this._trainAnalyticsService.createTaskComment(payload).subscribe(() => {
-            this.getComments();
+
+        if (this.parentCommentId()) {
+            payload['parent_comment'] = this.parentCommentId();
+        }
+
+        this._trainAnalyticsService.createTaskComment(payload).subscribe({
+            next: () => {
+                this.commentForm.patchValue({ message: '' });
+                this.parentCommentId.set(null);
+                this.getComments();
+            },
+            error: (err) => {
+                this._dataService.changeMessage({
+                    id: MessageIds.SNACKBAR_TRIGGERED,
+                    data: {
+                        type: 'error',
+                        title: $localize`Error`,
+                        description: $localize`Something went wrong. Please try again.`,
+                    },
+                });
+            },
         });
     }
 
     deleteComment(comment: TaskComment) {
         this._trainAnalyticsService
             .deleteTaskComment(comment.id.toString())
-            .subscribe(() => {
-                this.getComments();
-            });
+            .subscribe({
+				next: () => {
+					this.getComments();
+				},
+				error: (err) => {
+					this._dataService.changeMessage({
+						id: MessageIds.SNACKBAR_TRIGGERED,
+						data: {
+							type: 'error',
+							title: $localize`Error`,
+							description: $localize`Something went wrong while deleting the comment. Please try again.`,
+						},
+					});
+				}
+			});
+    }
+
+    formatTimeAgo(dateString: string): string {
+        const now = new Date();
+        const commentDate = new Date(dateString);
+        const diffInSeconds = Math.floor(
+            (now.getTime() - commentDate.getTime()) / 1000
+        );
+
+        if (diffInSeconds < 60) {
+            return 'now';
+        } else if (diffInSeconds < 3600) {
+            const minutes = Math.floor(diffInSeconds / 60);
+            return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+        } else if (diffInSeconds < 86400) {
+            const hours = Math.floor(diffInSeconds / 3600);
+            return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+        } else {
+            const days = Math.floor(diffInSeconds / 86400);
+            return `${days} day${days > 1 ? 's' : ''} ago`;
+        }
     }
 }
