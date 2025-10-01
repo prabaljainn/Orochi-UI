@@ -167,7 +167,22 @@
                     }
                 </div>
             </div>
-            } }
+            } } @empty {
+            <div
+                class="flex-1 flex flex-col items-center justify-center gap-2 p-4"
+            >
+                <mat-icon
+                    class="text-primary icon-size-20"
+                    svgIcon="sudocode:no-comments"
+                ></mat-icon>
+                <div
+                    class="text-center text-base text-default font-semibold"
+                    i18n
+                >
+                    No comments found yet
+                </div>
+            </div>
+            }
         </div>
     </div>
 </div>
@@ -215,7 +230,8 @@
                         <button
                             class="border border-primary text-md text-primary font-medium rounded-md px-4 py-2 flex items-center gap-1 hover:bg-primary/10 transition-all duration-300"
                             (click)="
-                                parentCommentId.set(null);  this.commentForm.patchValue({ message: '' });
+                                parentCommentId.set(null);
+                                this.commentForm.patchValue({ message: '' })
                             "
                         >
                             Cancel

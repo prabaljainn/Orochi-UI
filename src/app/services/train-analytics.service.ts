@@ -87,9 +87,7 @@ export class TrainAnalyticsService {
 
     createTaskComment(comment: TaskCommentPayload) {
         return this.http
-            .post(this.baseUrl + `api/custom/task-comments/create/?org=`, {
-                comment,
-            })
+            .post(this.baseUrl + `api/custom/task-comments/create/?org=`, comment)
             .pipe(
                 catchError((err) => {
                     console.error('Error: Failed to create task comment', err);
