@@ -1,4 +1,4 @@
-<div class="flex flex-col flex-auto w-full min-w-0">
+<div class="flex flex-col flex-auto w-full min-w-0 h-full">
     <!-- Header -->
     <app-top-bar
         class="sticky top-0 z-50"
@@ -8,106 +8,125 @@
     ></app-top-bar>
 
     <!-- Content -->
-    <div class="flex flex-auto gap-4 p-6">
-        <div class="w-3/4 h-full flex flex-col gap-4">
-            <div class="w-full h-3/4 bg-card shadow-md rounded-lg p-2 relative">
+    <div class="flex flex-col flex-auto gap-4 p-6">
+        <div
+            class="w-full min-h-[40rem] bg-card shadow-md rounded-lg p-2 relative"
+        >
+            <div
+                class="w-full h-full rounded-lg overflow-hidden flex items-center justify-center"
+                #frameAnnotator
+            >
+                @if (selectedFrames().length > 0) {
+                <app-frame-annotator
+                    [jobId]="jobId()"
+                    [frameNumber]="currentFrame()"
+                    [labelNameToLabelMap]="labelNameToLabelMap()"
+                >
+                </app-frame-annotator>
+                } @else {
                 <div
-                    class="w-full h-full rounded-lg overflow-hidden flex items-center justify-center"
-                    #frameAnnotator
+                    class="w-full h-full flex flex-1 gap-2 flex-col items-center justify-center"
                 >
-                    @if (selectedFrames().length > 0) {
-                    <app-frame-annotator
-                        [jobId]="jobId()"
-                        [frameNumber]="currentFrame()"
-                        [labelNameToLabelMap]="labelNameToLabelMap()"
+                    <mat-icon
+                        class="text-primary icon-size-20"
+                        svgIcon="sudocode:no-image"
+                    ></mat-icon>
+                    <div
+                        class="text-center text-base text-default font-semibold"
+                        i18n
                     >
-                    </app-frame-annotator>
-                    } @else {
-                    <div class="w-full h-full flex items-center justify-center">
-                        <span class="text-default text-base font-medium">
-                            No Annotated Frames.
-                        </span>
+                        No Annotated Frames.
                     </div>
-                    }
                 </div>
-
-                <button
-                    class="absolute top-1/2 -translate-y-1/2 left-2 bg-card-secondary rounded-full p-2 w-10 h-10 flex justify-center items-center hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                    (click)="getPreviousFrame()"
-                    [disabled]="currentFrame() === selectedFrames()[0]"
-                >
-                    <mat-icon
-                        class="icon-size-4 stroke-current text-primary"
-                        [svgIcon]="'heroicons_outline:chevron-left'"
-                    ></mat-icon>
-                </button>
-
-                <button
-                    class="absolute top-1/2 -translate-y-1/2 right-2 bg-card-secondary rounded-full p-2 w-10 h-10 flex justify-center items-center hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                    (click)="getNextFrame()"
-                    [disabled]="
-                        currentFrame() ===
-                        selectedFrames()[selectedFrames().length - 1]
-                    "
-                >
-                    <mat-icon
-                        class="icon-size-4 stroke-current text-primary"
-                        [svgIcon]="'heroicons_outline:chevron-right'"
-                    ></mat-icon>
-                </button>
+                }
             </div>
 
-            <div class="w-full  bg-card shadow-md rounded-lg p-4 ">
-                <app-comments [taskId]="taskId()"></app-comments>
-            </div>
+            <button
+                class="absolute top-1/2 -translate-y-1/2 left-2 bg-card-secondary rounded-full p-2 w-10 h-10 flex justify-center items-center hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                (click)="getPreviousFrame()"
+                [disabled]="currentFrame() === selectedFrames()[0]"
+            >
+                <mat-icon
+                    class="icon-size-4 stroke-current text-primary"
+                    [svgIcon]="'heroicons_outline:chevron-left'"
+                ></mat-icon>
+            </button>
+
+            <button
+                class="absolute top-1/2 -translate-y-1/2 right-2 bg-card-secondary rounded-full p-2 w-10 h-10 flex justify-center items-center hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                (click)="getNextFrame()"
+                [disabled]="
+                    currentFrame() ===
+                    selectedFrames()[selectedFrames().length - 1]
+                "
+            >
+                <mat-icon
+                    class="icon-size-4 stroke-current text-primary"
+                    [svgIcon]="'heroicons_outline:chevron-right'"
+                ></mat-icon>
+            </button>
         </div>
 
-        <div class="w-1/4 h-full flex flex-col gap-4">
+        <div class="w-full flex gap-4">
             <div
-                class="w-full h-1/4 bg-card shadow-md rounded-lg p-4 flex flex-col gap-4"
+                class="bg-card shadow-md rounded-lg p-4 flex flex-col gap-4"
             >
                 <div class="text-lg font-semibold text-default">Details</div>
-                <div class="grid grid-cols-[auto,1fr] gap-2">
-                    <!-- Project Name -->
-                    <div class="text-default text-base font-normal mr-2">
-                        Project Name
+                <div class="w-full flex justify-between gap-2">
+                    <div class="grid grid-cols-[auto,1fr] gap-2">
+                        <!-- Project Name -->
+                        <div class="text-default text-base font-normal mr-2">
+                            Project Name
+                        </div>
+                        <div class="text-default text-base font-medium">
+                            {{ taskDetails()?.projectName }}
+                        </div>
+                        <!-- Owner -->
+                        <div class="text-default text-base font-normal mr-2">
+                            Owner
+                        </div>
+                        <div class="text-default text-base font-medium">
+                            {{ taskDetails()?.owner }}
+                        </div>
+                        <!-- Assignee -->
+                        <div class="text-default text-base font-normal mr-2">
+                            Assignee
+                        </div>
+                        <div class="text-default text-base font-medium">
+                            {{ taskDetails()?.assignee }}
+                        </div>
                     </div>
-                    <div class="text-default text-base font-medium">
-                        {{ taskDetails()?.projectName }}
-                    </div>
-                    <!-- Owner -->
-                    <div class="text-default text-base font-normal mr-2">
-                        Owner
-                    </div>
-                    <div class="text-default text-base font-medium">
-                        {{ taskDetails()?.owner }}
-                    </div>
-                    <!-- Assignee -->
-                    <div class="text-default text-base font-normal mr-2">
-                        Assignee
-                    </div>
-                    <div class="text-default text-base font-medium">
-                        {{ taskDetails()?.assignee }}
-                    </div>
-                    <!-- Status -->
-                    <div class="text-default text-base font-normal mr-2">
-                        Status
-                    </div>
-                    <div class="text-default text-base font-medium">
-                        {{ taskDetails()?.status }}
-                    </div>
-                    <!-- Create Date -->
-                    <div class="text-default text-base font-normal mr-2">
-                        Create Date
-                    </div>
-                    <div class="text-default text-base font-medium">
-                        {{ taskDetails()?.createDate }}
+
+					<mat-divider class="mx-4" [vertical]="true"></mat-divider>
+					
+                    <div class="grid grid-cols-[auto,1fr] gap-2">
+						 <!-- Annotation -->
+						 <div class="text-default text-base font-normal mr-2">
+                            Annotation
+                        </div>
+                        <div class="text-default text-base font-medium">
+                            {{ taskDetails()?.annotatedFrames }}/{{ taskDetails()?.totalFrames }} Frames
+                        </div>
+                        <!-- Status -->
+                        <div class="text-default text-base font-normal mr-2">
+                            Status
+                        </div>
+                        <div class="text-default text-base font-medium">
+                            {{ taskDetails()?.status }}
+                        </div>
+                        <!-- Create Date -->
+                        <div class="text-default text-base font-normal mr-2">
+                            Create Date
+                        </div>
+                        <div class="text-default text-base font-medium">
+                            {{ taskDetails()?.createDate }}
+                        </div>
                     </div>
                 </div>
             </div>
 
             <div
-                class="w-full h-3/4 bg-card shadow-md rounded-lg p-4 flex flex-col gap-4"
+                class="flex-auto bg-card shadow-md rounded-lg p-4 flex flex-col gap-4"
             >
                 <div class="text-lg font-semibold text-default">Labels</div>
                 <div class="flex gap-2 flex-wrap w-full">
@@ -135,6 +154,10 @@
                     }
                 </div>
             </div>
+        </div>
+
+        <div class="w-full flex-auto bg-card shadow-md rounded-lg p-4">
+            <app-comments [taskId]="taskId()"></app-comments>
         </div>
     </div>
 </div>

@@ -79,4 +79,6 @@ export interface TaskDetails {
 	assignee: string;
 	createDate: string;
 	status: string;
+	annotatedFrames: number;
+	totalFrames: number;
 }

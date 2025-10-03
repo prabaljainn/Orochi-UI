@@ -9,6 +9,7 @@ import { KeyValuePipe, NgStyle } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { DateTime } from 'luxon';
 import { CommentsComponent } from './comments/comments.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
     selector: 'app-task-details',
@@ -19,7 +20,8 @@ import { CommentsComponent } from './comments/comments.component';
         KeyValuePipe,
         MatIconModule,
         NgStyle,
-		CommentsComponent,
+        CommentsComponent,
+        MatDividerModule,
     ],
     templateUrl: './task-details.component.html',
 })
@@ -57,6 +59,7 @@ export class TaskDetailsComponent implements OnInit {
         this._trainAnalyticsService
             .getTaskAnalysis(this.projectId(), this.taskId())
             .subscribe((res: any) => {
+                let totalFrames = 0;
                 res.jobs.forEach((job: any) => {
                     if (job?.type === 'annotation') {
                         this.jobId.set(job?.id);
@@ -67,6 +70,8 @@ export class TaskDetailsComponent implements OnInit {
                         this.allFrames.set(frames);
                         this.selectedFrames.set(this.allFrames());
                         this.currentFrame.set(this.selectedFrames()[0]);
+
+                        totalFrames = job?.frame_count;
                     }
                 });
 
@@ -81,7 +86,7 @@ export class TaskDetailsComponent implements OnInit {
                     });
                 }
 
-                const createDate = DateTime.fromISO(res?.create_date).toFormat(
+                const createDate = DateTime.fromISO(res?.created_date).toFormat(
                     'dd/MM/yyyy HH:mm:ss'
                 );
                 this.taskDetails.set({
@@ -90,6 +95,9 @@ export class TaskDetailsComponent implements OnInit {
                     assignee: res?.assignee ?? 'N/A',
                     createDate: createDate ?? 'N/A',
                     status: res?.status?.toUpperCase() ?? 'N/A',
+                    annotatedFrames:
+                        res?.annotation_analysis?.total_annotated_frames ?? 0,
+                    totalFrames: totalFrames ?? 0,
                 });
             });
     }

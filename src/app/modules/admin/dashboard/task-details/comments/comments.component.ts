@@ -55,6 +55,10 @@ export class CommentsComponent {
             key: CommentType.FB,
             displayValue: CommentTypeMap.get(CommentType.FB),
         },
+		{
+			key: CommentType.Note,
+			displayValue: CommentTypeMap.get(CommentType.Note),
+		},
     ];
 
     commentForm: FormGroup = new FormGroup({

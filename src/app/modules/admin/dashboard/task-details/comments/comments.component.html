@@ -169,7 +169,7 @@
             </div>
             } } @empty {
             <div
-                class="flex-1 flex flex-col items-center justify-center gap-2 p-4"
+                class="flex-auto flex flex-col items-center justify-center gap-2 p-4"
             >
                 <mat-icon
                     class="text-primary icon-size-20"
@@ -196,7 +196,7 @@
                 <div class="flex-1 flex flex-col gap-2">
                     <div class="w-full flex items-center gap-2">
                         <mat-form-field
-                            class="w-36 task-comments-input-wrapper"
+                            class="w-36 task-comments-input-wrapper h-10 filter-dropdown"
                             appearance="outline"
                         >
                             <mat-label>Type</mat-label>
@@ -211,8 +211,9 @@
                         </mat-form-field>
 
                         <mat-form-field
-                            class="w-full task-comments-input-wrapper"
+                            class="w-full task-comments-input-wrapper h-10 filter-dropdown"
                             appearance="outline"
+                            style="--mat-form-field-container-height: 2.5rem"
                         >
                             <mat-label>Add a comment...</mat-label>
                             <input
@@ -222,10 +223,40 @@
                                 class="text-sm"
                             />
                         </mat-form-field>
+
+                        @if (parentCommentId()) {
+                        <button
+                            class="border h-10 border-primary text-md text-primary font-medium rounded-md px-4 py-2 flex items-center gap-1 hover:bg-primary/10 transition-all duration-300"
+                            (click)="
+                                parentCommentId.set(null);
+                                this.commentForm.patchValue({ message: '' })
+                            "
+                        >
+                            <mat-icon
+                                class="icon-size-4 text-primary"
+                                svgIcon="heroicons_outline:x-mark"
+                            ></mat-icon>
+                        </button>
+                        }
+
+                        <button
+                            class="bg-primary h-10 text-md text-on-primary font-medium rounded-md px-4 py-2 flex items-center gap-1 hover:bg-primary/90 transition-all duration-300 disabled:text-disabled disabled:cursor-not-allowed"
+                            [disabled]="
+                                !commentForm.value.message ||
+                                !commentForm.value.comment_type
+                            "
+                            (click)="createComment()"
+                        >
+                            <mat-icon
+                                class="icon-size-4 text-white"
+                                svgIcon="heroicons_outline:paper-airplane"
+                            ></mat-icon>
+                            <!-- {{ parentCommentId() ? "Reply" : "Comment" }} -->
+                        </button>
                     </div>
 
                     <!-- Comment Type and Submit Button Row -->
-                    <div class="flex items-center justify-end gap-2">
+                    <div class="hidden flex items-center justify-end gap-2">
                         @if (parentCommentId()) {
                         <button
                             class="border border-primary text-md text-primary font-medium rounded-md px-4 py-2 flex items-center gap-1 hover:bg-primary/10 transition-all duration-300"
