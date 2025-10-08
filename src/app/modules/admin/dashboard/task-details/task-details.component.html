@@ -13,6 +13,63 @@
             class="w-full min-h-[40rem] bg-card shadow-md rounded-lg p-2 relative"
         >
             <div
+                class="bg-card-secondary rounded-lg p-2 flex items-center gap-4"
+            >
+                <div
+                    class="flex justify-center items-center gap-2 bg-card dark:bg-card-third rounded-full p-2"
+                >
+                    <!-- previous frame -->
+                    <button
+                        class="disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
+                        (click)="getPreviousFrame()"
+                        [disabled]="currentFrame() === selectedFrames()[0]"
+                    >
+                        <mat-icon class="icon-size-5 text-default">
+                            chevron_left
+                        </mat-icon>
+                    </button>
+
+                    <!-- next frame -->
+                    <button
+                        class="disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
+                        (click)="getNextFrame()"
+                        [disabled]="
+                            currentFrame() ===
+                            selectedFrames()[selectedFrames().length - 1]
+                        "
+                    >
+                        <mat-icon class="icon-size-5 text-default">
+                            chevron_right
+                        </mat-icon>
+                    </button>
+
+                    <!-- Reset -->
+                    <button
+                        class="flex justify-center items-center"
+                        (click)="currentFrame.set(selectedFrames()[0])"
+                    >
+                        <mat-icon class="icon-size-4 text-default">
+                            replay
+                        </mat-icon>
+                    </button>
+                </div>
+
+                <mat-slider
+                    class="flex-1"
+                    [max]="selectedFrames().length - 1"
+                    [min]="0"
+                    [step]="1"
+                    [discrete]="true"
+                    [showTickMarks]="true"
+                    [displayWith]="formatLabel"
+                >
+                    <input matSliderThumb [(ngModel)]="currentFrame" #slider />
+                </mat-slider>
+
+
+            </div>
+
+            <div
                 class="w-full h-full rounded-lg overflow-hidden flex items-center justify-center"
                 #frameAnnotator
             >
@@ -40,37 +97,10 @@
                 </div>
                 }
             </div>
-
-            <button
-                class="absolute top-1/2 -translate-y-1/2 left-2 bg-card-secondary rounded-full p-2 w-10 h-10 flex justify-center items-center hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                (click)="getPreviousFrame()"
-                [disabled]="currentFrame() === selectedFrames()[0]"
-            >
-                <mat-icon
-                    class="icon-size-4 stroke-current text-primary"
-                    [svgIcon]="'heroicons_outline:chevron-left'"
-                ></mat-icon>
-            </button>
-
-            <button
-                class="absolute top-1/2 -translate-y-1/2 right-2 bg-card-secondary rounded-full p-2 w-10 h-10 flex justify-center items-center hover:scale-110 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                (click)="getNextFrame()"
-                [disabled]="
-                    currentFrame() ===
-                    selectedFrames()[selectedFrames().length - 1]
-                "
-            >
-                <mat-icon
-                    class="icon-size-4 stroke-current text-primary"
-                    [svgIcon]="'heroicons_outline:chevron-right'"
-                ></mat-icon>
-            </button>
         </div>
 
         <div class="w-full flex gap-4">
-            <div
-                class="bg-card shadow-md rounded-lg p-4 flex flex-col gap-4"
-            >
+            <div class="bg-card shadow-md rounded-lg p-4 flex flex-col gap-4">
                 <div class="text-lg font-semibold text-default">Details</div>
                 <div class="w-full flex justify-between gap-2">
                     <div class="grid grid-cols-[auto,1fr] gap-2">
@@ -97,15 +127,18 @@
                         </div>
                     </div>
 
-					<mat-divider class="mx-4" [vertical]="true"></mat-divider>
-					
+                    <mat-divider class="mx-4" [vertical]="true"></mat-divider>
+
                     <div class="grid grid-cols-[auto,1fr] gap-2">
-						 <!-- Annotation -->
-						 <div class="text-default text-base font-normal mr-2">
+                        <!-- Annotation -->
+                        <div class="text-default text-base font-normal mr-2">
                             Annotation
                         </div>
                         <div class="text-default text-base font-medium">
-                            {{ taskDetails()?.annotatedFrames }}/{{ taskDetails()?.totalFrames }} Frames
+                            {{ taskDetails()?.annotatedFrames }}/{{
+                                taskDetails()?.totalFrames
+                            }}
+                            Frames
                         </div>
                         <!-- Status -->
                         <div class="text-default text-base font-normal mr-2">

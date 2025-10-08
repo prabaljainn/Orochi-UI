@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { DateTime } from 'luxon';
 import { CommentsComponent } from './comments/comments.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatSliderModule } from '@angular/material/slider';
 
 @Component({
     selector: 'app-task-details',
@@ -22,6 +23,7 @@ import { MatDividerModule } from '@angular/material/divider';
         NgStyle,
         CommentsComponent,
         MatDividerModule,
+        MatSliderModule,
     ],
     templateUrl: './task-details.component.html',
 })
@@ -161,5 +163,9 @@ export class TaskDetailsComponent implements OnInit {
         const b = parseInt(color.slice(5, 7), 16);
 
         return `linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(${r}, ${g}, ${b}, 0.5) 100%)`;
+    }
+
+    formatLabel(value: number): string {
+        return `${value + 1}`;
     }
 }
