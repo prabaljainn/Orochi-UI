@@ -10,8 +10,39 @@
     <!-- Content -->
     <div class="flex flex-col flex-auto gap-4 p-6">
         <div
-            class="w-full min-h-[40rem] bg-card shadow-md rounded-lg p-2 relative"
+            class="w-full min-h-[40rem] bg-card shadow-md rounded-lg p-2 relative flex flex-col gap-2"
         >
+            <div
+                class="flex-1 rounded-lg overflow-hidden flex items-center justify-center"
+                #frameAnnotator
+            >
+                @if (selectedFrames().length > 0) {
+                <app-frame-annotator
+                    [jobId]="jobId()"
+                    [frameNumber]="currentFrame()"
+                    [labelNameToLabelMap]="labelNameToLabelMap()"
+                    [maxDisplayWidth]="frameAnnotatorWidth()"
+                    [maxDisplayHeight]="frameAnnotatorHeight()"
+                >
+                </app-frame-annotator>
+                } @else {
+                <div
+                    class="w-full h-full flex flex-1 gap-2 flex-col items-center justify-center"
+                >
+                    <mat-icon
+                        class="text-primary icon-size-20"
+                        svgIcon="sudocode:no-image"
+                    ></mat-icon>
+                    <div
+                        class="text-center text-base text-default font-semibold"
+                        i18n
+                    >
+                        No Annotated Frames.
+                    </div>
+                </div>
+                }
+            </div>
+
             <div
                 class="bg-card-secondary rounded-lg p-2 flex items-center gap-4"
             >
@@ -59,43 +90,17 @@
                     [max]="selectedFrames().length - 1"
                     [min]="0"
                     [step]="1"
-                    [discrete]="true"
                     [showTickMarks]="true"
                     [displayWith]="formatLabel"
                 >
-                    <input matSliderThumb [(ngModel)]="currentFrame" #slider />
+                    <input matSliderThumb [formControl]="frameSliderInput" />
                 </mat-slider>
 
-
-            </div>
-
-            <div
-                class="w-full h-full rounded-lg overflow-hidden flex items-center justify-center"
-                #frameAnnotator
-            >
-                @if (selectedFrames().length > 0) {
-                <app-frame-annotator
-                    [jobId]="jobId()"
-                    [frameNumber]="currentFrame()"
-                    [labelNameToLabelMap]="labelNameToLabelMap()"
-                >
-                </app-frame-annotator>
-                } @else {
                 <div
-                    class="w-full h-full flex flex-1 gap-2 flex-col items-center justify-center"
+                    class="w-15 text-center bg-card dark:bg-card-third rounded-full p-2"
                 >
-                    <mat-icon
-                        class="text-primary icon-size-20"
-                        svgIcon="sudocode:no-image"
-                    ></mat-icon>
-                    <div
-                        class="text-center text-base text-default font-semibold"
-                        i18n
-                    >
-                        No Annotated Frames.
-                    </div>
+                    {{ currentFrame() ?? 0 }}
                 </div>
-                }
             </div>
         </div>
 

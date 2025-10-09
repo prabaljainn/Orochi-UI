@@ -1,15 +1,16 @@
 <div class="frame-annotator-container relative">
     <!-- Loading State -->
     @if (loading) {
-    <mat-progress-spinner
-        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 icon-size-10"
-        mode="indeterminate"
-    ></mat-progress-spinner>
+    <div class="annotation-viewer">
+        <img src="assets/images/logo/train-loader.gif" alt="Train Loader" />
+    </div>
     }
 
     <!-- Error State -->
     @if (error) {
-    <div class="error-message absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50">
+    <div
+        class="error-message absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
+    >
         {{ error }}
     </div>
     }
@@ -259,14 +260,20 @@
             </svg>
 
             <!-- Frame Info Overlay -->
-            <div class="frame-info">
-                <span>Frame: {{ frameNumber() }}</span>
-                <span>Annotations: {{ frameData.annotation_count }}</span>
-                <!-- <span
-                    >Size: {{ frameData.frame_meta.width }}x{{
+            <div
+                class="hidden flex flex-wrap gap-2 absolute top-2 right-2 py-1 px-2 bg-card bg-opacity-80 rounded-lg"
+            >
+                <div class="text-default text-sm font-medium">
+                    Frame: {{ frameNumber() }}
+                </div>
+                <div class="text-default text-sm font-medium">
+                    Annotations: {{ frameData.annotation_count }}
+                </div>
+                <!-- <div class="text-default text-base font-medium">
+                    Size: {{ frameData.frame_meta.width }}x{{
                         frameData.frame_meta.height
-                    }}</span
-                > -->
+                    }}
+                </div> -->
             </div>
         </div>
 

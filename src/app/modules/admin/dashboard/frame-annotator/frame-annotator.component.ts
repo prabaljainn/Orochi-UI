@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-    Component,
-    effect,
-    input,
-    OnInit,
-    signal,
-} from '@angular/core';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { Component, effect, input, OnInit, signal } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
     FrameData,
@@ -19,7 +12,7 @@ import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-frame-annotator',
-    imports: [CommonModule, MatProgressSpinnerModule],
+    imports: [CommonModule],
     templateUrl: './frame-annotator.component.html',
     styleUrl: './frame-annotator.component.scss',
 })
@@ -27,9 +20,12 @@ export class FrameAnnotatorComponent implements OnInit {
     jobId = input<number>();
     frameNumber = input<number>();
     labelNameToLabelMap = input<Map<string, Label>>();
+    maxDisplayWidth = input<number>();
+    maxDisplayHeight = input<number>();
 
     displayWidth = signal<number>(800);
     displayHeight = signal<number>(600);
+    scaleFactor = signal<number>(1);
 
     frameData: FrameData | null = null;
     frameImageUrl: SafeUrl;
@@ -51,7 +47,10 @@ export class FrameAnnotatorComponent implements OnInit {
         private _sanitizer: DomSanitizer
     ) {
         effect(() => {
-			console.log('label map in frame annotator', this.labelNameToLabelMap());
+            console.log(
+                'label map in frame annotator',
+                this.labelNameToLabelMap()
+            );
             this.loadFrameData();
         });
     }
@@ -79,8 +78,12 @@ export class FrameAnnotatorComponent implements OnInit {
             next: ({ meta, imageBlob }) => {
                 // Meta assignment
                 this.frameData = meta;
-                this.displayWidth.set(meta.frame_meta.width);
-                this.displayHeight.set(meta.frame_meta.height);
+
+                // Calculate display dimensions to fit within maxDisplayWidth/maxDisplayHeight
+                this.calculateDisplayDimensions(
+                    meta.frame_meta.width,
+                    meta.frame_meta.height
+                );
 
                 // Image processing
                 const fileType = imageBlob.type;
@@ -140,15 +143,55 @@ export class FrameAnnotatorComponent implements OnInit {
         };
     }
 
+    private calculateDisplayDimensions(
+        originalWidth: number,
+        originalHeight: number
+    ) {
+        if (!this.maxDisplayWidth() || !this.maxDisplayHeight()) {
+            // Fallback to original dimensions if max dimensions not provided
+            this.displayWidth.set(originalWidth);
+            this.displayHeight.set(originalHeight);
+            this.scaleFactor.set(1);
+            console.log('Using original dimensions:', {
+                originalWidth,
+                originalHeight,
+            });
+            return;
+        }
+
+        const maxWidth = this.maxDisplayWidth();
+        const maxHeight = this.maxDisplayHeight();
+
+        // Calculate scale factors for both dimensions
+        const scaleX = maxWidth / originalWidth;
+        const scaleY = maxHeight / originalHeight;
+
+        // Use the smaller scale factor to ensure image fits within both dimensions
+        const scale = Math.min(scaleX, scaleY);
+
+        // Calculate final display dimensions
+        const displayWidth = Math.round(originalWidth * scale);
+        const displayHeight = Math.round(originalHeight * scale);
+
+        this.displayWidth.set(displayWidth);
+        this.displayHeight.set(displayHeight);
+        this.scaleFactor.set(scale);
+
+        console.log('Calculated display dimensions:', {
+            original: { width: originalWidth, height: originalHeight },
+            max: { width: maxWidth, height: maxHeight },
+            scale: { x: scaleX, y: scaleY, final: scale },
+            display: { width: displayWidth, height: displayHeight },
+        });
+    }
+
     private scaleCoordinates(points: number[]): number[] {
         if (!this.frameData || points.length === 0) return points;
 
-        const scaleX = this.displayWidth() / this.frameData.frame_meta.width;
-        const scaleY = this.displayHeight() / this.frameData.frame_meta.height;
+        // Use the scale factor for consistent scaling
+        const scale = this.scaleFactor();
 
-        return points.map((point, index) =>
-            index % 2 === 0 ? point * scaleX : point * scaleY
-        );
+        return points.map((point, index) => point * scale);
     }
 
     private createSvgPath(type: ShapeType, points: number[]): string {
@@ -248,5 +291,23 @@ export class FrameAnnotatorComponent implements OnInit {
             pairs.push({ x: points[i], y: points[i + 1] });
         }
         return pairs;
+    }
+
+    // Template helper methods
+    trackByShapeId(index: number, shape: ScaledShape): string {
+        return shape.id.toString();
+    }
+
+    trackByTrackId(index: number, track: ScaledShape): string {
+        return track.id.toString();
+    }
+
+    trackByTagId(index: number, tag: any): string {
+        return tag.id || index.toString();
+    }
+
+    getLabelColor(labelName: string): string {
+        const label = this.labelNameToLabelMap()?.get(labelName);
+        return label?.label_color || '#000000';
     }
 }

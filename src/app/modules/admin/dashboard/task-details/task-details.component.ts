@@ -1,9 +1,23 @@
-import { Component, signal, ChangeDetectorRef, OnInit } from '@angular/core';
+import {
+    Component,
+    signal,
+    ChangeDetectorRef,
+    OnInit,
+    ElementRef,
+    ViewChild,
+    HostListener,
+    effect,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TrainAnalyticsService } from 'app/services/train-analytics.service';
 import { TopBarComponent } from 'app/widgets/top-bar/top-bar.component';
 import { FrameAnnotatorComponent } from '../frame-annotator/frame-annotator.component';
-import { FormsModule } from '@angular/forms';
+import {
+    FormControl,
+    FormsModule,
+    ReactiveFormsModule,
+    UntypedFormControl,
+} from '@angular/forms';
 import { Label, TaskDetails } from 'app/models/annotation.types';
 import { KeyValuePipe, NgStyle } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,6 +25,7 @@ import { DateTime } from 'luxon';
 import { CommentsComponent } from './comments/comments.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSliderModule } from '@angular/material/slider';
+import { debounceTime } from 'rxjs';
 
 @Component({
     selector: 'app-task-details',
@@ -18,6 +33,7 @@ import { MatSliderModule } from '@angular/material/slider';
         TopBarComponent,
         FrameAnnotatorComponent,
         FormsModule,
+        ReactiveFormsModule,
         KeyValuePipe,
         MatIconModule,
         NgStyle,
@@ -42,11 +58,23 @@ export class TaskDetailsComponent implements OnInit {
 
     taskDetails = signal<TaskDetails | null>(null);
 
+    frameSliderInput = new UntypedFormControl(0);
+
+    @ViewChild('frameAnnotator') frameAnnotator!: ElementRef<HTMLDivElement>;
+    frameAnnotatorWidth = signal<number>(0);
+    frameAnnotatorHeight = signal<number>(0);
+
     constructor(
         private _trainAnalyticsService: TrainAnalyticsService,
         private _activatedRoute: ActivatedRoute,
         private _router: Router
-    ) {}
+    ) {
+        effect(() => {
+            this.frameSliderInput.setValue(
+                this.selectedFrames().indexOf(this.currentFrame())
+            );
+        });
+    }
 
     ngOnInit() {
         this._activatedRoute.params.subscribe((params) => {
@@ -55,6 +83,21 @@ export class TaskDetailsComponent implements OnInit {
         });
 
         this.getTaskAnalysis();
+
+        this.frameSliderInput.valueChanges
+            .pipe(debounceTime(500))
+            .subscribe((value) => {
+                this.currentFrame.set(this.selectedFrames()[value]);
+            });
+    }
+
+    ngAfterViewInit() {
+        this.getFrameAnnotatorSize();
+    }
+
+    @HostListener('window:resize')
+    onResize() {
+        this.getFrameAnnotatorSize();
     }
 
     getTaskAnalysis() {
@@ -65,27 +108,25 @@ export class TaskDetailsComponent implements OnInit {
                 res.jobs.forEach((job: any) => {
                     if (job?.type === 'annotation') {
                         this.jobId.set(job?.id);
-                        let startFrame = job?.start_frame;
-                        let endFrame = job?.stop_frame;
-
-                        let frames = this.range(startFrame, endFrame);
-                        this.allFrames.set(frames);
-                        this.selectedFrames.set(this.allFrames());
-                        this.currentFrame.set(this.selectedFrames()[0]);
-
                         totalFrames = job?.frame_count;
                     }
                 });
 
                 let labelsAnalysis = res?.annotation_analysis?.labels_analysis;
+                let frames = [];
                 if (labelsAnalysis instanceof Object) {
                     Object.values(labelsAnalysis)?.forEach((label: Label) => {
+                        frames.push(...(label.annotated_frames ?? []));
                         this.labelNameToLabelMap.update((currentMap) => {
                             const newMap = new Map(currentMap);
                             newMap.set(label.label_name, label);
                             return newMap;
                         });
                     });
+                    frames.sort((a, b) => a - b);
+                    this.allFrames.set(frames);
+                    this.selectedFrames.set(this.allFrames());
+                    this.currentFrame.set(this.selectedFrames()[0]);
                 }
 
                 const createDate = DateTime.fromISO(res?.created_date).toFormat(
@@ -167,5 +208,16 @@ export class TaskDetailsComponent implements OnInit {
 
     formatLabel(value: number): string {
         return `${value + 1}`;
+    }
+
+    getFrameAnnotatorSize() {
+        if (this.frameAnnotator) {
+            this.frameAnnotatorWidth.set(
+                this.frameAnnotator.nativeElement.clientWidth
+            );
+            this.frameAnnotatorHeight.set(
+                this.frameAnnotator.nativeElement.clientHeight
+            );
+        }
     }
 }
