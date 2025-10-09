@@ -251,37 +251,6 @@
                                 class="icon-size-4 text-white"
                                 svgIcon="heroicons_outline:paper-airplane"
                             ></mat-icon>
-                            <!-- {{ parentCommentId() ? "Reply" : "Comment" }} -->
-                        </button>
-                    </div>
-
-                    <!-- Comment Type and Submit Button Row -->
-                    <div class="hidden flex items-center justify-end gap-2">
-                        @if (parentCommentId()) {
-                        <button
-                            class="border border-primary text-md text-primary font-medium rounded-md px-4 py-2 flex items-center gap-1 hover:bg-primary/10 transition-all duration-300"
-                            (click)="
-                                parentCommentId.set(null);
-                                this.commentForm.patchValue({ message: '' })
-                            "
-                        >
-                            Cancel
-                        </button>
-                        }
-
-                        <button
-                            class="bg-primary text-md text-on-primary font-medium rounded-md px-4 py-2 flex items-center gap-1 hover:bg-primary/90 transition-all duration-300 disabled:text-disabled disabled:cursor-not-allowed"
-                            [disabled]="
-                                !commentForm.value.message ||
-                                !commentForm.value.comment_type
-                            "
-                            (click)="createComment()"
-                        >
-                            <mat-icon
-                                class="icon-size-4 text-white"
-                                svgIcon="heroicons_outline:paper-airplane"
-                            ></mat-icon>
-                            {{ parentCommentId() ? "Reply" : "Comment" }}
                         </button>
                     </div>
                 </div>
