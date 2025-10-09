@@ -9,187 +9,206 @@
 
     <!-- Content -->
     <div class="flex flex-col flex-auto gap-4 p-6">
-        <div
-            class="w-full min-h-[40rem] bg-card shadow-md rounded-lg p-2 relative flex flex-col gap-2"
-        >
+        <div class="flex gap-4">
             <div
-                class="flex-1 rounded-lg overflow-hidden flex items-center justify-center"
-                #frameAnnotator
+                class="w-4/5 min-h-[35rem] bg-card shadow-md rounded-lg p-2 relative flex flex-col gap-2"
             >
-                @if (selectedFrames().length > 0) {
-                <app-frame-annotator
-                    [jobId]="jobId()"
-                    [frameNumber]="currentFrame()"
-                    [labelNameToLabelMap]="labelNameToLabelMap()"
-                    [maxDisplayWidth]="frameAnnotatorWidth()"
-                    [maxDisplayHeight]="frameAnnotatorHeight()"
-                >
-                </app-frame-annotator>
-                } @else {
                 <div
-                    class="w-full h-full flex flex-1 gap-2 flex-col items-center justify-center"
+                    id="frameAnnotator"
+                    class="flex-1 rounded-lg overflow-hidden flex items-center justify-center"
+                    #frameAnnotator
                 >
-                    <mat-icon
-                        class="text-primary icon-size-20"
-                        svgIcon="sudocode:no-image"
-                    ></mat-icon>
+                    @if (selectedFrames().length > 0) {
+                    <app-frame-annotator
+                        [jobId]="jobId()"
+                        [frameNumber]="currentFrame()"
+                        [labelNameToLabelMap]="labelNameToLabelMap()"
+                        [maxDisplayWidth]="frameAnnotatorWidth()"
+                        [maxDisplayHeight]="frameAnnotatorHeight()"
+                    >
+                    </app-frame-annotator>
+                    } @else {
                     <div
-                        class="text-center text-base text-default font-semibold"
-                        i18n
+                        class="w-full h-full flex flex-1 gap-2 flex-col items-center justify-center"
                     >
-                        No Annotated Frames.
-                    </div>
-                </div>
-                }
-            </div>
-
-            <div
-                class="bg-card-secondary rounded-lg p-2 flex items-center gap-4"
-            >
-                <div
-                    class="flex justify-center items-center gap-2 bg-card dark:bg-card-third rounded-full p-2"
-                >
-                    <!-- previous frame -->
-                    <button
-                        class="disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
-                        (click)="getPreviousFrame()"
-                        [disabled]="currentFrame() === selectedFrames()[0]"
-                    >
-                        <mat-icon class="icon-size-5 text-default">
-                            chevron_left
-                        </mat-icon>
-                    </button>
-
-                    <!-- next frame -->
-                    <button
-                        class="disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
-                        (click)="getNextFrame()"
-                        [disabled]="
-                            currentFrame() ===
-                            selectedFrames()[selectedFrames().length - 1]
-                        "
-                    >
-                        <mat-icon class="icon-size-5 text-default">
-                            chevron_right
-                        </mat-icon>
-                    </button>
-
-                    <!-- Reset -->
-                    <button
-                        class="flex justify-center items-center"
-                        (click)="currentFrame.set(selectedFrames()[0])"
-                    >
-                        <mat-icon class="icon-size-4 text-default">
-                            replay
-                        </mat-icon>
-                    </button>
-                </div>
-
-                <mat-slider
-                    class="flex-1"
-                    [max]="selectedFrames().length - 1"
-                    [min]="0"
-                    [step]="1"
-                    [showTickMarks]="true"
-                    [displayWith]="formatLabel"
-                >
-                    <input matSliderThumb [formControl]="frameSliderInput" />
-                </mat-slider>
-
-                <div
-                    class="w-15 text-center bg-card dark:bg-card-third rounded-full p-2"
-                >
-                    {{ currentFrame() ?? 0 }}
-                </div>
-            </div>
-        </div>
-
-        <div class="w-full flex gap-4">
-            <div class="bg-card shadow-md rounded-lg p-4 flex flex-col gap-4">
-                <div class="text-lg font-semibold text-default">Details</div>
-                <div class="w-full flex justify-between gap-2">
-                    <div class="grid grid-cols-[auto,1fr] gap-2">
-                        <!-- Project Name -->
-                        <div class="text-default text-base font-normal mr-2">
-                            Project Name
-                        </div>
-                        <div class="text-default text-base font-medium">
-                            {{ taskDetails()?.projectName }}
-                        </div>
-                        <!-- Owner -->
-                        <div class="text-default text-base font-normal mr-2">
-                            Owner
-                        </div>
-                        <div class="text-default text-base font-medium">
-                            {{ taskDetails()?.owner }}
-                        </div>
-                        <!-- Assignee -->
-                        <div class="text-default text-base font-normal mr-2">
-                            Assignee
-                        </div>
-                        <div class="text-default text-base font-medium">
-                            {{ taskDetails()?.assignee }}
-                        </div>
-                    </div>
-
-                    <mat-divider class="mx-4" [vertical]="true"></mat-divider>
-
-                    <div class="grid grid-cols-[auto,1fr] gap-2">
-                        <!-- Annotation -->
-                        <div class="text-default text-base font-normal mr-2">
-                            Annotation
-                        </div>
-                        <div class="text-default text-base font-medium">
-                            {{ taskDetails()?.annotatedFrames }}/{{
-                                taskDetails()?.totalFrames
-                            }}
-                            Frames
-                        </div>
-                        <!-- Status -->
-                        <div class="text-default text-base font-normal mr-2">
-                            Status
-                        </div>
-                        <div class="text-default text-base font-medium">
-                            {{ taskDetails()?.status }}
-                        </div>
-                        <!-- Create Date -->
-                        <div class="text-default text-base font-normal mr-2">
-                            Create Date
-                        </div>
-                        <div class="text-default text-base font-medium">
-                            {{ taskDetails()?.createDate }}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div
-                class="flex-auto bg-card shadow-md rounded-lg p-4 flex flex-col gap-4"
-            >
-                <div class="text-lg font-semibold text-default">Labels</div>
-                <div class="flex gap-2 flex-wrap w-full">
-                    @for (label of labelNameToLabelMap() | keyvalue; track
-                    label) {
-                    <button
-                        class="px-2 py-1 rounded-md flex items-center justify-center gap-1 bg-opacity-40 border w-fit"
-                        [ngStyle]="{
-                            background: getBgColor(label.value.label_color),
-                            color: label.value.label_color,
-                            'border-color': label.value.label_color
-                        }"
-                        (click)="onLabelClick(label.value)"
-                    >
-                        @if (selectedLabels().includes(label.value.label_name))
-                        {
                         <mat-icon
-                            [svgIcon]="'heroicons_outline:check'"
-                            class="icon-size-4 stroke-current"
-                            [ngStyle]="{ color: label.value.label_color }"
+                            class="text-primary icon-size-20"
+                            svgIcon="sudocode:no-image"
                         ></mat-icon>
-                        }
-                        <span>{{ label.value.label_name }}</span>
-                    </button>
+                        <div
+                            class="text-center text-base text-default font-semibold"
+                            i18n
+                        >
+                            No Annotated Frames.
+                        </div>
+                    </div>
                     }
+                </div>
+
+                <div
+                    class="bg-card-secondary rounded-lg p-2 flex items-center gap-4"
+                >
+                    <div
+                        class="flex justify-center items-center gap-2 bg-card dark:bg-card-third rounded-full p-2"
+                    >
+                        <!-- previous frame -->
+                        <button
+                            class="disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
+                            (click)="getPreviousFrame()"
+                            [disabled]="currentFrame() === selectedFrames()[0]"
+                        >
+                            <mat-icon class="icon-size-5 text-default">
+                                chevron_left
+                            </mat-icon>
+                        </button>
+
+                        <!-- next frame -->
+                        <button
+                            class="disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center"
+                            (click)="getNextFrame()"
+                            [disabled]="
+                                currentFrame() ===
+                                selectedFrames()[selectedFrames().length - 1]
+                            "
+                        >
+                            <mat-icon class="icon-size-5 text-default">
+                                chevron_right
+                            </mat-icon>
+                        </button>
+
+                        <!-- Reset -->
+                        <button
+                            class="flex justify-center items-center"
+                            (click)="currentFrame.set(selectedFrames()[0])"
+                        >
+                            <mat-icon class="icon-size-4 text-default">
+                                replay
+                            </mat-icon>
+                        </button>
+                    </div>
+
+                    <mat-slider
+                        class="flex-1"
+                        [max]="selectedFrames().length - 1"
+                        [min]="0"
+                        [step]="1"
+                        [showTickMarks]="true"
+                        [displayWith]="formatLabel"
+                    >
+                        <input
+                            matSliderThumb
+                            [formControl]="frameSliderInput"
+                        />
+                    </mat-slider>
+
+                    <div
+                        class="w-15 text-center bg-card dark:bg-card-third rounded-full p-2"
+                    >
+                        {{ currentFrame() ?? 0 }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="w-1/5 flex flex-col gap-4">
+                <div
+                    class="bg-card shadow-md rounded-lg p-4 flex flex-col gap-4"
+                >
+                    <div class="text-lg font-semibold text-default">
+                        Details
+                    </div>
+                    <div class="w-full flex justify-between gap-2">
+                        <div class="grid grid-cols-[auto,1fr] gap-2">
+                            <!-- Project Name -->
+                            <div
+                                class="text-default text-base font-normal mr-2"
+                            >
+                                Project Name
+                            </div>
+                            <div class="text-default text-base font-medium">
+                                {{ taskDetails()?.projectName }}
+                            </div>
+                            <!-- Owner -->
+                            <div
+                                class="text-default text-base font-normal mr-2"
+                            >
+                                Owner
+                            </div>
+                            <div class="text-default text-base font-medium">
+                                {{ taskDetails()?.owner }}
+                            </div>
+                            <!-- Assignee -->
+                            <div
+                                class="text-default text-base font-normal mr-2"
+                            >
+                                Assignee
+                            </div>
+                            <div class="text-default text-base font-medium">
+                                {{ taskDetails()?.assignee }}
+                            </div>
+
+                            <!-- Annotation -->
+                            <div
+                                class="text-default text-base font-normal mr-2"
+                            >
+                                Annotation
+                            </div>
+                            <div class="text-default text-base font-medium">
+                                {{ taskDetails()?.annotatedFrames }}/{{
+                                    taskDetails()?.totalFrames
+                                }}
+                                Frames
+                            </div>
+                            <!-- Status -->
+                            <div
+                                class="text-default text-base font-normal mr-2"
+                            >
+                                Status
+                            </div>
+                            <div class="text-default text-base font-medium">
+                                {{ taskDetails()?.status }}
+                            </div>
+                            <!-- Create Date -->
+                            <div
+                                class="text-default text-base font-normal mr-2"
+                            >
+                                Create Date
+                            </div>
+                            <div class="text-default text-base font-medium">
+                                {{ taskDetails()?.createDate }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    class="flex-auto bg-card shadow-md rounded-lg p-4 flex flex-col gap-4"
+                >
+                    <div class="text-lg font-semibold text-default">Labels</div>
+                    <div class="flex gap-2 flex-wrap w-full">
+                        @for (label of labelNameToLabelMap() | keyvalue; track
+                        label) {
+                        <button
+                            class="px-2 py-1 rounded-md flex items-center justify-center gap-1 bg-opacity-40 border w-fit"
+                            [ngStyle]="{
+                                background: getBgColor(label.value.label_color),
+                                color: label.value.label_color,
+                                'border-color': label.value.label_color
+                            }"
+                            (click)="onLabelClick(label.value)"
+                        >
+                            @if
+                            (selectedLabels().includes(label.value.label_name))
+                            {
+                            <mat-icon
+                                [svgIcon]="'heroicons_outline:check'"
+                                class="icon-size-4 stroke-current"
+                                [ngStyle]="{ color: label.value.label_color }"
+                            ></mat-icon>
+                            }
+                            <span>{{ label.value.label_name }}</span>
+                        </button>
+                        }
+                    </div>
                 </div>
             </div>
         </div>
