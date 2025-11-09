@@ -14,10 +14,19 @@
             "sourceRoot": "src",
             "prefix": "app",
             "i18n": {
-                "sourceLocale": "en",
+                "sourceLocale": {
+                    "code": "en",
+                    "baseHref": "/dashboard/en/"
+                },
                 "locales": {
-                    "ja": "src/locale/messages.ja.xlf2",
-                    "hi": "src/locale/messages.hi.xlf2"
+                    "ja": {
+                        "translation": "src/locale/messages.ja.xlf2",
+                        "baseHref": "/dashboard/ja/"
+                    },
+                    "hi": {
+                        "translation": "src/locale/messages.hi.xlf2",
+                        "baseHref": "/dashboard/hi/"
+                    }
                 }
             },
             "architect": {
