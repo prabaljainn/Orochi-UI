@@ -387,5 +387,41 @@
         <target>कार्य विवरण</target>
       </segment>
     </unit>
+    <unit id="5866254605255506989">
+      <notes>
+        <note>src/app/layout/common/languages/languages.component.ts:26</note>
+      </notes>
+      <segment>
+        <source>English</source>
+        <target>अंग्रेज़ी</target>
+      </segment>
+    </unit>
+    <unit id="6924606686202701860">
+      <notes>
+        <note>src/app/layout/common/languages/languages.component.ts:31</note>
+      </notes>
+      <segment>
+        <source>Japanese</source>
+        <target>जापानी</target>
+      </segment>
+    </unit>
+    <unit id="7941090461604249190">
+      <notes>
+        <note>src/app/layout/common/languages/languages.component.ts:36</note>
+      </notes>
+      <segment>
+        <source>Hindi</source>
+        <target>नहीं</target>
+      </segment>
+    </unit>
+    <unit id="6570363013146073520">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:55</note>
+      </notes>
+      <segment>
+        <source>Dashboard</source>
+        <target>डैशबोर्ड</target>
+      </segment>
+    </unit>
   </file>
 </xliff>

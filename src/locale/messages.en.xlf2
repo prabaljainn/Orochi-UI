@@ -1,5 +1,32 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="en">
   <file id="ngi18n">
+    <unit id="5866254605255506989">
+      <notes>
+        <note>src/app/layout/common/languages/languages.component.ts:26</note>
+      </notes>
+      <segment>
+        <source>English</source>
+        <target>English</target>
+      </segment>
+    </unit>
+    <unit id="6924606686202701860">
+      <notes>
+        <note>src/app/layout/common/languages/languages.component.ts:31</note>
+      </notes>
+      <segment>
+        <source>Japanese</source>
+        <target>Japanese</target>
+      </segment>
+    </unit>
+    <unit id="7941090461604249190">
+      <notes>
+        <note>src/app/layout/common/languages/languages.component.ts:36</note>
+      </notes>
+      <segment>
+        <source>Hindi</source>
+        <target>Hindi</target>
+      </segment>
+    </unit>
     <unit id="1341816711378353652">
       <notes>
         <note>src/app/modules/admin/dashboard/dashboard.component.html:27,29</note>
@@ -11,7 +38,7 @@
     </unit>
     <unit id="3448462145758383019">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.ts:130</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:131</note>
       </notes>
       <segment>
         <source>Total</source>
@@ -20,7 +47,7 @@
     </unit>
     <unit id="7317290694079257887">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.ts:131</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:132</note>
       </notes>
       <segment>
         <source>Accepted</source>
@@ -29,7 +56,7 @@
     </unit>
     <unit id="4188654437346976139">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.ts:132</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:133</note>
       </notes>
       <segment>
         <source>Rejected</source>
@@ -126,9 +153,18 @@
         <target>ACTION</target>
       </segment>
     </unit>
+    <unit id="6570363013146073520">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:55</note>
+      </notes>
+      <segment>
+        <source>Dashboard</source>
+        <target>Dashboard</target>
+      </segment>
+    </unit>
     <unit id="6882901562096359676">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.ts:65</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:66</note>
       </notes>
       <segment>
         <source>No data found</source>
@@ -137,7 +173,7 @@
     </unit>
     <unit id="6048892649018070225">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.ts:77</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:78</note>
       </notes>
       <segment>
         <source>Today</source>
@@ -146,7 +182,7 @@
     </unit>
     <unit id="1819001234976193310">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.ts:81</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:82</note>
       </notes>
       <segment>
         <source>Last 3 days</source>
@@ -155,7 +191,7 @@
     </unit>
     <unit id="4873149362496451858">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.ts:85</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:86</note>
       </notes>
       <segment>
         <source>Last 7 days</source>
@@ -164,7 +200,7 @@
     </unit>
     <unit id="2949150997160654358">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.ts:89</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:90</note>
       </notes>
       <segment>
         <source>Last 30 days</source>
@@ -173,7 +209,7 @@
     </unit>
     <unit id="892383834188993767">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.ts:93</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:94</note>
       </notes>
       <segment>
         <source>Custom Date Range</source>
@@ -182,7 +218,7 @@
     </unit>
     <unit id="1616102757855967475">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.ts:100</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:101</note>
       </notes>
       <segment>
         <source>All</source>
@@ -191,7 +227,7 @@
     </unit>
     <unit id="2972668581857158337">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.ts:133</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:134</note>
       </notes>
       <segment>
         <source>Not Annotated</source>

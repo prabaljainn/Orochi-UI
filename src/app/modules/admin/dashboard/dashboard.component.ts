@@ -52,6 +52,7 @@ import { TopBarComponent } from 'app/widgets/top-bar/top-bar.component';
     encapsulation: ViewEncapsulation.None,
 })
 export class DashboardComponent implements AfterViewInit, OnInit {
+	title : string = $localize`Dashboard`;
     displayedColumns: string[] = [
         'trainId',
         'timeAndDate',

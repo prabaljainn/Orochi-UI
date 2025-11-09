@@ -98,12 +98,36 @@ export class LanguagesComponent implements OnInit, OnDestroy {
                 //3) Reload the page with the chosen language
                 const originalurl = window.location.href;
                 let modifiedurl = originalurl;
+                
+                // First, try to replace any existing language code
+                let hasLanguageCode = false;
                 this.supportedLanguages.forEach((lang) => {
-                    modifiedurl = modifiedurl.replace(
-                        '/' + lang + '/',
-                        '/' + language + '/'
-                    );
+                    let re = new RegExp(`/${lang}/`, 'g');
+                    if (re.test(modifiedurl)) {
+                        hasLanguageCode = true;
+                        modifiedurl = modifiedurl.replace(
+                            '/' + lang + '/',
+                            '/' + language + '/'
+                        );
+                    }
                 });
+                
+                // If no language code was found, add it after the domain
+                if (!hasLanguageCode) {
+                    const url = new URL(modifiedurl);
+                    const pathParts = url.pathname.split('/').filter(part => part);
+                    
+                    // Insert language code after the first path segment (e.g., after 'dashboard')
+                    if (pathParts.length > 0) {
+                        pathParts.splice(1, 0, language);
+                    } else {
+                        pathParts.push(language);
+                    }
+                    
+                    url.pathname = '/' + pathParts.join('/') + '/';
+                    modifiedurl = url.toString();
+                }
+                
                 if (originalurl !== modifiedurl) {
                     window.location.href = modifiedurl;
                 }

@@ -117,6 +117,15 @@
                         "proxyConfig": "proxy.conf.js"
                     },
                     "configurations": {
+                        "en": {
+                            "buildTarget": "orochi-ui:build:en"
+                        },
+                        "ja": {
+                            "buildTarget": "orochi-ui:build:ja"
+                        },
+                        "hi": {
+                            "buildTarget": "orochi-ui:build:hi"
+                        },
                         "production": {
                             "buildTarget": "orochi-ui:build:production"
                         },
