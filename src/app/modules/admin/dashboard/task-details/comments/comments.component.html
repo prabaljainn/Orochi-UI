@@ -1,7 +1,7 @@
 <div class="w-full h-full flex flex-col gap-4">
     <!-- Header -->
     <div class="flex justify-between items-center gap-2">
-        <div class="text-lg font-semibold text-default">Task Comments</div>
+        <div class="text-lg font-semibold text-default" i18n>Task Comments</div>
         <div class="flex justify-end items-center gap-2">
             <button
                 class="bg-primary text-md text-on-primary font-medium rounded-md px-4 py-2 flex items-center gap-1 hover:bg-primary/90 transition-all duration-300"
@@ -11,7 +11,7 @@
                     class="icon-size-4 text-white"
                     svgIcon="heroicons_outline:arrow-path-rounded-square"
                 ></mat-icon>
-                Refresh
+                <span i18n>Refresh</span>
             </button>
         </div>
     </div>
@@ -89,6 +89,7 @@
                         type="text"
                         [value]="comment.message"
                         readonly
+						i18n-placeholder
                         placeholder="Comment"
                     />
 
@@ -160,6 +161,7 @@
                                 [value]="reply.message"
                                 readonly
                                 class="w-full px-3 py-2 border rounded-md text-sm text-default italic bg-card-secondary"
+                                i18n-placeholder
                                 placeholder="reply"
                             />
                         </div>
@@ -199,7 +201,7 @@
                             class="w-36 task-comments-input-wrapper h-10 filter-dropdown"
                             appearance="outline"
                         >
-                            <mat-label>Type</mat-label>
+                            <mat-label i18n>Type</mat-label>
                             <mat-select formControlName="comment_type">
                                 @for (commentType of commentTypeList; track
                                 commentType.key) {
@@ -215,10 +217,11 @@
                             appearance="outline"
                             style="--mat-form-field-container-height: 2.5rem"
                         >
-                            <mat-label>Add a comment...</mat-label>
+                            <mat-label i18n>Add a comment...</mat-label>
                             <input
                                 matInput
                                 formControlName="message"
+								i18n-placeholder
                                 placeholder="Add a comment..."
                                 class="text-sm"
                             />

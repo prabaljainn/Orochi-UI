@@ -62,7 +62,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         'action',
     ];
     dataSource = new MatTableDataSource<TaskElement>();
-    noDataMsg: string = 'No data found';
+    noDataMsg: string = $localize`No data found`;
     @ViewChild(MatSort) sort: MatSort;
     @ViewChild('paginator') paginator: MatPaginator;
     pageSizeOptions: number[] = [10, 20, 50];
@@ -74,42 +74,42 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     filterByList: Array<Dropdown> = [
         {
             key: 'today',
-            displayValue: 'Today',
+            displayValue: $localize`Today`,
         },
         {
             key: 'last3days',
-            displayValue: 'Last 3 days',
+            displayValue: $localize`Last 3 days`,
         },
         {
             key: 'last7days',
-            displayValue: 'Last 7 days',
+            displayValue: $localize`Last 7 days`,
         },
         {
             key: 'last30days',
-            displayValue: 'Last 30 days',
+            displayValue: $localize`Last 30 days`,
         },
         {
             key: 'custom',
-            displayValue: 'Custom Date Range',
+            displayValue: $localize`Custom Date Range`,
         },
     ];
 
     verdictFilterList: Array<Dropdown> = [
         {
             key: '',
-            displayValue: 'All',
+            displayValue: $localize`All`,
         },
         {
             key: 'AC',
-            displayValue: 'Accepted',
+            displayValue: $localize`Accepted`,
         },
         {
             key: 'RJ',
-            displayValue: 'Rejected',
+            displayValue: $localize`Rejected`,
         },
         {
             key: 'NA',
-            displayValue: 'Not Annotated',
+            displayValue: $localize`Not Annotated`,
         },
     ];
     verdictFilterControl: FormControl = new FormControl(
@@ -126,7 +126,12 @@ export class DashboardComponent implements AfterViewInit, OnInit {
 
     verdictChartData = {
         series: [],
-        labels: ['Total', 'Accepted', 'Rejected', 'Not Annotated'],
+        labels: [
+            $localize`Total`,
+            $localize`Accepted`,
+            $localize`Rejected`,
+            $localize`Not Annotated`,
+        ],
         colors: ['#4D96FF', '#6BCB77', '#EB5353', '#FF9D23'],
     };
 

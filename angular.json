@@ -16,7 +16,8 @@
             "i18n": {
                 "sourceLocale": "en",
                 "locales": {
-                    "ja": "src/locale/messages.ja.xlf2"
+                    "ja": "src/locale/messages.ja.xlf2",
+                    "hi": "src/locale/messages.hi.xlf2"
                 }
             },
             "architect": {
@@ -68,6 +69,9 @@
                         },
                         "ja": {
                             "localize": ["ja"]
+                        },
+						"hi": {
+                            "localize": ["hi"]
                         },
                         "production": {
                             "budgets": [

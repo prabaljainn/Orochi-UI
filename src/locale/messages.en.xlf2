@@ -1,12 +1,390 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="en">
   <file id="ngi18n">
-    <unit id="6805718923693239037">
+    <unit id="1341816711378353652">
       <notes>
-        <note>src/app/modules/admin/example/example.component.html:8</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:27,29</note>
       </notes>
       <segment>
-        <source>TEST LOCALIZATION</source>
-        <target>TEST LOCALIZATION</target>
+        <source> Verdicts </source>
+        <target> Verdicts </target>
+      </segment>
+    </unit>
+    <unit id="3448462145758383019">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:130</note>
+      </notes>
+      <segment>
+        <source>Total</source>
+        <target>Total</target>
+      </segment>
+    </unit>
+    <unit id="7317290694079257887">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:131</note>
+      </notes>
+      <segment>
+        <source>Accepted</source>
+        <target>Accepted</target>
+      </segment>
+    </unit>
+    <unit id="4188654437346976139">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:132</note>
+      </notes>
+      <segment>
+        <source>Rejected</source>
+        <target>Rejected</target>
+      </segment>
+    </unit>
+    <unit id="7913579395505362868">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:70,72</note>
+      </notes>
+      <segment>
+        <source> Not Annotated </source>
+        <target> Not Annotated </target>
+      </segment>
+    </unit>
+    <unit id="2341208127410331677">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:117,119</note>
+      </notes>
+      <segment>
+        <source> FILTER BY </source>
+        <target> FILTER BY </target>
+      </segment>
+    </unit>
+    <unit id="3797570084942068182">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:123</note>
+      </notes>
+      <segment>
+        <source>Select</source>
+        <target>Select</target>
+      </segment>
+    </unit>
+    <unit id="6201553740003783739">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:147</note>
+      </notes>
+      <segment>
+        <source>TRAIN ID</source>
+        <target>TRAIN ID</target>
+      </segment>
+    </unit>
+    <unit id="6644683034494569115">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:157</note>
+      </notes>
+      <segment>
+        <source>TIME AND DATE</source>
+        <target>TIME AND DATE</target>
+      </segment>
+    </unit>
+    <unit id="1473467113021165135">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:167</note>
+      </notes>
+      <segment>
+        <source>STATUS</source>
+        <target>STATUS</target>
+      </segment>
+    </unit>
+    <unit id="3858816479441073768">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:177</note>
+      </notes>
+      <segment>
+        <source>VERDICT</source>
+        <target>VERDICT</target>
+      </segment>
+    </unit>
+    <unit id="833320260701585870">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:196</note>
+      </notes>
+      <segment>
+        <source>ANNOTATION</source>
+        <target>ANNOTATION</target>
+      </segment>
+    </unit>
+    <unit id="4325854060977838530">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:206</note>
+      </notes>
+      <segment>
+        <source>ASSIGNEE</source>
+        <target>ASSIGNEE</target>
+      </segment>
+    </unit>
+    <unit id="3308546607246356732">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:216</note>
+      </notes>
+      <segment>
+        <source>ACTION</source>
+        <target>ACTION</target>
+      </segment>
+    </unit>
+    <unit id="6882901562096359676">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:65</note>
+      </notes>
+      <segment>
+        <source>No data found</source>
+        <target>No data found</target>
+      </segment>
+    </unit>
+    <unit id="6048892649018070225">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:77</note>
+      </notes>
+      <segment>
+        <source>Today</source>
+        <target>Today</target>
+      </segment>
+    </unit>
+    <unit id="1819001234976193310">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:81</note>
+      </notes>
+      <segment>
+        <source>Last 3 days</source>
+        <target>Last 3 days</target>
+      </segment>
+    </unit>
+    <unit id="4873149362496451858">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:85</note>
+      </notes>
+      <segment>
+        <source>Last 7 days</source>
+        <target>Last 7 days</target>
+      </segment>
+    </unit>
+    <unit id="2949150997160654358">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:89</note>
+      </notes>
+      <segment>
+        <source>Last 30 days</source>
+        <target>Last 30 days</target>
+      </segment>
+    </unit>
+    <unit id="892383834188993767">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:93</note>
+      </notes>
+      <segment>
+        <source>Custom Date Range</source>
+        <target>Custom Date Range</target>
+      </segment>
+    </unit>
+    <unit id="1616102757855967475">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:100</note>
+      </notes>
+      <segment>
+        <source>All</source>
+        <target>All</target>
+      </segment>
+    </unit>
+    <unit id="2972668581857158337">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.ts:133</note>
+      </notes>
+      <segment>
+        <source>Not Annotated</source>
+        <target>Not Annotated</target>
+      </segment>
+    </unit>
+    <unit id="149044872342563489">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:4</note>
+      </notes>
+      <segment>
+        <source>Task Comments</source>
+        <target>Task Comments</target>
+      </segment>
+    </unit>
+    <unit id="1102717806459547726">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:14</note>
+      </notes>
+      <segment>
+        <source>Refresh</source>
+        <target>Refresh</target>
+      </segment>
+    </unit>
+    <unit id="2662644497259948010">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:93</note>
+      </notes>
+      <segment>
+        <source>Comment</source>
+        <target>Comment</target>
+      </segment>
+    </unit>
+    <unit id="5572873179876552830">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:165</note>
+      </notes>
+      <segment>
+        <source>reply</source>
+        <target>reply</target>
+      </segment>
+    </unit>
+    <unit id="5621735247460966280">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:183,185</note>
+      </notes>
+      <segment>
+        <source> No comments found yet </source>
+        <target> No comments found yet </target>
+      </segment>
+    </unit>
+    <unit id="8650499415827640724">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:204</note>
+      </notes>
+      <segment>
+        <source>Type</source>
+        <target>Type</target>
+      </segment>
+    </unit>
+    <unit id="6999356248762503689">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:225</note>
+      </notes>
+      <segment>
+        <source>Add a comment...</source>
+        <target>Add a comment...</target>
+      </segment>
+    </unit>
+    <unit id="1519954996184640001">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.ts:161</note>
+      </notes>
+      <segment>
+        <source>Error</source>
+        <target>Error</target>
+      </segment>
+    </unit>
+    <unit id="883225603593837541">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.ts:142</note>
+      </notes>
+      <segment>
+        <source>Something went wrong. Please try again.</source>
+        <target>Something went wrong. Please try again.</target>
+      </segment>
+    </unit>
+    <unit id="5392901357038630532">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.ts:162</note>
+      </notes>
+      <segment>
+        <source>Something went wrong while deleting the comment. Please try again.</source>
+        <target>Something went wrong while deleting the comment. Please try again.</target>
+      </segment>
+    </unit>
+    <unit id="2982422585844013726">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:41,43</note>
+      </notes>
+      <segment>
+        <source> No Annotated Frames. </source>
+        <target> No Annotated Frames. </target>
+      </segment>
+    </unit>
+    <unit id="4423253549935469768">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:116,118</note>
+      </notes>
+      <segment>
+        <source> Details </source>
+        <target> Details </target>
+      </segment>
+    </unit>
+    <unit id="4760173033440473119">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:125,127</note>
+      </notes>
+      <segment>
+        <source> Project Name </source>
+        <target> Project Name </target>
+      </segment>
+    </unit>
+    <unit id="9193001935256028830">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:135,137</note>
+      </notes>
+      <segment>
+        <source> Owner </source>
+        <target> Owner </target>
+      </segment>
+    </unit>
+    <unit id="4810347345927320513">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:145,147</note>
+      </notes>
+      <segment>
+        <source> Assignee </source>
+        <target> Assignee </target>
+      </segment>
+    </unit>
+    <unit id="8825952487324912813">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:156,158</note>
+      </notes>
+      <segment>
+        <source> Annotation </source>
+        <target> Annotation </target>
+      </segment>
+    </unit>
+    <unit id="3091819333763458246">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:163</note>
+      </notes>
+      <segment>
+        <source>Frames</source>
+        <target>Frames</target>
+      </segment>
+    </unit>
+    <unit id="4282587102956396340">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:169,171</note>
+      </notes>
+      <segment>
+        <source> Status </source>
+        <target> Status </target>
+      </segment>
+    </unit>
+    <unit id="5689202800227799783">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:179,181</note>
+      </notes>
+      <segment>
+        <source> Create Date </source>
+        <target> Create Date </target>
+      </segment>
+    </unit>
+    <unit id="1763705795920808112">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:192,194</note>
+      </notes>
+      <segment>
+        <source> Labels </source>
+        <target> Labels </target>
+      </segment>
+    </unit>
+    <unit id="114816039455039903">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.ts:47</note>
+      </notes>
+      <segment>
+        <source>Task Details</source>
+        <target>Task Details</target>
       </segment>
     </unit>
   </file>

@@ -44,6 +44,7 @@ import { debounceTime } from 'rxjs';
     templateUrl: './task-details.component.html',
 })
 export class TaskDetailsComponent implements OnInit {
+	title = $localize`Task Details`;
     projectId = signal<string>('');
     taskId = signal<string>('');
 

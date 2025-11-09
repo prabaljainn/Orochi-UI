@@ -2,7 +2,7 @@
     <!-- Header -->
     <app-top-bar
         class="sticky top-0 z-50"
-        [title]="'Task Details'"
+        [title]="title"
         [showBackButton]="true"
         (onBackButtonClick)="onBackButtonClick()"
     ></app-top-bar>
@@ -113,7 +113,7 @@
                 <div
                     class="bg-card shadow-md rounded-lg p-4 flex flex-col gap-4"
                 >
-                    <div class="text-lg font-semibold text-default">
+                    <div class="text-lg font-semibold text-default" i18n>
                         Details
                     </div>
                     <div class="w-full flex justify-between gap-2">
@@ -121,6 +121,7 @@
                             <!-- Project Name -->
                             <div
                                 class="text-default text-base font-normal mr-2"
+                                i18n
                             >
                                 Project Name
                             </div>
@@ -130,6 +131,7 @@
                             <!-- Owner -->
                             <div
                                 class="text-default text-base font-normal mr-2"
+                                i18n
                             >
                                 Owner
                             </div>
@@ -139,6 +141,7 @@
                             <!-- Assignee -->
                             <div
                                 class="text-default text-base font-normal mr-2"
+                                i18n
                             >
                                 Assignee
                             </div>
@@ -149,6 +152,7 @@
                             <!-- Annotation -->
                             <div
                                 class="text-default text-base font-normal mr-2"
+                                i18n
                             >
                                 Annotation
                             </div>
@@ -156,11 +160,12 @@
                                 {{ taskDetails()?.annotatedFrames }}/{{
                                     taskDetails()?.totalFrames
                                 }}
-                                Frames
+                                <span i18n>Frames</span>
                             </div>
                             <!-- Status -->
                             <div
                                 class="text-default text-base font-normal mr-2"
+                                i18n
                             >
                                 Status
                             </div>
@@ -170,6 +175,7 @@
                             <!-- Create Date -->
                             <div
                                 class="text-default text-base font-normal mr-2"
+                                i18n
                             >
                                 Create Date
                             </div>
@@ -183,7 +189,9 @@
                 <div
                     class="flex-auto bg-card shadow-md rounded-lg p-4 flex flex-col gap-4"
                 >
-                    <div class="text-lg font-semibold text-default">Labels</div>
+                    <div class="text-lg font-semibold text-default" i18n>
+                        Labels
+                    </div>
                     <div class="flex gap-2 flex-wrap w-full">
                         @for (label of labelNameToLabelMap() | keyvalue; track
                         label) {
