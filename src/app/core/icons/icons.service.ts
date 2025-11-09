@@ -22,5 +22,6 @@ export class IconsService
         matIconRegistry.addSvgIconSetInNamespace('heroicons_solid', domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/heroicons-solid.svg'));
         matIconRegistry.addSvgIconSetInNamespace('heroicons_mini', domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/heroicons-mini.svg'));
 		matIconRegistry.addSvgIconSetInNamespace('sudocode', domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/sudocode.svg'));
+		matIconRegistry.addSvgIconSetInNamespace('flags', domSanitizer.bypassSecurityTrustResourceUrl('assets/icons/flags.svg'));
     }
 }
