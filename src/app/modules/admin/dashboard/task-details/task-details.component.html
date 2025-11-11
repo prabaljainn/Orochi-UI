@@ -11,7 +11,7 @@
     <div class="flex flex-col flex-auto gap-4 p-6">
         <div class="flex gap-4">
             <div
-                class="w-4/5 min-h-[35rem] bg-card shadow-md rounded-lg p-2 relative flex flex-col gap-2"
+                class="hidden w-4/5 min-h-[35rem] bg-card shadow-md rounded-lg p-2 relative flex flex-col gap-2"
             >
                 <div
                     id="frameAnnotator"
@@ -107,6 +107,14 @@
                         {{ currentFrame() ?? 0 }}
                     </div>
                 </div>
+            </div>
+
+            <div
+                class="w-4/5 min-h-[35rem] bg-card shadow-md rounded-lg p-2 relative flex flex-col gap-2"
+            >
+                <app-video-grid
+                    [videos]="videoList()"
+                ></app-video-grid>
             </div>
 
             <div class="w-1/5 flex flex-col gap-4">

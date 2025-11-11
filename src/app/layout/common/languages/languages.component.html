@@ -27,7 +27,7 @@
 			mat-menu-item 
 			(click)="handleLanguageSelection(lang.code)"
 		>
-			@if (languageOption === lang.code) {
+			@if (selectedLanguage === lang.code) {
 			<mat-icon
 				class="cursor-pointer text-primary icon-size-5"
 				[svgIcon]="'heroicons_solid:check'"

@@ -26,6 +26,7 @@ import { CommentsComponent } from './comments/comments.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSliderModule } from '@angular/material/slider';
 import { debounceTime } from 'rxjs';
+import { VideoGridComponent } from './video-grid/video-grid.component';
 
 @Component({
     selector: 'app-task-details',
@@ -40,6 +41,7 @@ import { debounceTime } from 'rxjs';
         CommentsComponent,
         MatDividerModule,
         MatSliderModule,
+		VideoGridComponent,
     ],
     templateUrl: './task-details.component.html',
 })
@@ -64,6 +66,8 @@ export class TaskDetailsComponent implements OnInit {
     @ViewChild('frameAnnotator') frameAnnotator!: ElementRef<HTMLDivElement>;
     frameAnnotatorWidth = signal<number>(0);
     frameAnnotatorHeight = signal<number>(0);
+
+	videoList = signal([]);
 
     constructor(
         private _trainAnalyticsService: TrainAnalyticsService,
@@ -105,6 +109,8 @@ export class TaskDetailsComponent implements OnInit {
         this._trainAnalyticsService
             .getTaskAnalysis(this.projectId(), this.taskId())
             .subscribe((res: any) => {
+				console.log(res?.videos?.videos ?? []);
+				this.videoList.set(res?.videos?.videos ?? []);
                 let totalFrames = 0;
                 res.jobs.forEach((job: any) => {
                     if (job?.type === 'annotation') {

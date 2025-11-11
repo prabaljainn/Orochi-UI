@@ -37,7 +37,7 @@ export class LanguagesComponent implements OnInit, OnDestroy {
         },
     ];
     supportedLanguages: string[] = this.languageList.map((lang) => lang.code);
-    languageOption: string = 'en';
+    selectedLanguage: string = 'en';
 
     /**
      * Constructor
@@ -51,7 +51,9 @@ export class LanguagesComponent implements OnInit, OnDestroy {
     /**
      * On init
      */
-    ngOnInit(): void {}
+    ngOnInit(): void {
+		this.selectedLanguage = localStorage.getItem('userPreference') || 'en';
+	}
 
     /**
      * On destroy
@@ -63,8 +65,8 @@ export class LanguagesComponent implements OnInit, OnDestroy {
     // -----------------------------------------------------------------------------------------------------
 
     changeLanguage() {
-        const language = this.supportedLanguages.includes(this.languageOption)
-            ? this.languageOption
+        const language = this.supportedLanguages.includes(this.selectedLanguage)
+            ? this.selectedLanguage
             : 'en';
 
         //Skip any language changes if running locally
@@ -137,7 +139,7 @@ export class LanguagesComponent implements OnInit, OnDestroy {
     }
 
     handleLanguageSelection(lng: string) {
-        this.languageOption = lng;
+        this.selectedLanguage = lng;
         this.changeLanguage();
     }
 }
