@@ -11,6 +11,7 @@
                 trackBy: trackByIndex
             "
             class="bg-black rounded-md overflow-hidden flex flex-col items-center justify-center hover:border hover:border-primary transition-all duration-300"
+			(click)="openVideoDialog(url)"
         >
             <video
                 #videoPlayer

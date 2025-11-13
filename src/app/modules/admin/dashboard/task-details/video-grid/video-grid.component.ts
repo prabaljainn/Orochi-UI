@@ -10,9 +10,11 @@ import {
     SimpleChanges,
     ChangeDetectorRef,
 } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { VideoPlayerDialogComponent } from './video-player-dialog/video-player-dialog.component';
 
 export interface VideoItem {
     key: string;
@@ -46,7 +48,8 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
 
     constructor(
         private sanitizer: DomSanitizer,
-        private cd: ChangeDetectorRef
+        private cd: ChangeDetectorRef,
+        private dialog: MatDialog
     ) {}
 
     ngAfterViewInit() {
@@ -209,5 +212,17 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
             this.videos.length
         );
         return `${start} – ${end}`;
+    }
+
+    openVideoDialog(url: SafeResourceUrl) {
+        this.dialog.open(VideoPlayerDialogComponent, {
+            width: '90vw',
+			maxHeight: '90vh',
+            data: {
+                url: url,
+                filename: this.safeUrlToVideoMetaMap.get(url)?.filename.split('.')?.[0] ?? '',
+                frameRate: 30,
+            },
+        });
     }
 }

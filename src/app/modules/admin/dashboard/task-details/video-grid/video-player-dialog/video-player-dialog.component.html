@@ -1,0 +1,121 @@
+<div class="flex flex-col gap-4 bg-card rounded-md">
+    <!-- header -->
+    <div class="flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <h3 class="text-lg font-semibold">{{ filename }}</h3>
+            <span class="text-sm text-gray-500"
+                >• {{ formatTime(currentTime) }} /
+                {{ formatTime(duration) }}</span
+            >
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button (click)="close()" class="px-3 py-1 rounded border text-sm">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- video area -->
+    <div class="w-full bg-black rounded-md overflow-hidden relative">
+		<!-- (pointerdown)="onPointerDown($event)"
+            (pointermove)="onPointerMove($event)"
+            (pointerup)="onPointerUp($event)"
+            (pointercancel)="onPointerUp($event)" -->
+        <div
+            #videoWrapper
+            class="w-full h-[60vh] flex items-center justify-center bg-black touch-none"
+            style="transition: transform 0.08s linear"
+        >
+            <video
+                #videoRef
+                [src]="safeUrl"
+				playsinline
+				autoplay
+				muted
+				loop
+                class="w-full h-full object-contain"
+            ></video>
+        </div>
+    </div>
+
+    <!-- controls -->
+    <div class="flex flex-col gap-3">
+        <!-- playback + frame controls -->
+        <div class="flex flex-wrap items-center gap-3">
+            <button
+                (click)="togglePlay()"
+                class="px-3 py-1 rounded bg-gray-100 hover:bg-gray-200"
+            >
+                <span *ngIf="!playing">Play</span>
+                <span *ngIf="playing">Pause</span>
+            </button>
+
+            <button (click)="stepFrame(-1)" class="px-3 py-1 rounded border">
+                ← Prev frame
+            </button>
+            <button (click)="stepFrame(1)" class="px-3 py-1 rounded border">
+                Next frame →
+            </button>
+
+            <!-- playback rate slider -->
+            <div class="flex items-center gap-2 ml-4">
+                <label class="text-sm text-gray-600">Speed</label>
+                <input
+                    type="range"
+                    min="0.25"
+                    max="2"
+                    step="0.05"
+                    [value]="playbackRate"
+                    (input)="setPlaybackRate($any($event.target).valueAsNumber)"
+                    class="w-40"
+                />
+                <div class="w-12 text-sm text-gray-700 text-center">
+                    {{ playbackRate | number : "1.2-2" }}x
+                </div>
+            </div>
+        </div>
+
+        <!-- seek bar (robust bindings) -->
+        <div class="flex items-center gap-3">
+            <input
+                type="range"
+                min="0"
+                [max]="duration || 0"
+                step="0.01"
+                [value]="currentTime"
+                (pointerdown)="onSeekStart()"
+                (input)="onSeekChange($any($event.target).valueAsNumber)"
+                (change)="onSeekEnd($any($event.target).valueAsNumber)"
+                class="w-full"
+            />
+        </div>
+
+        <!-- zoom controls -->
+        <div class="flex items-center gap-3">
+            <label class="text-sm text-gray-600">Zoom</label>
+            <button (click)="zoomOut()" class="px-2 py-1 rounded border">
+                -
+            </button>
+            <input
+                type="range"
+                [min]="minZoom"
+                [max]="maxZoom"
+                step="0.05"
+                [value]="zoom"
+                (input)="setZoom($any($event.target).valueAsNumber)"
+                class="w-40"
+            />
+            <button (click)="zoomIn()" class="px-2 py-1 rounded border">
+                +
+            </button>
+            <button (click)="resetZoom()" class="px-2 py-1 rounded border">
+                Reset
+            </button>
+
+            <div class="ml-4 text-sm text-gray-700">
+                Zoom: {{ zoom | number : "1.2-2" }}x
+            </div>
+        </div>
+    </div>
+</div>
