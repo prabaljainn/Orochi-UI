@@ -216,8 +216,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
 
     openVideoDialog(url: SafeResourceUrl) {
         this.dialog.open(VideoPlayerDialogComponent, {
-            width: '90vw',
-			maxHeight: '90vh',
+            width: '95%',
             data: {
                 url: url,
                 filename: this.safeUrlToVideoMetaMap.get(url)?.filename.split('.')?.[0] ?? '',

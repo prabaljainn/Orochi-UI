@@ -51,6 +51,11 @@ input[type="number"] {
     }
 }
 
+.mat-mdc-dialog-surface {
+	background: var(--fuse-bg-card) !important;
+}
+
+
 /**
  * ----------------------------------------
  * animation slide-right

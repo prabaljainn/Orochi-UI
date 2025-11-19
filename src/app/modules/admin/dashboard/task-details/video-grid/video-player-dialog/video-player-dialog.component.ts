@@ -10,6 +10,8 @@ import {
     ChangeDetectorRef,
 } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 export interface VideoDialogData {
@@ -20,8 +22,8 @@ export interface VideoDialogData {
 
 @Component({
     selector: 'app-video-player-dialog',
-	standalone: true,
-	imports: [CommonModule],
+    standalone: true,
+    imports: [CommonModule, MatIconModule, MatTooltipModule],
     templateUrl: './video-player-dialog.component.html',
 })
 export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
