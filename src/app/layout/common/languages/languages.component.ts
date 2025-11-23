@@ -1,37 +1,48 @@
-import { NgFor, NgTemplateOutlet } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    OnDestroy,
+    OnInit,
+    ViewEncapsulation,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { FuseNavigationService, FuseVerticalNavigationComponent } from '@fuse/components/navigation';
-import { AvailableLangs, TranslocoService } from '@ngneat/transloco';
-import { take } from 'rxjs';
 
 @Component({
-    selector       : 'languages',
-    templateUrl    : './languages.component.html',
-    encapsulation  : ViewEncapsulation.None,
+    selector: 'languages',
+    templateUrl: './languages.component.html',
+    encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'languages',
-    standalone     : true,
-    imports        : [MatButtonModule, MatMenuModule, NgTemplateOutlet, NgFor, MatIconModule],
+    exportAs: 'languages',
+    standalone: true,
+    imports: [MatButtonModule, MatMenuModule, MatIconModule],
 })
-export class LanguagesComponent implements OnInit, OnDestroy
-{
-    availableLangs: AvailableLangs;
-    activeLang: string;
-    flagCodes: any;
+export class LanguagesComponent implements OnInit, OnDestroy {
+    languageList = [
+        {
+            code: 'en',
+            icon: 'flags:en',
+            name: $localize`English`,
+        },
+        {
+            code: 'ja',
+            icon: 'flags:ja',
+            name: $localize`Japanese`,
+        },
+		{
+            code: 'hi',
+            icon: 'flags:hi',
+            name: $localize`Hindi`,
+        },
+    ];
+    supportedLanguages: string[] = this.languageList.map((lang) => lang.code);
+    selectedLanguage: string = 'en';
 
     /**
      * Constructor
      */
-    constructor(
-        private _changeDetectorRef: ChangeDetectorRef,
-        private _fuseNavigationService: FuseNavigationService,
-        private _translocoService: TranslocoService,
-    )
-    {
-    }
+    constructor() {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Lifecycle hooks
@@ -40,120 +51,95 @@ export class LanguagesComponent implements OnInit, OnDestroy
     /**
      * On init
      */
-    ngOnInit(): void
-    {
-        // Get the available languages from transloco
-        this.availableLangs = this._translocoService.getAvailableLangs();
-
-        // Subscribe to language changes
-        this._translocoService.langChanges$.subscribe((activeLang) =>
-        {
-            // Get the active lang
-            this.activeLang = activeLang;
-
-            // Update the navigation
-            this._updateNavigation(activeLang);
-        });
-
-        // Set the country iso codes for languages for flags
-        this.flagCodes = {
-            'en': 'us',
-            'tr': 'tr',
-        };
-    }
+    ngOnInit(): void {
+		this.selectedLanguage = localStorage.getItem('userPreference') || 'en';
+	}
 
     /**
      * On destroy
      */
-    ngOnDestroy(): void
-    {
-    }
+    ngOnDestroy(): void {}
 
     // -----------------------------------------------------------------------------------------------------
     // @ Public methods
     // -----------------------------------------------------------------------------------------------------
 
-    /**
-     * Set the active lang
-     *
-     * @param lang
-     */
-    setActiveLang(lang: string): void
-    {
-        // Set the active lang
-        this._translocoService.setActiveLang(lang);
+    changeLanguage() {
+        const language = this.supportedLanguages.includes(this.selectedLanguage)
+            ? this.selectedLanguage
+            : 'en';
+
+        //Skip any language changes if running locally
+        if (window.location.hostname !== 'localhost') {
+            let currentLanguage = 'en';
+            this.supportedLanguages.forEach((lang) => {
+                let re = new RegExp(`/${lang}/`, 'g');
+                if (re.test(window.location.href)) {
+                    currentLanguage = lang;
+                    //console.log('currentLanguage set to ', currentLanguage);
+                }
+            });
+
+            //0) Check if the currently loaded language is the same as what is requested
+            if (language != currentLanguage) {
+                console.log(
+                    'Switching the language from ',
+                    currentLanguage,
+                    ' to ',
+                    language
+                );
+                //1) Set the preference to local storage
+                localStorage.setItem('userPreference', language);
+
+                //2) Update logged in user's language preference
+                // this.userinfo.meta['langKey'] = language;
+                // this._userService.updateUserMeta(this.userinfo.meta).subscribe((resp) => {
+                //     //console.log('resp', resp);
+                // });
+
+                //3) Reload the page with the chosen language
+                const originalurl = window.location.href;
+                let modifiedurl = originalurl;
+                
+                // First, try to replace any existing language code
+                let hasLanguageCode = false;
+                this.supportedLanguages.forEach((lang) => {
+                    let re = new RegExp(`/${lang}/`, 'g');
+                    if (re.test(modifiedurl)) {
+                        hasLanguageCode = true;
+                        modifiedurl = modifiedurl.replace(
+                            '/' + lang + '/',
+                            '/' + language + '/'
+                        );
+                    }
+                });
+                
+                // If no language code was found, add it after the domain
+                if (!hasLanguageCode) {
+                    const url = new URL(modifiedurl);
+                    const pathParts = url.pathname.split('/').filter(part => part);
+                    
+                    // Insert language code after the first path segment (e.g., after 'dashboard')
+                    if (pathParts.length > 0) {
+                        pathParts.splice(1, 0, language);
+                    } else {
+                        pathParts.push(language);
+                    }
+                    
+                    url.pathname = '/' + pathParts.join('/') + '/';
+                    modifiedurl = url.toString();
+                }
+                
+                if (originalurl !== modifiedurl) {
+                    window.location.href = modifiedurl;
+                }
+            }
+        }
+        //this._changeDetectorRef.markForCheck();
     }
 
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
-    trackByFn(index: number, item: any): any
-    {
-        return item.id || index;
-    }
-
-    // -----------------------------------------------------------------------------------------------------
-    // @ Private methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Update the navigation
-     *
-     * @param lang
-     * @private
-     */
-    private _updateNavigation(lang: string): void
-    {
-        // For the demonstration purposes, we will only update the Dashboard names
-        // from the navigation but you can do a full swap and change the entire
-        // navigation data.
-        //
-        // You can import the data from a file or request it from your backend,
-        // it's up to you.
-
-        // Get the component -> navigation data -> item
-        const navComponent = this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>('mainNavigation');
-
-        // Return if the navigation component does not exist
-        if ( !navComponent )
-        {
-            return null;
-        }
-
-        // Get the flat navigation data
-        const navigation = navComponent.navigation;
-
-        // Get the Project dashboard item and update its title
-        const projectDashboardItem = this._fuseNavigationService.getItem('dashboards.project', navigation);
-        if ( projectDashboardItem )
-        {
-            this._translocoService.selectTranslate('Project').pipe(take(1))
-                .subscribe((translation) =>
-                {
-                    // Set the title
-                    projectDashboardItem.title = translation;
-
-                    // Refresh the navigation component
-                    navComponent.refresh();
-                });
-        }
-
-        // Get the Analytics dashboard item and update its title
-        const analyticsDashboardItem = this._fuseNavigationService.getItem('dashboards.analytics', navigation);
-        if ( analyticsDashboardItem )
-        {
-            this._translocoService.selectTranslate('Analytics').pipe(take(1))
-                .subscribe((translation) =>
-                {
-                    // Set the title
-                    analyticsDashboardItem.title = translation;
-
-                    // Refresh the navigation component
-                    navComponent.refresh();
-                });
-        }
+    handleLanguageSelection(lng: string) {
+        this.selectedLanguage = lng;
+        this.changeLanguage();
     }
 }

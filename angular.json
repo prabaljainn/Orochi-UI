@@ -14,9 +14,19 @@
             "sourceRoot": "src",
             "prefix": "app",
             "i18n": {
-                "sourceLocale": "en",
+                "sourceLocale": {
+                    "code": "en",
+                    "baseHref": "/dashboard/en/"
+                },
                 "locales": {
-                    "ja": "src/locale/messages.ja.xlf2"
+                    "ja": {
+                        "translation": "src/locale/messages.ja.xlf2",
+                        "baseHref": "/dashboard/ja/"
+                    },
+                    "hi": {
+                        "translation": "src/locale/messages.hi.xlf2",
+                        "baseHref": "/dashboard/hi/"
+                    }
                 }
             },
             "architect": {
@@ -69,6 +79,9 @@
                         "ja": {
                             "localize": ["ja"]
                         },
+						"hi": {
+                            "localize": ["hi"]
+                        },
                         "production": {
                             "budgets": [
                                 {
@@ -113,6 +126,15 @@
                         "proxyConfig": "proxy.conf.js"
                     },
                     "configurations": {
+                        "en": {
+                            "buildTarget": "orochi-ui:build:en"
+                        },
+                        "ja": {
+                            "buildTarget": "orochi-ui:build:ja"
+                        },
+                        "hi": {
+                            "buildTarget": "orochi-ui:build:hi"
+                        },
                         "production": {
                             "buildTarget": "orochi-ui:build:production"
                         },

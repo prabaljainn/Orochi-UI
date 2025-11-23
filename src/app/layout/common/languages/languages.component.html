@@ -22,16 +22,23 @@
 <mat-menu
     [xPosition]="'before'"
     #languages="matMenu">
-    <ng-container *ngFor="let lang of availableLangs; trackBy: trackByFn">
-        <button
-            mat-menu-item
-            (click)="setActiveLang(lang.id)">
-            <span class="flex items-center">
-                <ng-container *ngTemplateOutlet="flagImage; context: {$implicit: lang.id}"></ng-container>
-                <span class="ml-3">{{lang.label}}</span>
-            </span>
-        </button>
-    </ng-container>
+	@for (lang of languageList; track lang.code) {
+		<button
+			mat-menu-item 
+			(click)="handleLanguageSelection(lang.code)"
+		>
+			@if (selectedLanguage === lang.code) {
+			<mat-icon
+				class="cursor-pointer text-primary icon-size-5"
+				[svgIcon]="'heroicons_solid:check'"
+			></mat-icon>
+			}
+			<span class="flex items-center">
+				<mat-icon class="icon-size-6" [svgIcon]="lang.icon"></mat-icon>
+				<span>{{lang.name}}</span>
+			</span>
+	</button>
+	}
 </mat-menu>
 
 <!-- Flag image template -->

@@ -1,14 +1,12 @@
 import { CommonModule } from '@angular/common';
-import {
-    Component,
-    input,
-    Input,
-    OnChanges,
-    OnInit,
-    SimpleChanges,
-} from '@angular/core';
+import { Component, effect, input, OnInit, signal } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { FrameData, ScaledShape, ShapeType } from 'app/models/annotation.types';
+import {
+    FrameData,
+    Label,
+    ScaledShape,
+    ShapeType,
+} from 'app/models/annotation.types';
 import { FrameApiService } from 'app/services/frame-api.service';
 import { forkJoin } from 'rxjs';
 
@@ -19,10 +17,15 @@ import { forkJoin } from 'rxjs';
     styleUrl: './frame-annotator.component.scss',
 })
 export class FrameAnnotatorComponent implements OnInit {
-	jobId = input<number>();
+    jobId = input<number>();
     frameNumber = input<number>();
-    displayWidth: number = 800;
-    displayHeight: number = 600;
+    labelNameToLabelMap = input<Map<string, Label>>();
+    maxDisplayWidth = input<number>();
+    maxDisplayHeight = input<number>();
+
+    displayWidth = signal<number>(800);
+    displayHeight = signal<number>(600);
+    scaleFactor = signal<number>(1);
 
     frameData: FrameData | null = null;
     frameImageUrl: SafeUrl;
@@ -42,10 +45,18 @@ export class FrameAnnotatorComponent implements OnInit {
     constructor(
         private _frameApiService: FrameApiService,
         private _sanitizer: DomSanitizer
-    ) {}
+    ) {
+        effect(() => {
+            console.log(
+                'label map in frame annotator',
+                this.labelNameToLabelMap()
+            );
+            this.loadFrameData();
+        });
+    }
 
     ngOnInit() {
-        this.loadFrameData();
+        // this.loadFrameData();
     }
 
     async loadFrameData() {
@@ -55,7 +66,10 @@ export class FrameAnnotatorComponent implements OnInit {
         this.error = null;
 
         forkJoin({
-            meta: this._frameApiService.getMeta(this.jobId(), this.frameNumber()),
+            meta: this._frameApiService.getMeta(
+                this.jobId(),
+                this.frameNumber()
+            ),
             imageBlob: this._frameApiService.getFrameImageUrl(
                 this.jobId(),
                 this.frameNumber()
@@ -64,8 +78,12 @@ export class FrameAnnotatorComponent implements OnInit {
             next: ({ meta, imageBlob }) => {
                 // Meta assignment
                 this.frameData = meta;
-				this.displayWidth = meta.frame_meta.width;
-				this.displayHeight = meta.frame_meta.height;
+
+                // Calculate display dimensions to fit within maxDisplayWidth/maxDisplayHeight
+                this.calculateDisplayDimensions(
+                    meta.frame_meta.width,
+                    meta.frame_meta.height
+                );
 
                 // Image processing
                 const fileType = imageBlob.type;
@@ -114,7 +132,7 @@ export class FrameAnnotatorComponent implements OnInit {
 
     private createScaledShape(shape: any, trackId?: number): ScaledShape {
         const scaledPoints = this.scaleCoordinates(shape.points);
-        const color = this.getLabelColor(shape.label);
+        const color = this.labelNameToLabelMap()?.get(shape.label)?.label_color;
 
         return {
             ...shape,
@@ -125,15 +143,55 @@ export class FrameAnnotatorComponent implements OnInit {
         };
     }
 
+    private calculateDisplayDimensions(
+        originalWidth: number,
+        originalHeight: number
+    ) {
+        if (!this.maxDisplayWidth() || !this.maxDisplayHeight()) {
+            // Fallback to original dimensions if max dimensions not provided
+            this.displayWidth.set(originalWidth);
+            this.displayHeight.set(originalHeight);
+            this.scaleFactor.set(1);
+            console.log('Using original dimensions:', {
+                originalWidth,
+                originalHeight,
+            });
+            return;
+        }
+
+        const maxWidth = this.maxDisplayWidth();
+        const maxHeight = this.maxDisplayHeight();
+
+        // Calculate scale factors for both dimensions
+        const scaleX = maxWidth / originalWidth;
+        const scaleY = maxHeight / originalHeight;
+
+        // Use the smaller scale factor to ensure image fits within both dimensions
+        const scale = Math.min(scaleX, scaleY);
+
+        // Calculate final display dimensions
+        const displayWidth = Math.round(originalWidth * scale);
+        const displayHeight = Math.round(originalHeight * scale);
+
+        this.displayWidth.set(displayWidth);
+        this.displayHeight.set(displayHeight);
+        this.scaleFactor.set(scale);
+
+        console.log('Calculated display dimensions:', {
+            original: { width: originalWidth, height: originalHeight },
+            max: { width: maxWidth, height: maxHeight },
+            scale: { x: scaleX, y: scaleY, final: scale },
+            display: { width: displayWidth, height: displayHeight },
+        });
+    }
+
     private scaleCoordinates(points: number[]): number[] {
         if (!this.frameData || points.length === 0) return points;
 
-        const scaleX = this.displayWidth / this.frameData.frame_meta.width;
-        const scaleY = this.displayHeight / this.frameData.frame_meta.height;
+        // Use the scale factor for consistent scaling
+        const scale = this.scaleFactor();
 
-        return points.map((point, index) =>
-            index % 2 === 0 ? point * scaleX : point * scaleY
-        );
+        return points.map((point, index) => point * scale);
     }
 
     private createSvgPath(type: ShapeType, points: number[]): string {
@@ -211,29 +269,6 @@ export class FrameAnnotatorComponent implements OnInit {
         this.cuboids = shapes.filter((s) => s.type === 'cuboid');
     }
 
-    private getLabelColor(label: string): string {
-        // Generate consistent colors for labels
-        const colors = [
-            '#FF6B6B',
-            '#4ECDC4',
-            '#45B7D1',
-            '#96CEB4',
-            '#FFEAA7',
-            '#DDA0DD',
-            '#98D8C8',
-            '#F7DC6F',
-            '#BB8FCE',
-            '#85C1E9',
-        ];
-
-        let hash = 0;
-        for (let i = 0; i < label.length; i++) {
-            hash = label.charCodeAt(i) + ((hash << 5) - hash);
-        }
-
-        return colors[Math.abs(hash) % colors.length];
-    }
-
     // Template helper methods
     getRectangleProps(shape: ScaledShape) {
         const [x1, y1, x2, y2] = shape.scaledPoints;
@@ -256,5 +291,23 @@ export class FrameAnnotatorComponent implements OnInit {
             pairs.push({ x: points[i], y: points[i + 1] });
         }
         return pairs;
+    }
+
+    // Template helper methods
+    trackByShapeId(index: number, shape: ScaledShape): string {
+        return shape.id.toString();
+    }
+
+    trackByTrackId(index: number, track: ScaledShape): string {
+        return track.id.toString();
+    }
+
+    trackByTagId(index: number, tag: any): string {
+        return tag.id || index.toString();
+    }
+
+    getLabelColor(labelName: string): string {
+        const label = this.labelNameToLabelMap()?.get(labelName);
+        return label?.label_color || '#000000';
     }
 }

@@ -14,54 +14,43 @@ NC='\033[0m' # No Color
 
 # Configuration
 OUTPUT_DIR="dist"
-LANGUAGES=("en" "ja")
+LANGUAGES=("en" "ja" "hi")
 
 # Clean previous build
 echo -e "${BLUE}Cleaning previous builds...${NC}"
 rm -rf $OUTPUT_DIR
 mkdir -p $OUTPUT_DIR
 
-# Build for each language with /dashboard/ base href
-for lang in "${LANGUAGES[@]}"; do
-    echo -e "${BLUE}Building for language: $lang${NC}"
-    echo "Base href: /dashboard/$lang/"
+# Build all locales at once using Angular's i18n configuration
+echo -e "${BLUE}Building for all languages with i18n...${NC}"
+echo "Languages: ${LANGUAGES[@]}"
+echo "Base hrefs are configured in angular.json"
+echo ""
 
-    # Create a temporary directory for this language build
-    TEMP_OUTPUT="$OUTPUT_DIR-$lang"
+NODE_OPTIONS=--max-old-space-size=5120 npx ng build --configuration production
 
-    # Build with specific base href for this language to temporary directory
-    NODE_OPTIONS=--max-old-space-size=5120 npx ng build \
-        --configuration production \
-        --localize=$lang \
-        --base-href="/dashboard/$lang/" \
-        --deploy-url="/dashboard/$lang/" \
-        --output-path="$TEMP_OUTPUT"
-
-    if [ $? -eq 0 ]; then
-        echo -e "${GREEN}✓ Build successful for $lang${NC}"
-
-        # Create the correct directory structure
-        mkdir -p "$OUTPUT_DIR/dashboard/$lang"
-
-        # Copy all files from temporary location to final location
-        if [ -d "$TEMP_OUTPUT/$lang" ]; then
-            # If Angular created language-specific directories
-            cp -r "$TEMP_OUTPUT/$lang"/* "$OUTPUT_DIR/dashboard/$lang/"
-        elif [ -d "$TEMP_OUTPUT" ]; then
-            # If Angular built everything in the temp directory
-            cp -r "$TEMP_OUTPUT"/* "$OUTPUT_DIR/dashboard/$lang/"
-        fi
-
-        # Clean up temporary directory
-        rm -rf "$TEMP_OUTPUT"
-
-        echo -e "${GREEN}✓ Files organized in dashboard/$lang directory${NC}"
-    else
-        echo -e "${RED}✗ Build failed for $lang${NC}"
-        exit 1
-    fi
+if [ $? -eq 0 ]; then
+    echo -e "${GREEN}✓ Build successful for all languages${NC}"
     echo ""
-done
+
+    # Reorganize files into dashboard structure
+    echo -e "${BLUE}Reorganizing files into /dashboard/ structure...${NC}"
+    mkdir -p "$OUTPUT_DIR/dashboard"
+
+    for lang in "${LANGUAGES[@]}"; do
+        if [ -d "$OUTPUT_DIR/$lang" ]; then
+            echo "Moving $lang to dashboard/$lang"
+            mv "$OUTPUT_DIR/$lang" "$OUTPUT_DIR/dashboard/$lang"
+            echo -e "${GREEN}✓ Files organized in dashboard/$lang directory${NC}"
+        else
+            echo -e "${RED}✗ No build output found for $lang${NC}"
+        fi
+    done
+else
+    echo -e "${RED}✗ Build failed${NC}"
+    exit 1
+fi
+echo ""
 
 echo -e "${GREEN}=== Build Complete ===${NC}"
 echo "Built applications are in:"

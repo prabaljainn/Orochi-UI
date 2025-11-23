@@ -1,4 +1,4 @@
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="ja">
+<xliff xmlns="urn:oasis:names:tc:xliff:document:2.0" version="2.0" srcLang="en" trgLang="hi">
   <file id="ngi18n">
     <unit id="1341816711378353652">
       <notes>
@@ -6,7 +6,7 @@
       </notes>
       <segment>
         <source> Verdicts </source>
-        <target>評決</target>
+        <target>फैसले</target>
       </segment>
     </unit>
     <unit id="3448462145758383019">
@@ -15,7 +15,7 @@
       </notes>
       <segment>
         <source>Total</source>
-        <target>合計</target>
+        <target>कुल</target>
       </segment>
     </unit>
     <unit id="7317290694079257887">
@@ -24,7 +24,7 @@
       </notes>
       <segment>
         <source>Accepted</source>
-        <target>承認済み</target>
+        <target>स्वीकृत</target>
       </segment>
     </unit>
     <unit id="4188654437346976139">
@@ -33,7 +33,7 @@
       </notes>
       <segment>
         <source>Rejected</source>
-        <target>拒否されました</target>
+        <target>अस्वीकार कर दिया</target>
       </segment>
     </unit>
     <unit id="7913579395505362868">
@@ -42,7 +42,7 @@
       </notes>
       <segment>
         <source> Not Annotated </source>
-        <target>注釈なし</target>
+        <target>एनोटेट नहीं</target>
       </segment>
     </unit>
     <unit id="2341208127410331677">
@@ -51,7 +51,7 @@
       </notes>
       <segment>
         <source> FILTER BY </source>
-        <target>フィルター</target>
+        <target> फिल्टर के द्वारा </target>
       </segment>
     </unit>
     <unit id="3797570084942068182">
@@ -60,7 +60,7 @@
       </notes>
       <segment>
         <source>Select</source>
-        <target>選択</target>
+        <target>चुनना</target>
       </segment>
     </unit>
     <unit id="6201553740003783739">
@@ -69,7 +69,7 @@
       </notes>
       <segment>
         <source>TRAIN ID</source>
-        <target>列車ID</target>
+        <target>ट्रेन आईडी</target>
       </segment>
     </unit>
     <unit id="6644683034494569115">
@@ -78,7 +78,7 @@
       </notes>
       <segment>
         <source>TIME AND DATE</source>
-        <target>時間と日付</target>
+        <target>समय और दिनांक</target>
       </segment>
     </unit>
     <unit id="1473467113021165135">
@@ -87,7 +87,7 @@
       </notes>
       <segment>
         <source>STATUS</source>
-        <target>状態</target>
+        <target>स्थिति</target>
       </segment>
     </unit>
     <unit id="3858816479441073768">
@@ -96,7 +96,7 @@
       </notes>
       <segment>
         <source>VERDICT</source>
-        <target>評決</target>
+        <target>निर्णय</target>
       </segment>
     </unit>
     <unit id="833320260701585870">
@@ -105,7 +105,7 @@
       </notes>
       <segment>
         <source>ANNOTATION</source>
-        <target>注釈</target>
+        <target>टिप्पणी</target>
       </segment>
     </unit>
     <unit id="4325854060977838530">
@@ -114,7 +114,7 @@
       </notes>
       <segment>
         <source>ASSIGNEE</source>
-        <target>譲受人</target>
+        <target>संपत्ति-भागी</target>
       </segment>
     </unit>
     <unit id="3308546607246356732">
@@ -123,7 +123,7 @@
       </notes>
       <segment>
         <source>ACTION</source>
-        <target>アクション</target>
+        <target>कार्रवाई</target>
       </segment>
     </unit>
     <unit id="6882901562096359676">
@@ -132,7 +132,7 @@
       </notes>
       <segment>
         <source>No data found</source>
-        <target>データが見つかりません</target>
+        <target>डाटा प्राप्त नहीं हुआ</target>
       </segment>
     </unit>
     <unit id="6048892649018070225">
@@ -141,7 +141,7 @@
       </notes>
       <segment>
         <source>Today</source>
-        <target>今日</target>
+        <target>आज</target>
       </segment>
     </unit>
     <unit id="1819001234976193310">
@@ -150,7 +150,7 @@
       </notes>
       <segment>
         <source>Last 3 days</source>
-        <target>過去3日間</target>
+        <target>पिछले 3 दिन</target>
       </segment>
     </unit>
     <unit id="4873149362496451858">
@@ -159,7 +159,7 @@
       </notes>
       <segment>
         <source>Last 7 days</source>
-        <target>過去7日間</target>
+        <target>पिछले 7 दिन</target>
       </segment>
     </unit>
     <unit id="2949150997160654358">
@@ -168,7 +168,7 @@
       </notes>
       <segment>
         <source>Last 30 days</source>
-        <target>過去30日間</target>
+        <target>पिछले 30 दिन</target>
       </segment>
     </unit>
     <unit id="892383834188993767">
@@ -177,7 +177,7 @@
       </notes>
       <segment>
         <source>Custom Date Range</source>
-        <target>カスタム日付範囲</target>
+        <target>कस्टम दिनांक सीमा</target>
       </segment>
     </unit>
     <unit id="1616102757855967475">
@@ -186,7 +186,7 @@
       </notes>
       <segment>
         <source>All</source>
-        <target>全て</target>
+        <target>सभी</target>
       </segment>
     </unit>
     <unit id="2972668581857158337">
@@ -195,7 +195,7 @@
       </notes>
       <segment>
         <source>Not Annotated</source>
-        <target>注釈なし</target>
+        <target>एनोटेट नहीं</target>
       </segment>
     </unit>
     <unit id="149044872342563489">
@@ -204,7 +204,7 @@
       </notes>
       <segment>
         <source>Task Comments</source>
-        <target>タスクコメント</target>
+        <target>कार्य टिप्पणियाँ</target>
       </segment>
     </unit>
     <unit id="1102717806459547726">
@@ -213,7 +213,7 @@
       </notes>
       <segment>
         <source>Refresh</source>
-        <target>リフレッシュ</target>
+        <target>ताज़ा करना</target>
       </segment>
     </unit>
     <unit id="2662644497259948010">
@@ -222,7 +222,7 @@
       </notes>
       <segment>
         <source>Comment</source>
-        <target>コメント</target>
+        <target>टिप्पणी</target>
       </segment>
     </unit>
     <unit id="5572873179876552830">
@@ -231,7 +231,7 @@
       </notes>
       <segment>
         <source>reply</source>
-        <target>返事</target>
+        <target>जवाब</target>
       </segment>
     </unit>
     <unit id="5621735247460966280">
@@ -240,7 +240,7 @@
       </notes>
       <segment>
         <source> No comments found yet </source>
-        <target>まだコメントは見つかりません</target>
+        <target>अभी तक कोई टिप्पणी नहीं मिली</target>
       </segment>
     </unit>
     <unit id="8650499415827640724">
@@ -249,7 +249,7 @@
       </notes>
       <segment>
         <source>Type</source>
-        <target>タイプ</target>
+        <target>प्रकार</target>
       </segment>
     </unit>
     <unit id="6999356248762503689">
@@ -258,7 +258,7 @@
       </notes>
       <segment>
         <source>Add a comment...</source>
-        <target>コメントを追加...</target>
+        <target>एक टिप्पणी जोड़ने...</target>
       </segment>
     </unit>
     <unit id="1519954996184640001">
@@ -267,7 +267,7 @@
       </notes>
       <segment>
         <source>Error</source>
-        <target>エラー</target>
+        <target>गलती</target>
       </segment>
     </unit>
     <unit id="883225603593837541">
@@ -276,7 +276,7 @@
       </notes>
       <segment>
         <source>Something went wrong. Please try again.</source>
-        <target>問題が発生しました。もう一度お試しください。</target>
+        <target>कुछ गड़बड़ हुई है। कृपया दोबारा प्रयास करें।</target>
       </segment>
     </unit>
     <unit id="5392901357038630532">
@@ -285,7 +285,7 @@
       </notes>
       <segment>
         <source>Something went wrong while deleting the comment. Please try again.</source>
-        <target>コメントの削除中に問題が発生しました。もう一度お試しください。</target>
+        <target>टिप्पणी हटाते समय कुछ गड़बड़ी हुई। कृपया पुनः प्रयास करें।</target>
       </segment>
     </unit>
     <unit id="2982422585844013726">
@@ -294,7 +294,7 @@
       </notes>
       <segment>
         <source> No Annotated Frames. </source>
-        <target>注釈付きフレームはありません。</target>
+        <target>कोई एनोटेटेड फ़्रेम नहीं.</target>
       </segment>
     </unit>
     <unit id="4423253549935469768">
@@ -303,7 +303,7 @@
       </notes>
       <segment>
         <source> Details </source>
-        <target> 詳細 </target>
+        <target> विवरण </target>
       </segment>
     </unit>
     <unit id="4760173033440473119">
@@ -312,7 +312,7 @@
       </notes>
       <segment>
         <source> Project Name </source>
-        <target>プロジェクト名</target>
+        <target>परियोजना का नाम</target>
       </segment>
     </unit>
     <unit id="9193001935256028830">
@@ -321,7 +321,7 @@
       </notes>
       <segment>
         <source> Owner </source>
-        <target> 所有者 </target>
+        <target> मालिक </target>
       </segment>
     </unit>
     <unit id="4810347345927320513">
@@ -330,7 +330,7 @@
       </notes>
       <segment>
         <source> Assignee </source>
-        <target>譲受人</target>
+        <target>समनुदेशिती</target>
       </segment>
     </unit>
     <unit id="8825952487324912813">
@@ -339,7 +339,7 @@
       </notes>
       <segment>
         <source> Annotation </source>
-        <target>注釈</target>
+        <target>एनोटेशन</target>
       </segment>
     </unit>
     <unit id="3091819333763458246">
@@ -348,7 +348,7 @@
       </notes>
       <segment>
         <source>Frames</source>
-        <target>フレーム</target>
+        <target>फ्रेम्स</target>
       </segment>
     </unit>
     <unit id="4282587102956396340">
@@ -357,7 +357,7 @@
       </notes>
       <segment>
         <source> Status </source>
-        <target> 状態 </target>
+        <target> स्थिति </target>
       </segment>
     </unit>
     <unit id="5689202800227799783">
@@ -366,7 +366,7 @@
       </notes>
       <segment>
         <source> Create Date </source>
-        <target>作成日</target>
+        <target> तिथि बनाएं </target>
       </segment>
     </unit>
     <unit id="1763705795920808112">
@@ -375,7 +375,7 @@
       </notes>
       <segment>
         <source> Labels </source>
-        <target>ラベル</target>
+        <target>लेबल</target>
       </segment>
     </unit>
     <unit id="114816039455039903">
@@ -384,7 +384,7 @@
       </notes>
       <segment>
         <source>Task Details</source>
-        <target>タスクの詳細</target>
+        <target>कार्य विवरण</target>
       </segment>
     </unit>
     <unit id="5866254605255506989">
@@ -393,7 +393,7 @@
       </notes>
       <segment>
         <source>English</source>
-        <target>英語</target>
+        <target>अंग्रेज़ी</target>
       </segment>
     </unit>
     <unit id="6924606686202701860">
@@ -402,7 +402,7 @@
       </notes>
       <segment>
         <source>Japanese</source>
-        <target>日本語</target>
+        <target>जापानी</target>
       </segment>
     </unit>
     <unit id="7941090461604249190">
@@ -411,7 +411,7 @@
       </notes>
       <segment>
         <source>Hindi</source>
-        <target>いいえ</target>
+        <target>नहीं</target>
       </segment>
     </unit>
     <unit id="6570363013146073520">
@@ -420,7 +420,7 @@
       </notes>
       <segment>
         <source>Dashboard</source>
-        <target>ダッシュボード</target>
+        <target>डैशबोर्ड</target>
       </segment>
     </unit>
   </file>

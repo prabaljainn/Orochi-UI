@@ -1,0 +1,180 @@
+<div class="w-full flex flex-col gap-4 bg-card rounded-md">
+    <!-- header -->
+    <div class="flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <h3 class="text-lg font-semibold">{{ filename }}</h3>
+            <span class="text-sm text-gray-500"
+                >• {{ formatTime(currentTime) }} /
+                {{ formatTime(duration) }}</span
+            >
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button (click)="close()" class="px-3 py-1 rounded border text-sm">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <!-- video area -->
+    <div class="w-full bg-black rounded-md overflow-hidden relative">
+        <!-- (pointerdown)="onPointerDown($event)"
+            (pointermove)="onPointerMove($event)"
+            (pointerup)="onPointerUp($event)"
+            (pointercancel)="onPointerUp($event)" -->
+        <div
+            #videoWrapper
+            class="w-full h-[70vh] flex items-center justify-center bg-black touch-none"
+            style="transition: transform 0.08s linear"
+        >
+            <video
+                #videoRef
+                [src]="safeUrl"
+                playsinline
+                autoplay
+                muted
+                loop
+                class="w-full h-full object-contain"
+            ></video>
+        </div>
+    </div>
+
+    <!-- controls -->
+    <div class="flex flex-col gap-3">
+        <!-- playback + frame controls -->
+        <div class="flex flex-wrap items-center gap-3">
+            <div
+                class="p-2 rounded-lg bg-card-secondary flex items-center gap-2"
+            >
+                <!-- Prev frame -->
+                <button
+                    class="flex justify-center items-center"
+                    (click)="stepFrame(-1)"
+                >
+                    <mat-icon
+                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                        [svgIcon]="'sudocode:double-arrow-left'"
+                        i18n-matTooltip
+                        matTooltip="Previous Frame"
+                    ></mat-icon>
+                </button>
+
+                <!-- Play/Pause -->
+                <button
+                    class="flex justify-center items-center"
+                    (click)="togglePlay()"
+                >
+                    <!-- Play -->
+                    <mat-icon
+                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                        *ngIf="!playing"
+                        i18n-matTooltip
+                        matTooltip="Play"
+                    >
+                        play_circle
+                    </mat-icon>
+                    <!-- Pause -->
+                    <mat-icon
+                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                        *ngIf="playing"
+                        i18n-matTooltip
+                        matTooltip="Pause"
+                    >
+                        pause_circle
+                    </mat-icon>
+                </button>
+
+                <!-- Next frame -->
+                <button
+                    class="flex justify-center items-center"
+                    (click)="stepFrame(1)"
+                    i18n-matTooltip
+                    matTooltip="Next Frame"
+                >
+                    <mat-icon
+                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                        [svgIcon]="'sudocode:double-arrow-right'"
+                    ></mat-icon>
+                </button>
+            </div>
+
+            <!-- seek bar (robust bindings) -->
+            <div class="flex items-center gap-3 flex-1">
+                <input
+                    type="range"
+                    min="0"
+                    [max]="duration || 0"
+                    step="0.01"
+                    [value]="currentTime"
+                    (pointerdown)="onSeekStart()"
+                    (input)="onSeekChange($any($event.target).valueAsNumber)"
+                    (change)="onSeekEnd($any($event.target).valueAsNumber)"
+                    class="w-full accent-primary"
+                />
+            </div>
+        </div>
+
+        <div class="flex justify-between items-center gap-3">
+            <!-- playback rate slider -->
+            <div class="flex items-center gap-2">
+                <label class="text-sm text-secondary">Speed</label>
+                <input
+                    type="range"
+                    min="0.25"
+                    max="2"
+                    step="0.05"
+                    [value]="playbackRate"
+                    (input)="setPlaybackRate($any($event.target).valueAsNumber)"
+                    class="w-40 accent-primary"
+                />
+                <div class="w-12 text-sm text-secondary text-center">
+                    {{ playbackRate | number : "1.2-2" }}x
+                </div>
+            </div>
+
+            <!-- zoom controls -->
+            <div class="flex items-center gap-3">
+                <label class="text-sm text-secondary">
+                    Zoom: {{ zoom | number : "1.2-2" }}x
+                </label>
+                <button
+                    (click)="zoomOut()"
+                    class="px-2 py-1 rounded border"
+                    i18n-matTooltip
+                    matTooltip="Zoom Out"
+                >
+                    -
+                </button>
+                <input
+                    type="range"
+                    [min]="minZoom"
+                    [max]="maxZoom"
+                    step="0.05"
+                    [value]="zoom"
+                    (input)="setZoom($any($event.target).valueAsNumber)"
+                    class="w-40 accent-primary"
+                />
+                <button
+                    (click)="zoomIn()"
+                    class="px-2 py-1 rounded border"
+                    i18n-matTooltip
+                    matTooltip="Zoom In"
+                >
+                    +
+                </button>
+                <button
+                    (click)="resetZoom()"
+                    class="p-2 rounded border flex justify-center items-center"
+                >
+                    <mat-icon
+                        class="icon-size-3 text-default cursor-pointer"
+                        i18n-matTooltip
+                        matTooltip="Reset Zoom"
+                    >
+                        replay
+                    </mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

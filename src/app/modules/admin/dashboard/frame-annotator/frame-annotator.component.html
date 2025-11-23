@@ -1,14 +1,16 @@
-<div class="frame-annotator-container">
+<div class="frame-annotator-container relative">
     <!-- Loading State -->
     @if (loading) {
-    <div class="loading-overlay">
-        <div class="spinner">Loading frame...</div>
+    <div class="annotation-viewer">
+        <img src="assets/images/logo/train-loader.gif" alt="Train Loader" />
     </div>
     }
 
     <!-- Error State -->
     @if (error) {
-    <div class="error-message">
+    <div
+        class="error-message absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50"
+    >
         {{ error }}
     </div>
     }
@@ -19,13 +21,13 @@
         <!-- Base Image -->
         <div
             class="image-container"
-            [style.width.px]="displayWidth"
-            [style.height.px]="displayHeight"
+            [style.width.px]="displayWidth()"
+            [style.height.px]="displayHeight()"
         >
             <img
                 [src]="frameImageUrl"
-                [style.width.px]="displayWidth"
-                [style.height.px]="displayHeight"
+                [style.width.px]="displayWidth()"
+                [style.height.px]="displayHeight()"
                 class="base-image"
                 alt="Frame {{ frameNumber() }}"
             />
@@ -33,9 +35,9 @@
             <!-- SVG Annotation Overlay -->
             <svg
                 class="annotation-overlay"
-                [attr.width]="displayWidth"
-                [attr.height]="displayHeight"
-                [attr.viewBox]="'0 0 ' + displayWidth + ' ' + displayHeight"
+                [attr.width]="displayWidth()"
+                [attr.height]="displayHeight()"
+                [attr.viewBox]="'0 0 ' + displayWidth() + ' ' + displayHeight()"
             >
                 <!-- Rectangles -->
                 <g class="rectangles-group">
@@ -256,17 +258,6 @@
                     }
                 </g>
             </svg>
-
-            <!-- Frame Info Overlay -->
-            <div class="frame-info">
-                <span>Frame: {{ frameNumber() }}</span>
-                <span>Annotations: {{ frameData.annotation_count }}</span>
-                <span
-                    >Size: {{ frameData.frame_meta.width }}x{{
-                        frameData.frame_meta.height
-                    }}</span
-                >
-            </div>
         </div>
 
         <!-- Tags Display -->

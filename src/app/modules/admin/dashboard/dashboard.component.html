@@ -1,7 +1,7 @@
 <div class="flex flex-col flex-auto w-full min-w-0">
     <!-- Header -->
     <app-top-bar
-        [title]="'Dashboard'"
+        [title]="title"
         [filterByList]="filterByList"
         [showDateRange]="true"
         [timeZone]="timeZone"
@@ -24,7 +24,7 @@
                             svgIcon="heroicons_solid:clipboard-document-list"
                         ></mat-icon>
                     </div>
-                    <div class="text-[1rem] ext-default font-[500]">
+                    <div class="text-[1rem] ext-default font-[500]" i18n>
                         Verdicts
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                             class="max-w-1 flex-1 rounded-full bg-[#4D96FF]"
                         ></div>
                         <div class="flex flex-col gap-2 p-2">
-                            <div class="text-md font-normal">Total</div>
+                            <div class="text-md font-normal" i18n>Total</div>
                             <div class="text-3xl font-semibold">
                                 {{ verdictInfo?.total ?? "--" }}
                             </div>
@@ -45,7 +45,7 @@
                             class="max-w-1 flex-1 rounded-full bg-[#6BCB77]"
                         ></div>
                         <div class="flex flex-col gap-2 p-2">
-                            <div class="text-md font-normal">Accepted</div>
+                            <div class="text-md font-normal" i18n>Accepted</div>
                             <div class="text-3xl font-semibold">
                                 {{ verdictInfo?.accepted ?? "- -" }}
                             </div>
@@ -56,7 +56,7 @@
                             class="max-w-1 flex-1 rounded-full bg-[#EB5353]"
                         ></div>
                         <div class="flex flex-col gap-2 p-2">
-                            <div class="text-md font-normal">Rejected</div>
+                            <div class="text-md font-normal" i18n>Rejected</div>
                             <div class="text-3xl font-semibold">
                                 {{ verdictInfo?.rejected ?? "- -" }}
                             </div>
@@ -67,7 +67,9 @@
                             class="max-w-1 flex-1 rounded-full bg-[#FF9D23]"
                         ></div>
                         <div class="flex flex-col gap-2 p-2">
-                            <div class="text-md font-normal">Not Annotated</div>
+                            <div class="text-md font-normal" i18n>
+                                Not Annotated
+                            </div>
                             <div class="text-3xl font-semibold">
                                 {{ verdictInfo?.notAnnotated ?? "- -" }}
                             </div>
@@ -112,9 +114,12 @@
                 </mat-form-field>
 
                 <div class="flex items-center gap-4">
-                    <div class="font-mono font-medium text-md">FILTER BY</div>
+                    <div class="font-mono font-medium text-md" i18n>
+                        FILTER BY
+                    </div>
                     <mat-form-field class="filter-dropdown w-36">
                         <mat-select
+                            i18n-placeholder
                             placeholder="Select"
                             [formControl]="verdictFilterControl"
                         >
@@ -139,7 +144,7 @@
                     <!-- Train Id Column -->
                     <ng-container matColumnDef="trainId">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            TRAIN ID
+                            <span i18n>TRAIN ID</span>
                         </th>
                         <td mat-cell *matCellDef="let element">
                             {{ element.trainId ?? "- -" }}
@@ -149,7 +154,7 @@
                     <!-- Time And Date Column -->
                     <ng-container matColumnDef="timeAndDate">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            TIME AND DATE
+                            <span i18n>TIME AND DATE</span>
                         </th>
                         <td mat-cell *matCellDef="let element">
                             {{ element.timeAndDate ?? "- -" }}
@@ -159,7 +164,7 @@
                     <!-- Status Column -->
                     <ng-container matColumnDef="status">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            STATUS
+                            <span i18n>STATUS</span>
                         </th>
                         <td mat-cell *matCellDef="let element">
                             {{ element.status ?? "- -" }}
@@ -169,7 +174,7 @@
                     <!-- Verdict Column -->
                     <ng-container matColumnDef="verdict">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            VERDICT
+                            <span i18n>VERDICT</span>
                         </th>
                         <td mat-cell *matCellDef="let element">
                             <span
@@ -188,7 +193,7 @@
                     <!-- Annotation Column -->
                     <ng-container matColumnDef="annotation">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            ANNOTATION
+                            <span i18n>ANNOTATION</span>
                         </th>
                         <td mat-cell *matCellDef="let element">
                             {{ element.annotation ?? "- -" }}
@@ -198,7 +203,7 @@
                     <!-- Assignee Column -->
                     <ng-container matColumnDef="assignee">
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                            ASSIGNEE
+                            <span i18n>ASSIGNEE</span>
                         </th>
                         <td mat-cell *matCellDef="let element">
                             {{ element.assignee ?? "- -" }}
@@ -207,7 +212,9 @@
 
                     <!-- Action Column -->
                     <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef>ACTION</th>
+                        <th mat-header-cell *matHeaderCellDef>
+                            <span i18n>ACTION</span>
+                        </th>
                         <td mat-cell *matCellDef="let element">
                             <button
                                 mat-icon-button

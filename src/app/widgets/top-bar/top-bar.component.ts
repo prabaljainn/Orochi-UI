@@ -1,7 +1,9 @@
 import { Component, effect, input, output, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule, MatDateRangePicker } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { Dropdown } from 'app/models/common.types';
@@ -16,6 +18,8 @@ import { DateTime } from 'luxon';
         MatSelectModule,
         MatInputModule,
 		MatDatepickerModule,
+		MatIconModule,
+		MatButtonModule
     ],
     templateUrl: './top-bar.component.html',
 })
@@ -24,9 +28,10 @@ export class TopBarComponent {
 	showDateRange = input<boolean>(false);
     filterByList = input<Array<Dropdown>>();
 	selectedFilterBy = signal<string>(this.filterByList()?.[0]?.key as string);
-
+	showBackButton = input<boolean>(false);
 	onDateRangeChange = output<{ start: string, end: string }>();
 	onFilterByChange = output<string>();
+	onBackButtonClick = output<void>();
 
 	timeZone = input<string>(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
