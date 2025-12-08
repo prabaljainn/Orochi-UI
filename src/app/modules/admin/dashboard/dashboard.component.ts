@@ -3,7 +3,6 @@ import {
     ChangeDetectorRef,
     Component,
     OnInit,
-    signal,
     ViewChild,
     ViewEncapsulation,
 } from '@angular/core';
@@ -23,12 +22,15 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { TrainAnalyticsService } from 'app/services/train-analytics.service';
 import { DateTime } from 'luxon';
-import { debounceTime } from 'rxjs';
+import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { NgClass } from '@angular/common';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { PolarAreaChartComponent } from 'app/widgets/polar-area-chart/polar-area-chart.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TopBarComponent } from 'app/widgets/top-bar/top-bar.component';
+import { FilterService } from 'app/services/filter.service';
+
+const DASHBOARD_KEY = 'dashboard_filters';
 
 @Component({
     selector: 'dashboard',
@@ -52,7 +54,7 @@ import { TopBarComponent } from 'app/widgets/top-bar/top-bar.component';
     encapsulation: ViewEncapsulation.None,
 })
 export class DashboardComponent implements AfterViewInit, OnInit {
-	title : string = $localize`Dashboard`;
+    title: string = $localize`Dashboard`;
     displayedColumns: string[] = [
         'trainId',
         'timeAndDate',
@@ -60,7 +62,6 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         'verdict',
         'annotation',
         'assignee',
-        'action',
     ];
     dataSource = new MatTableDataSource<TaskElement>();
     noDataMsg: string = $localize`No data found`;
@@ -140,13 +141,25 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     fromTime = DateTime.now().startOf('day').setZone(this.timeZone).toISO();
     toTime = DateTime.now().endOf('day').setZone(this.timeZone).toISO();
 
+    private destroy$ = new Subject<void>();
+
+    filtersForm: FormGroup = new FormGroup({
+        verdict: new FormControl(''),
+        search: new FormControl(''),
+        dateType: new FormControl(''),
+        from: new FormControl(''),
+        to: new FormControl(''),
+    });
+
     /**
      * Constructor
      */
     constructor(
         private _trainAnalyticsService: TrainAnalyticsService,
         private _cdr: ChangeDetectorRef,
-        private _router: Router
+        private _router: Router,
+        private _activatedRoute: ActivatedRoute,
+        private _filterService: FilterService
     ) {}
 
     ngAfterViewInit() {
@@ -154,16 +167,223 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         this.dataSource.sort = this.sort;
     }
 
+    ngOnDestroy() {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+
     ngOnInit(): void {
         this._setupFormControls();
+
+        this._activatedRoute.queryParamMap
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((params) => {
+                const hasQueryParams = params.keys.length > 0;
+                if (hasQueryParams) {
+                    const qp: any = {
+                        verdict: params.get('verdict') || '',
+                        q: params.get('q') || '',
+                        from: params.get('from') || '',
+                        to: params.get('to') || '',
+                        dateType: params.get('dateType') || '',
+                    };
+                    this.restoreState(qp);
+                    this._filterService.setFilters(DASHBOARD_KEY, qp);
+                    this.fetchResults();
+                } else {
+                    // fallback if no query params
+                    const saved = this._filterService.snapshot(DASHBOARD_KEY);
+                    if (saved && Object.keys(saved).length > 0) {
+                        this.restoreState(saved);
+                        // sync to URL for consistency
+                        this.updateQueryParams(saved, true);
+                        // fetchResults will be triggered by URL update if we navigate,
+                        // but since we are replacing URL without navigation event if already on same route?
+                        // Actually router.navigate will trigger queryParams subscription again if they change.
+                        // But if they are same, it might not.
+                        // Let's just fetch here if we are not navigating.
+                        this.fetchResults();
+                    } else {
+                        // Default case: 'today'
+                        this.applyDateTypeLogic('today');
+                        const defaultFilters = {
+                            dateType: 'today',
+                            from: this.fromTime,
+                            to: this.toTime,
+                            verdict: '',
+                            q: '',
+                        };
+                        this.filtersForm.patchValue(defaultFilters, {
+                            emitEvent: false,
+                        });
+                        this._filterService.setFilters(
+                            DASHBOARD_KEY,
+                            defaultFilters
+                        );
+                        // We do NOT update URL here to keep it clean (optional preference),
+                        // OR we force it so sharing works immediately.
+                        // User said "if i share url... same filters".
+                        // It implies explicit filters should be in URL.
+                        // But "default as today" implies implicit.
+                        // Let's keep URL clean for default, but state consistent.
+                        this.fetchResults();
+                    }
+                }
+            });
+
+        // STEP 2: Watch Form Changes → update Query Params + FilterService
+        this.filtersForm.valueChanges
+            .pipe(
+                debounceTime(300),
+                distinctUntilChanged(
+                    (a, b) => JSON.stringify(a) === JSON.stringify(b)
+                ),
+                takeUntil(this.destroy$)
+            )
+            .subscribe((val) => {
+                const cleaned = this.clean(val);
+                if (cleaned.search !== undefined) {
+                    cleaned.q = cleaned.search;
+                    delete cleaned.search;
+                }
+
+                // If dateType is custom but no specific dates, we might face issues.
+                // But logic handles it.
+
+                this.updateQueryParams(cleaned);
+                this._filterService.setFilters(DASHBOARD_KEY, cleaned);
+                // this.fetchResults(); // API call triggered by URL change via updateQueryParams -> queryParamMap
+            });
+    }
+
+    private restoreState(filters: any) {
+        const unified = {
+            verdict: filters.verdict || '',
+            search: filters.q || filters.search || '',
+            from: filters.from || '',
+            to: filters.to || '',
+            dateType: filters.dateType || 'today', // Default to today if missing in deep restore
+        };
+
+        // If dateType is custom, we MUST have from/to. If not, fallback to today.
+        // if (unified.dateType === 'custom' && (!unified.from || !unified.to)) {
+        //     unified.dateType = 'today';
+        // }
+
+        // Apply logic to set fromTime/toTime strings component-wide
+        if (unified.dateType !== 'custom') {
+            this.applyDateTypeLogic(unified.dateType);
+            unified.from = this.fromTime;
+            unified.to = this.toTime;
+        } else {
+            this.fromTime = unified.from;
+            this.toTime = unified.to;
+        }
+
+        this.filtersForm.patchValue(unified, { emitEvent: false });
+
+        if (unified.verdict !== undefined) {
+            this.verdictFilterControl.setValue(unified.verdict, {
+                emitEvent: false,
+            });
+        }
+
+        if (unified.search !== undefined) {
+            this.searchInputControl.setValue(unified.search, {
+                emitEvent: false,
+            });
+        }
+    }
+
+    private applyDateTypeLogic(value: string) {
+        if (value === 'custom') return;
+
+        // Reset to Today first as base calculation
+        let start = DateTime.now().startOf('day').setZone(this.timeZone);
+        let end = DateTime.now().endOf('day').setZone(this.timeZone);
+
+        if (value === 'last3days') {
+            start = start.minus({ days: 3 });
+        } else if (value === 'last7days') {
+            start = start.minus({ days: 7 });
+        } else if (value === 'last30days') {
+            start = start.minus({ days: 30 });
+        }
+
+        this.fromTime = start.toISO();
+        this.toTime = end.toISO();
+    }
+
+    private updateQueryParams(params: any, replace = false) {
+        this._router.navigate([], {
+            relativeTo: this._activatedRoute,
+            queryParams: this.clean(params),
+            replaceUrl: replace, // true when restoring to avoid adding to history
+        });
+    }
+
+    private clean(obj: any) {
+        const out: any = {};
+        Object.keys(obj).forEach((k) => {
+            if (
+                obj[k] !== null &&
+                obj[k] !== undefined &&
+                String(obj[k]).trim() !== ''
+            ) {
+                out[k] = obj[k];
+            }
+        });
+        return out;
+    }
+
+    clearFilters() {
+        this.filtersForm.reset({ verdict: '', q: '', from: '', to: '' });
+        this._router.navigate([], {
+            relativeTo: this._activatedRoute,
+            queryParams: {},
+            replaceUrl: true,
+        });
+        this._filterService.clear(DASHBOARD_KEY);
+        this.fetchResults();
+    }
+
+    private fetchResults() {
+        // Read values from form (or from explicit controls if you're using them)
+        const v = this.filtersForm ? this.filtersForm.value : {};
+        // If you use dedicated FormControls (as in your snippet), prefer their values:
+        const verdict = this.verdictFilterControl?.value ?? v.verdict ?? '';
+        const search = this.searchInputControl?.value ?? v.q ?? '';
+        const from = v.from ?? this.fromTime ?? '';
+        const to = v.to ?? this.toTime ?? '';
+
+        // Keep component-level fromTime/toTime in sync
+        this.fromTime = from;
+        this.toTime = to;
+
+        if (!this.fromTime || !this.toTime) {
+            this.dataSource = new MatTableDataSource([]);
+            this.paginator.length = 0;
+            this.verdictInfo = {
+                total: 0,
+                accepted: 0,
+                rejected: 0,
+                notAnnotated: 0,
+            };
+            this.verdictChartData.series = [];
+            this._cdr.detectChanges();
+            return;
+        }
+
+        // Call the summary + list APIs with the current time range and filters
         this.getTasksSummary(this.fromTime, this.toTime);
+
         this.getTasks(
             this.pageIndex,
             this.pageSize,
             this.fromTime,
             this.toTime,
-            this.verdictFilterControl.value,
-            this.searchInputControl.value
+            verdict,
+            search
         );
     }
 
@@ -171,25 +391,13 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         this.searchInputControl.valueChanges
             .pipe(debounceTime(500))
             .subscribe((value) => {
-                this.getTasks(
-                    this.pageIndex,
-                    this.pageSize,
-                    this.fromTime,
-                    this.toTime,
-                    this.verdictFilterControl.value,
-                    value
-                );
+                this.filtersForm.patchValue({ search: value });
+                // API call triggered by filtersForm.valueChanges
             });
 
         this.verdictFilterControl.valueChanges.subscribe((value) => {
-            this.getTasks(
-                this.pageIndex,
-                this.pageSize,
-                this.fromTime,
-                this.toTime,
-                value,
-                this.searchInputControl.value
-            );
+            this.filtersForm.patchValue({ verdict: value });
+            // API call triggered by filtersForm.valueChanges
         });
     }
 
@@ -268,76 +476,33 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     }
 
     onFilterByChange(value: any) {
+        this.filtersForm.patchValue({ dateType: value });
+
+        this.applyDateTypeLogic(value);
+
         if (value === 'custom') {
-            return;
+            this.fromTime = '';
+            this.toTime = '';
         }
 
-        // default is today
-        this.fromTime = DateTime.now()
-            .startOf('day')
-            .setZone(this.timeZone)
-            .toISO();
-        this.toTime = DateTime.now()
-            .endOf('day')
-            .setZone(this.timeZone)
-            .toISO();
+        // Update form with calculated dates
+        this.filtersForm.patchValue({ from: this.fromTime, to: this.toTime });
 
-        if (value === 'last3days') {
-            this.fromTime = DateTime.now()
-                .minus({ days: 3 })
-                .startOf('day')
-                .setZone(this.timeZone)
-                .toISO();
-            this.toTime = DateTime.now()
-                .endOf('day')
-                .setZone(this.timeZone)
-                .toISO();
-        } else if (value === 'last7days') {
-            this.fromTime = DateTime.now()
-                .minus({ days: 7 })
-                .startOf('day')
-                .setZone(this.timeZone)
-                .toISO();
-            this.toTime = DateTime.now()
-                .endOf('day')
-                .setZone(this.timeZone)
-                .toISO();
-        } else if (value === 'last30days') {
-            this.fromTime = DateTime.now()
-                .minus({ days: 30 })
-                .startOf('day')
-                .setZone(this.timeZone)
-                .toISO();
-            this.toTime = DateTime.now()
-                .endOf('day')
-                .setZone(this.timeZone)
-                .toISO();
-        }
-
-        this.getTasksSummary(this.fromTime, this.toTime);
-        this.getTasks(
-            this.pageIndex,
-            this.pageSize,
-            this.fromTime,
-            this.toTime,
-            this.verdictFilterControl.value,
-            this.searchInputControl.value
-        );
+        // Logic below refactored into applyDateTypeLogic for reuse
     }
 
     onDateRangeChange(value: any) {
+        const currentFrom = this.filtersForm.get('from')?.value;
+        const currentTo = this.filtersForm.get('to')?.value;
+
+        if (currentFrom === value.start && currentTo === value.end) {
+            return;
+        }
+
         this.fromTime = value.start;
         this.toTime = value.end;
 
-        this.getTasksSummary(this.fromTime, this.toTime);
-        this.getTasks(
-            this.pageIndex,
-            this.pageSize,
-            this.fromTime,
-            this.toTime,
-            this.verdictFilterControl.value,
-            this.searchInputControl.value
-        );
+        this.filtersForm.patchValue({ from: this.fromTime, to: this.toTime });
     }
 
     onPageChange(event: any) {

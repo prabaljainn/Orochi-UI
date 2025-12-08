@@ -17,40 +17,86 @@ import { DateTime } from 'luxon';
         MatFormFieldModule,
         MatSelectModule,
         MatInputModule,
-		MatDatepickerModule,
-		MatIconModule,
-		MatButtonModule
+        MatDatepickerModule,
+        MatIconModule,
+        MatButtonModule,
     ],
     templateUrl: './top-bar.component.html',
 })
 export class TopBarComponent {
-	title = input<string>('');
-	showDateRange = input<boolean>(false);
+    title = input<string>('');
+    showDateRange = input<boolean>(false);
     filterByList = input<Array<Dropdown>>();
-	selectedFilterBy = signal<string>(this.filterByList()?.[0]?.key as string);
-	showBackButton = input<boolean>(false);
-	onDateRangeChange = output<{ start: string, end: string }>();
-	onFilterByChange = output<string>();
-	onBackButtonClick = output<void>();
+    selectedFilter = input<string | null>(null);
+    selectedFilterBy = signal<string>('');
+    showBackButton = input<boolean>(false);
+    onDateRangeChange = output<{ start: string; end: string }>();
+    onFilterByChange = output<string>();
+    onBackButtonClick = output<void>();
 
-	timeZone = input<string>(Intl.DateTimeFormat().resolvedOptions().timeZone);
+    startDate = input<string | null>(null);
+    endDate = input<string | null>(null);
+
+    timeZone = input<string>(Intl.DateTimeFormat().resolvedOptions().timeZone);
 
     range: FormGroup = new FormGroup({
         start: new FormControl<Date | null>(null),
         end: new FormControl<Date | null>(null),
     });
 
+    constructor() {
+        effect(() => {
+            const initial = this.selectedFilter();
+            const list = this.filterByList();
 
-	constructor() {
-		effect(() => {
-			if (this.filterByList()) {
-				this.selectedFilterBy.set(this.filterByList()?.[0]?.key as string);
-			}
-		});
-	}
+            if (initial) {
+                this.selectedFilterBy.set(initial);
+            } else if (list && list.length > 0) {
+                this.selectedFilterBy.set(list[0].key as string);
+            }
+        });
 
-	ngOnInit() {
-		this.range.valueChanges.subscribe((value) => {
+        effect(() => {
+            const start = this.startDate();
+            const end = this.endDate();
+
+            const current = this.range.value;
+            const currentStart = current.start
+                ? DateTime.fromJSDate(current.start).toISODate()
+                : null;
+            const currentEnd = current.end
+                ? DateTime.fromJSDate(current.end).toISODate()
+                : null;
+
+            const newStart = start ? DateTime.fromISO(start).toISODate() : null;
+            const newEnd = end ? DateTime.fromISO(end).toISODate() : null;
+
+            if (start && end) {
+                if (currentStart !== newStart || currentEnd !== newEnd) {
+                    this.range.patchValue(
+                        {
+                            start: DateTime.fromISO(start).toJSDate(),
+                            end: DateTime.fromISO(end).toJSDate(),
+                        },
+                        { emitEvent: false }
+                    );
+                }
+            } else {
+                if (current.start || current.end) {
+                    this.range.reset({}, { emitEvent: false });
+                }
+            }
+        });
+    }
+
+    ngOnInit() {
+        this.range.controls['start'].valueChanges.subscribe(() => {
+            if (this.range.controls['end'].value) {
+                this.range.controls['end'].reset(null);
+            }
+        });
+
+        this.range.valueChanges.subscribe((value) => {
             if (value.start && value.end) {
                 const formattedStart = DateTime.fromJSDate(value.start)
                     .startOf('day')
@@ -62,18 +108,16 @@ export class TopBarComponent {
                     .setZone(this.timeZone())
                     .toISO();
 
-				this.onDateRangeChange.emit({ start: formattedStart, end: formattedEnd });
+                this.onDateRangeChange.emit({
+                    start: formattedStart,
+                    end: formattedEnd,
+                });
             }
         });
-	}
+    }
 
-
-	filterByChange(value: string) {
-		this.selectedFilterBy.set(value);
-		if (value === 'custom') {
-			return;
-		}
-
-		this.onFilterByChange.emit(value);
-	}
+    filterByChange(value: string) {
+        this.selectedFilterBy.set(value);
+        this.onFilterByChange.emit(value);
+    }
 }

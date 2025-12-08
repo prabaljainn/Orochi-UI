@@ -27,7 +27,7 @@ export const appConfig: ApplicationConfig = {
             ])
 		),
         provideRouter(appRoutes,
-            withPreloading(PreloadAllModules),
+            // withPreloading(PreloadAllModules),
             withInMemoryScrolling({scrollPositionRestoration: 'enabled'}),
         ),
 		{ provide: API_BASE_HREF, useFactory: getBaseLocation },
