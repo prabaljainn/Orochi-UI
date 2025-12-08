@@ -117,15 +117,6 @@
         <target>संपत्ति-भागी</target>
       </segment>
     </unit>
-    <unit id="3308546607246356732">
-      <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.html:216</note>
-      </notes>
-      <segment>
-        <source>ACTION</source>
-        <target>कार्रवाई</target>
-      </segment>
-    </unit>
     <unit id="6882901562096359676">
       <notes>
         <note>src/app/modules/admin/dashboard/dashboard.component.ts:65</note>
@@ -421,6 +412,96 @@
       <segment>
         <source>Dashboard</source>
         <target>डैशबोर्ड</target>
+      </segment>
+    </unit>
+    <unit id="3080483882937310852">
+      <notes>
+        <note>src/@fuse/components/navigation/vertical/vertical.component.ts:147</note>
+      </notes>
+      <segment>
+        <source>Normal</source>
+        <target>सामान्य</target>
+      </segment>
+    </unit>
+    <unit id="3905533329051691155">
+      <notes>
+        <note>src/@fuse/components/navigation/vertical/vertical.component.ts:151</note>
+      </notes>
+      <segment>
+        <source>Large</source>
+        <target>बड़ा</target>
+      </segment>
+    </unit>
+    <unit id="1067433641518800382">
+      <notes>
+        <note>src/@fuse/components/navigation/vertical/vertical.component.ts:155</note>
+      </notes>
+      <segment>
+        <source>Extra Large</source>
+        <target>एक्स्ट्रा लार्ज</target>
+      </segment>
+    </unit>
+    <unit id="7078707660902818442">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:58</note>
+      </notes>
+      <segment>
+        <source>Previous Frame</source>
+        <target>पिछला फ़्रेम</target>
+      </segment>
+    </unit>
+    <unit id="8564202903947049539">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:72</note>
+      </notes>
+      <segment>
+        <source>Play</source>
+        <target>खेल</target>
+      </segment>
+    </unit>
+    <unit id="9042260521669277115">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:81</note>
+      </notes>
+      <segment>
+        <source>Pause</source>
+        <target>विराम</target>
+      </segment>
+    </unit>
+    <unit id="1941817722784982167">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:92</note>
+      </notes>
+      <segment>
+        <source>Next Frame</source>
+        <target>अगला फ़्रेम</target>
+      </segment>
+    </unit>
+    <unit id="1356460275822781324">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:144</note>
+      </notes>
+      <segment>
+        <source>Zoom Out</source>
+        <target>ज़ूम आउट</target>
+      </segment>
+    </unit>
+    <unit id="1470758907984185227">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:161</note>
+      </notes>
+      <segment>
+        <source>Zoom In</source>
+        <target>ज़ूम इन</target>
+      </segment>
+    </unit>
+    <unit id="8791824480246623851">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:172</note>
+      </notes>
+      <segment>
+        <source>Reset Zoom</source>
+        <target>ज़ूम रीसेट करें</target>
       </segment>
     </unit>
   </file>
