@@ -2,6 +2,23 @@
 /*  @ Import/write your custom styles here.
 /*  @ Styles from this file will override 'vendors.scss' and Fuse's base styles.
 /* ----------------------------------------------------------------------------------------------------- */
+html {
+    &.body-normal {
+        font-size: 16px;
+    }
+
+    &.body-large {
+        font-size: 18px;
+    }
+
+    &.body-xl {
+        font-size: 20px;
+    }
+}
+
+body {
+    font-size: 0.875rem;
+}
 
 *::-webkit-scrollbar {
     display: none;
@@ -46,15 +63,14 @@ input[type="number"] {
 }
 
 .task-comments-input-wrapper {
-	.mat-mdc-form-field-subscript-wrapper {
+    .mat-mdc-form-field-subscript-wrapper {
         display: none !important;
     }
 }
 
 .mat-mdc-dialog-surface {
-	background: var(--fuse-bg-card) !important;
+    background: var(--fuse-bg-card) !important;
 }
-
 
 /**
  * ----------------------------------------
