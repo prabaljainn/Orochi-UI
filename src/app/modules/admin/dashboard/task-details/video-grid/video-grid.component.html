@@ -11,7 +11,7 @@
                 trackBy: trackByIndex
             "
             class="bg-black rounded-md overflow-hidden flex flex-col items-center justify-center hover:border hover:border-primary transition-all duration-300"
-			(click)="openVideoDialog(url)"
+            (click)="openVideoDialog(url)"
         >
             <video
                 #videoPlayer
@@ -19,7 +19,7 @@
                 muted
                 playsinline
                 preload="metadata"
-				loop
+                loop
                 class="w-full h-[90%] object-cover"
                 (error)="console.error('video error', $event)"
             ></video>
@@ -51,9 +51,64 @@
 
     <!-- Bottom controls / status -->
     <div class="flex items-center justify-between text-sm text-gray-600">
+        @if(loading){
         <div class="text-right">
-            <span *ngIf="loading" class="text-gray-500">Starting videos…</span>
+            <span class="text-gray-500"> Starting videos… </span>
         </div>
+        } @else{
+        <div class="p-2 rounded-lg bg-card-secondary flex items-center gap-2">
+            <!-- Prev frame -->
+            <button
+                class="flex justify-center items-center"
+                (click)="stepFrame(-1)"
+            >
+                <mat-icon
+                    class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                    [svgIcon]="'sudocode:double-arrow-left'"
+                    i18n-matTooltip
+                    matTooltip="Previous Frame"
+                ></mat-icon>
+            </button>
+
+            <!-- Play/Pause -->
+            <button
+                class="flex justify-center items-center"
+                (click)="togglePlay()"
+            >
+                <!-- Play -->
+                <mat-icon
+                    class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                    *ngIf="!playing"
+                    i18n-matTooltip
+                    matTooltip="Play"
+                >
+                    play_circle
+                </mat-icon>
+                <!-- Pause -->
+                <mat-icon
+                    class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                    *ngIf="playing"
+                    i18n-matTooltip
+                    matTooltip="Pause"
+                >
+                    pause_circle
+                </mat-icon>
+            </button>
+
+            <!-- Next frame -->
+            <button
+                class="flex justify-center items-center"
+                (click)="stepFrame(1)"
+                i18n-matTooltip
+                matTooltip="Next Frame"
+            >
+                <mat-icon
+                    class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                    [svgIcon]="'sudocode:double-arrow-right'"
+                ></mat-icon>
+            </button>
+        </div>
+        }
 
         <div class="flex items-center gap-3">
             <button
@@ -61,7 +116,11 @@
                 [disabled]="currentPage === 0"
                 class="px-2 py-1 flex justify-center items-center gap-2 rounded-md border disabled:opacity-50"
             >
-                <mat-icon class="icon-size-3" svgIcon="heroicons_outline:chevron-left"></mat-icon> Prev
+                <mat-icon
+                    class="icon-size-3"
+                    svgIcon="heroicons_outline:chevron-left"
+                ></mat-icon>
+                Prev
             </button>
             <span>Showing {{ showingRange }} of {{ videos.length }}</span>
             <button
@@ -69,7 +128,11 @@
                 [disabled]="currentPage + 1 >= totalPages"
                 class="px-2 py-1 flex justify-center items-center gap-2 rounded-md border disabled:opacity-50"
             >
-                Next <mat-icon class="icon-size-3" svgIcon="heroicons_outline:chevron-right"></mat-icon>
+                Next
+                <mat-icon
+                    class="icon-size-3"
+                    svgIcon="heroicons_outline:chevron-right"
+                ></mat-icon>
             </button>
         </div>
     </div>

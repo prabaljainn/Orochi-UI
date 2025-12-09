@@ -44,6 +44,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
     mutedByDefault = true;
     totalPages = 0;
 
+    playing = false; // Track global playing state
     safeUrlToVideoMetaMap: Map<SafeResourceUrl, VideoItem> = new Map();
 
     constructor(
@@ -123,9 +124,55 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
                 } catch {}
             });
             this.autoplayBlocked = true;
+            this.playing = false;
         } else {
             this.autoplayBlocked = false;
+            this.playing = true;
         }
+    }
+
+    togglePlay() {
+        this.playing = !this.playing;
+        const elems =
+            this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
+        
+        elems.forEach((v) => {
+            try {
+                if (this.playing) {
+                    v.play();
+                } else {
+                    v.pause();
+                }
+            } catch (error) {
+                console.error('Error toggling play state:', error);
+            }
+        });
+    }
+
+    stepFrame(direction: number) {
+        // Pause first if playing
+        if (this.playing) {
+            this.playing = false;
+            this.togglePlay(); // This will pause because we set playing to false above, but wait..
+            // actually togglePlay uses the current this.playing state. 
+            // If I set this.playing = false, then call togglePlay(), it sees false and pauses. Correct.
+            // BUT, togglePlay flips the boolean first thing.
+            // So better to just manually pause and set logic.
+        }
+        
+        // Ensure we are paused and state reflects it
+        this.playing = false; 
+        const elems = this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
+        
+        elems.forEach(v => {
+            try {
+                v.pause();
+                // 1/30 seems to be the assumed frame rate from the dialog component
+                v.currentTime += direction * (1/30);
+            } catch (error) {
+                console.error("Error stepping frame", error);
+            }
+        });
     }
 
     async playAllUserInitiated(unmuteAfter = false) {
@@ -145,6 +192,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
             v.play().catch((err) => console.warn('play error', err))
         );
         await Promise.all(promises);
+        this.playing = true;
     }
 
     async syncStart(unmuteAfter = false) {

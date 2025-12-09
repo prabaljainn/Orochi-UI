@@ -151,6 +151,11 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         to: new FormControl(''),
     });
 
+    taskAndProjectIdToTrainDateTimeMap: Map<
+        { taskId: string; projectId: string },
+        string
+    > = new Map();
+
     /**
      * Constructor
      */
@@ -463,6 +468,14 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                             annotation: `${result?.annotation_stats?.annotated_frames}/${result?.annotation_stats?.total_frames} FRAMES`,
                             assignee: result?.assignee ?? '- -',
                         });
+
+                        this.taskAndProjectIdToTrainDateTimeMap.set(
+                            {
+                                taskId: result?.task_id,
+                                projectId: result?.project_id,
+                            },
+                            `${result?.train_metadata?.train_id}-${result?.time_data?.task_created}`
+                        );
                     });
                     this.dataSource = new MatTableDataSource(data);
                     setTimeout(() => {
@@ -516,5 +529,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
             task.projectId,
             task.taskId,
         ]);
+
+        console.log(this.taskAndProjectIdToTrainDateTimeMap);
     }
 }
