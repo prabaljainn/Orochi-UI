@@ -15,6 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { VideoPlayerDialogComponent } from './video-player-dialog/video-player-dialog.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 export interface VideoItem {
     key: string;
@@ -27,7 +28,12 @@ export interface VideoItem {
 
 @Component({
     selector: 'app-video-grid',
-    imports: [CommonModule, MatProgressSpinnerModule, MatIconModule],
+    imports: [
+        CommonModule,
+        MatProgressSpinnerModule,
+        MatIconModule,
+        MatTooltipModule,
+    ],
     templateUrl: './video-grid.component.html',
 })
 export class VideoGridComponent implements AfterViewInit, OnChanges {
@@ -135,7 +141,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
         this.playing = !this.playing;
         const elems =
             this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
-        
+
         elems.forEach((v) => {
             try {
                 if (this.playing) {
@@ -154,23 +160,39 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
         if (this.playing) {
             this.playing = false;
             this.togglePlay(); // This will pause because we set playing to false above, but wait..
-            // actually togglePlay uses the current this.playing state. 
+            // actually togglePlay uses the current this.playing state.
             // If I set this.playing = false, then call togglePlay(), it sees false and pauses. Correct.
             // BUT, togglePlay flips the boolean first thing.
             // So better to just manually pause and set logic.
         }
-        
+
         // Ensure we are paused and state reflects it
-        this.playing = false; 
-        const elems = this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
-        
-        elems.forEach(v => {
+        this.playing = false;
+        const elems =
+            this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
+
+        elems.forEach((v) => {
             try {
                 v.pause();
                 // 1/30 seems to be the assumed frame rate from the dialog component
-                v.currentTime += direction * (1/30);
+                v.currentTime += direction * (1 / 30);
             } catch (error) {
-                console.error("Error stepping frame", error);
+                console.error('Error stepping frame', error);
+            }
+        });
+    }
+
+    resetVideo() {
+        this.playing = false;
+        const elems =
+            this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
+        
+        elems.forEach((v) => {
+            try {
+                v.currentTime = 0;
+ 				v.pause();
+            } catch (error) {
+                console.error('Error resetting video:', error);
             }
         });
     }
@@ -267,7 +289,10 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
             width: '95%',
             data: {
                 url: url,
-                filename: this.safeUrlToVideoMetaMap.get(url)?.filename.split('.')?.[0] ?? '',
+                filename:
+                    this.safeUrlToVideoMetaMap
+                        .get(url)
+                        ?.filename.split('.')?.[0] ?? '',
                 frameRate: 30,
             },
         });

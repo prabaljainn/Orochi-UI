@@ -521,6 +521,19 @@ export class DashboardComponent implements AfterViewInit, OnInit {
     onPageChange(event: any) {
         this.pageIndex = event.pageIndex;
         this.pageSize = event.pageSize;
+
+        const v = this.filtersForm ? this.filtersForm.value : {};
+        const verdict = this.verdictFilterControl?.value ?? v.verdict ?? '';
+        const search = this.searchInputControl?.value ?? v.q ?? '';
+
+        this.getTasks(
+            this.pageIndex,
+            this.pageSize,
+            this.fromTime,
+            this.toTime,
+            verdict,
+            search
+        );
     }
 
     gotoTaskDetails(task: TaskElement) {

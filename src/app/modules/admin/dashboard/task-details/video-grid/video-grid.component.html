@@ -57,6 +57,20 @@
         </div>
         } @else{
         <div class="p-2 rounded-lg bg-card-secondary flex items-center gap-2">
+            <!-- Prev 10 frames -->
+            <button
+                class="flex justify-center items-center"
+                (click)="stepFrame(-10)"
+            >
+                <mat-icon
+                    class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                    i18n-matTooltip
+                    matTooltip="Previous 10 Frames"
+                >
+                    fast_rewind
+                </mat-icon>
+            </button>
+
             <!-- Prev frame -->
             <button
                 class="flex justify-center items-center"
@@ -106,6 +120,34 @@
                     class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
                     [svgIcon]="'sudocode:double-arrow-right'"
                 ></mat-icon>
+            </button>
+
+            <!-- Next 10 frames -->
+            <button
+                class="flex justify-center items-center"
+                (click)="stepFrame(10)"
+            >
+                <mat-icon
+                    class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                    i18n-matTooltip
+                    matTooltip="Next 10 Frames"
+                >
+                    fast_forward
+                </mat-icon>
+            </button>
+
+            <!-- Reset -->
+            <button
+                class="flex justify-center items-center"
+                (click)="resetVideo()"
+            >
+                <mat-icon
+                    class="icon-size-5 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                    i18n-matTooltip
+                    matTooltip="Reset Video"
+                >
+                    replay
+                </mat-icon>
             </button>
         </div>
         }
