@@ -19,9 +19,9 @@
                 muted
                 playsinline
                 preload="metadata"
-                loop
                 class="w-full h-[90%] object-cover"
                 (error)="console.error('video error', $event)"
+                (loadedmetadata)="onMetadataLoaded($event)"
             ></video>
             <div
                 class="w-full h-[10%] flex justify-between items-center p-2 bg-card-secondary text-default"
@@ -149,6 +149,20 @@
                     replay
                 </mat-icon>
             </button>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="flex-1 px-4">
+            <input
+                type="range"
+                [min]="0"
+                [max]="maxDuration"
+                [value]="currentProgress"
+                (input)="onSeek($event)"
+                (mousedown)="onSeekStart()"
+                (mouseup)="onSeekEnd()"
+                class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-primary"
+            />
         </div>
         }
 

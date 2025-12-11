@@ -9,6 +9,7 @@ import {
     OnChanges,
     SimpleChanges,
     ChangeDetectorRef,
+    OnDestroy,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -36,7 +37,7 @@ export interface VideoItem {
     ],
     templateUrl: './video-grid.component.html',
 })
-export class VideoGridComponent implements AfterViewInit, OnChanges {
+export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
     @Input() videos: VideoItem[] = [];
     @Input() pageSize = 6;
     @ViewChildren('videoPlayer') videoElems!: QueryList<
@@ -52,6 +53,12 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
 
     playing = false; // Track global playing state
     safeUrlToVideoMetaMap: Map<SafeResourceUrl, VideoItem> = new Map();
+    
+    maxDuration = 0;
+    currentProgress = 0;
+    isDragging = false;
+    private animationFrameId: number | null = null;
+    private wasPlayingBeforeDrag = false;
 
     constructor(
         private sanitizer: DomSanitizer,
@@ -70,7 +77,14 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
         }
     }
 
+    ngOnDestroy() {
+        this.stopProgressLoop();
+    }
+
     private setupPage() {
+        this.maxDuration = 0;
+        this.currentProgress = 0;
+        this.stopProgressLoop();
         this.totalPages = Math.max(
             1,
             Math.ceil((this.videos?.length || 0) / this.pageSize)
@@ -131,9 +145,11 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
             });
             this.autoplayBlocked = true;
             this.playing = false;
+            this.stopProgressLoop();
         } else {
             this.autoplayBlocked = false;
             this.playing = true;
+            this.startProgressLoop();
         }
     }
 
@@ -141,6 +157,12 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
         this.playing = !this.playing;
         const elems =
             this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
+
+        if (this.playing) {
+            this.startProgressLoop();
+        } else {
+            this.stopProgressLoop();
+        }
 
         elems.forEach((v) => {
             try {
@@ -168,6 +190,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
 
         // Ensure we are paused and state reflects it
         this.playing = false;
+        this.stopProgressLoop();
         const elems =
             this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
 
@@ -180,10 +203,20 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
                 console.error('Error stepping frame', error);
             }
         });
+        
+        // Sync progress bar
+        if (elems.length > 0) {
+            // Recalculate max time to ensure progress bar reflects the new state
+            const times = elems.map(v => v.currentTime);
+            this.currentProgress = Math.max(...times);
+            this.cd.detectChanges();
+        }
     }
 
     resetVideo() {
         this.playing = false;
+        this.stopProgressLoop();
+        this.currentProgress = 0;
         const elems =
             this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
         
@@ -215,6 +248,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
         );
         await Promise.all(promises);
         this.playing = true;
+        this.startProgressLoop();
     }
 
     async syncStart(unmuteAfter = false) {
@@ -296,5 +330,98 @@ export class VideoGridComponent implements AfterViewInit, OnChanges {
                 frameRate: 30,
             },
         });
+    }
+
+    onMetadataLoaded(event: Event) {
+        const video = event.target as HTMLVideoElement;
+        if (isFinite(video.duration) && video.duration > this.maxDuration) {
+            this.maxDuration = video.duration;
+            this.cd.detectChanges();
+        }
+    }
+
+    private startProgressLoop() {
+        this.stopProgressLoop();
+        const loop = () => {
+            if (this.playing && !this.isDragging) {
+                const elems = this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
+                if (elems.length > 0) {
+                    const times = elems.map(v => v.currentTime);
+                    const maxTime = Math.max(...times);
+                    this.currentProgress = maxTime;
+
+                    // Check if we reached the end of the longest video
+                    // Allow a small buffer (e.g., 0.1s) to ensure we hit the end
+                    if (this.maxDuration > 0 && maxTime >= this.maxDuration - 0.05) {
+                        this.triggerSyncRestart(elems);
+                        return; // Exit current loop frame, will restart in triggerSyncRestart
+                    }
+                    this.cd.detectChanges();
+                }
+                this.animationFrameId = requestAnimationFrame(loop);
+            }
+        };
+        this.animationFrameId = requestAnimationFrame(loop);
+    }
+
+    private async triggerSyncRestart(elems: HTMLVideoElement[]) {
+        // Pause and reset all
+        elems.forEach(v => {
+            v.pause();
+            v.currentTime = 0;
+        });
+        this.currentProgress = 0;
+        this.cd.detectChanges(); // Update UI to show 0
+
+        // Restart
+        if (this.playing) {
+             const promises = elems.map((v) =>
+                v.play().catch((err) => console.warn('loop restart error', err))
+            );
+            await Promise.all(promises);
+            // Restart loop
+            this.startProgressLoop();
+        }
+    }
+
+    private stopProgressLoop() {
+        if (this.animationFrameId !== null) {
+            cancelAnimationFrame(this.animationFrameId);
+            this.animationFrameId = null;
+        }
+    }
+
+    onSeek(event: Event) {
+        const input = event.target as HTMLInputElement;
+        const value = Number(input.value);
+        this.currentProgress = value;
+        const elems = this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
+        elems.forEach((v) => {
+            v.currentTime = value;
+        });
+    }
+
+    onSeekStart() {
+        this.isDragging = true;
+        this.wasPlayingBeforeDrag = this.playing;
+        if (this.playing) {
+            // Pause all without setting global playing state to false permanently if we want to resume
+            this.playing = false;
+            this.stopProgressLoop();
+            
+            const elems = this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
+            elems.forEach(v => v.pause());
+        }
+    }
+
+    onSeekEnd() {
+        this.isDragging = false;
+        if (this.wasPlayingBeforeDrag) {
+            this.playing = true;
+            this.startProgressLoop();
+            
+            const elems = this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
+            elems.forEach(v => v.play().catch(e => console.error(e)));
+        }
     }
 }

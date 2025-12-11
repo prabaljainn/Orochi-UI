@@ -527,7 +527,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         const search = this.searchInputControl?.value ?? v.q ?? '';
 
         this.getTasks(
-            this.pageIndex,
+            this.pageIndex + 1, // API pagination is 1-indexed, and mat-paginator is 0-indexed
             this.pageSize,
             this.fromTime,
             this.toTime,
