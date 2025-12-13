@@ -13,17 +13,19 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { BouncyLoaderComponent } from 'app/widgets/bouncy-loader/bouncy-loader.component';
 
 export interface VideoDialogData {
     url: string;
     filename?: string;
     frameRate?: number; // optional, default 30
+    startTime?: number; // optional start time in seconds
 }
 
 @Component({
     selector: 'app-video-player-dialog',
     standalone: true,
-    imports: [CommonModule, MatIconModule, MatTooltipModule],
+    imports: [CommonModule, MatIconModule, MatTooltipModule, BouncyLoaderComponent],
     templateUrl: './video-player-dialog.component.html',
 })
 export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
@@ -37,6 +39,7 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
 
     // playback state
     playing = false;
+    isLoading = true; // start loading
     duration = 0;
     currentTime = 0;
     playbackRate = 1;
@@ -63,6 +66,11 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
     private onLoadedMetadataBound = this.onLoadedMetadata.bind(this);
     private onTimeUpdateBound = this.onTimeUpdate.bind(this);
     private onEndedBound = this.onEnded.bind(this);
+    private onWaitingBound = () => { this.isLoading = true; this.cd.detectChanges(); };
+    private onCanPlayBound = () => { this.isLoading = false; this.cd.detectChanges(); };
+    private onPlayingBound = () => { this.isLoading = false; this.cd.detectChanges(); };
+
+    private hasSetStartTime = false;
 
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: VideoDialogData,
@@ -82,27 +90,33 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
         // custom controls: disable native controls
         v.controls = false;
         v.playsInline = true;
-        v.autoplay = false;
+        // v.autoplay = true; // intentionally removed to allow manual play() control
         v.muted = false;
 
         // attach events
         v.addEventListener('loadedmetadata', this.onLoadedMetadataBound);
         v.addEventListener('timeupdate', this.onTimeUpdateBound);
         v.addEventListener('ended', this.onEndedBound);
+        v.addEventListener('waiting', this.onWaitingBound);
+        v.addEventListener('canplay', this.onCanPlayBound);
+        v.addEventListener('playing', this.onPlayingBound);
 
         // attempt to play (the click that opened dialog is a user gesture)
-        v.play()
-            .then(() => {
-                this.playing = true;
-                this.playbackRate = v.playbackRate || 1;
-                this.cd.detectChanges();
-            })
-            .catch((err) => {
-                // fallback: don't autoplay if browser blocks, let user click play
-                console.warn('Dialog video play failed:', err);
-                this.playing = false;
-                this.cd.detectChanges();
-            });
+        // Check if paused to avoid redundant calls if browser somehow started it (unlikely without autoplay)
+        if (v.paused) {
+            v.play()
+                .then(() => {
+                    this.playing = true;
+                    this.playbackRate = v.playbackRate || 1;
+                    this.cd.detectChanges();
+                })
+                .catch((err) => {
+                    // fallback: don't autoplay if browser blocks, let user click play
+                    console.warn('Dialog video play failed:', err);
+                    this.playing = false;
+                    this.cd.detectChanges();
+                });
+        }
     }
 
     ngOnDestroy() {
@@ -112,6 +126,9 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
             v.removeEventListener('loadedmetadata', this.onLoadedMetadataBound);
             v.removeEventListener('timeupdate', this.onTimeUpdateBound);
             v.removeEventListener('ended', this.onEndedBound);
+            v.removeEventListener('waiting', this.onWaitingBound);
+            v.removeEventListener('canplay', this.onCanPlayBound);
+            v.removeEventListener('playing', this.onPlayingBound);
             v.src = '';
         } catch {}
     }
@@ -120,6 +137,13 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
     private onLoadedMetadata() {
         const v = this.videoRef.nativeElement;
         this.duration = v.duration || 0;
+        
+        // If start time was provided and we haven't set it yet
+        if (this.data.startTime && !this.hasSetStartTime) {
+            v.currentTime = this.data.startTime;
+            this.hasSetStartTime = true;
+        }
+
         this.currentTime = v.currentTime || 0;
         this.cd.detectChanges();
     }
@@ -213,6 +237,7 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
                 v.pause();
                 this.playing = false;
             }
+            this.isLoading = true; // seeking usually implies loading
         } catch {}
     }
 
@@ -225,6 +250,7 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
     // commit seek when drag ends
     async onSeekEnd(value: number) {
         this.seeking = false;
+        this.isLoading = true; // ensure loader stays until seek done
         const v = this.videoRef.nativeElement;
         const dur = this.duration || v.duration || 0;
         if (!isFinite(dur) || dur === 0) {
@@ -244,6 +270,7 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
                 .catch(() => {});
         } else {
             this.playing = false;
+            this.isLoading = false;
             this.cd.detectChanges();
         }
     }

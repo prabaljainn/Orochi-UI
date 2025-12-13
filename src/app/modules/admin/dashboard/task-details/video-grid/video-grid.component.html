@@ -10,18 +10,27 @@
                 let i = index;
                 trackBy: trackByIndex
             "
-            class="bg-black rounded-md overflow-hidden flex flex-col items-center justify-center hover:border hover:border-primary transition-all duration-300"
-            (click)="openVideoDialog(url)"
+            class="bg-black rounded-md overflow-hidden flex flex-col items-center justify-center hover:border hover:border-primary transition-all duration-300 relative"
+            (click)="openVideoDialog(url, i)"
         >
+            <!-- Loader -->
+            <div
+                *ngIf="!areAllVideosLoaded"
+                class="absolute inset-0 flex items-center justify-center z-10"
+            >
+                <app-bouncy-loader></app-bouncy-loader>
+            </div>
+
             <video
                 #videoPlayer
                 [src]="url"
                 muted
                 playsinline
                 preload="metadata"
+                [style.visibility]="areAllVideosLoaded ? 'visible' : 'hidden'"
                 class="w-full h-[90%] object-cover"
                 (error)="console.error('video error', $event)"
-                (loadedmetadata)="onMetadataLoaded($event)"
+                (loadedmetadata)="onMetadataLoaded($event, i)"
             ></video>
             <div
                 class="w-full h-[10%] flex justify-between items-center p-2 bg-card-secondary text-default"

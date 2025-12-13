@@ -17,6 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { VideoPlayerDialogComponent } from './video-player-dialog/video-player-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { BouncyLoaderComponent } from 'app/widgets/bouncy-loader/bouncy-loader.component';
 
 export interface VideoItem {
     key: string;
@@ -34,6 +35,7 @@ export interface VideoItem {
         MatProgressSpinnerModule,
         MatIconModule,
         MatTooltipModule,
+		BouncyLoaderComponent
     ],
     templateUrl: './video-grid.component.html',
 })
@@ -91,11 +93,15 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
         );
         this.updateSafeUrlsForPage();
         // small timeout so ViewChildren is available
+        // small timeout so ViewChildren is available
+        // Removed explicit tryPlayAll timeout, relying on loadedmetadata event
         setTimeout(() => {
-            this.tryPlayAll();
             this.cd.detectChanges();
         }, 120);
     }
+
+    loadedVideoIndices = new Set<number>();
+    areAllVideosLoaded = false;
 
     private updateSafeUrlsForPage() {
         const start = this.currentPage * this.pageSize;
@@ -103,6 +109,11 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
             start,
             start + this.pageSize
         );
+        
+        // Reset loading state for the new page
+        this.loadedVideoIndices.clear();
+        this.areAllVideosLoaded = pageItems.length === 0;
+        
         this.safeUrlsOnPage = pageItems.map((v) => {
             let safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
                 v.presigned_url
@@ -110,6 +121,13 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
             this.safeUrlToVideoMetaMap.set(safeUrl, v);
             return safeUrl;
         });
+        
+        // If no videos, we might want to update UI immediately
+        if (this.areAllVideosLoaded) {
+             setTimeout(() => {
+                this.cd.detectChanges();
+             }, 0);
+        }
     }
 
     private async tryPlayAll() {
@@ -276,21 +294,18 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
         if (this.currentPage + 1 >= this.totalPages) return;
         this.currentPage++;
         this.updateSafeUrlsForPage();
-        setTimeout(() => this.tryPlayAll(), 120);
     }
 
     prevPage() {
         if (this.currentPage === 0) return;
         this.currentPage--;
         this.updateSafeUrlsForPage();
-        setTimeout(() => this.tryPlayAll(), 120);
     }
 
     gotoPage(page: number) {
         if (page < 0 || page >= this.totalPages) return;
         this.currentPage = page;
         this.updateSafeUrlsForPage();
-        setTimeout(() => this.tryPlayAll(), 120);
     }
 
     updateVideos(newVideos: VideoItem[]) {
@@ -302,7 +317,6 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
         if (this.currentPage >= this.totalPages)
             this.currentPage = this.totalPages - 1;
         this.updateSafeUrlsForPage();
-        setTimeout(() => this.tryPlayAll(), 120);
     }
 
     trackByIndex(i: number) {
@@ -318,8 +332,21 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
         return `${start} – ${end}`;
     }
 
-    openVideoDialog(url: SafeResourceUrl) {
-        this.dialog.open(VideoPlayerDialogComponent, {
+    openVideoDialog(url: SafeResourceUrl, index: number) {
+        // Pause all background videos
+        this.stopProgressLoop();
+        this.playing = false;
+        const elems = this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
+        elems.forEach((v) => {
+            try {
+                v.pause();
+            } catch {}
+        });
+
+        const videoElem = this.videoElems?.get(index)?.nativeElement;
+        const currentTime = videoElem?.currentTime || 0;
+
+        const dialogRef = this.dialog.open(VideoPlayerDialogComponent, {
             width: '95%',
             data: {
                 url: url,
@@ -328,15 +355,39 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
                         .get(url)
                         ?.filename.split('.')?.[0] ?? '',
                 frameRate: 30,
+                startTime: currentTime
             },
+        });
+
+        dialogRef.afterClosed().subscribe(() => {
+            // Resume playing all videos
+            this.playing = true;
+            this.startProgressLoop();
+            elems.forEach((v) => {
+                try {
+                    v.play().catch(console.error);
+                } catch {}
+            });
         });
     }
 
-    onMetadataLoaded(event: Event) {
+    onMetadataLoaded(event: Event, index: number) {
         const video = event.target as HTMLVideoElement;
+        
+        // Track this video as loaded
+        this.loadedVideoIndices.add(index);
+
         if (isFinite(video.duration) && video.duration > this.maxDuration) {
             this.maxDuration = video.duration;
             this.cd.detectChanges();
+        }
+
+        // Check if all videos for the current page are loaded
+        if (this.loadedVideoIndices.size === this.safeUrlsOnPage.length) {
+             this.areAllVideosLoaded = true;
+             // Now that all are loaded, try to play them together
+             this.tryPlayAll();
+             this.cd.detectChanges();
         }
     }
 
