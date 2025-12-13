@@ -366,7 +366,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
         this.toTime = to;
 
         if (!this.fromTime || !this.toTime) {
-            this.dataSource = new MatTableDataSource([]);
+            this.dataSource.data = [];
             this.paginator.length = 0;
             this.verdictInfo = {
                 total: 0,
@@ -477,7 +477,7 @@ export class DashboardComponent implements AfterViewInit, OnInit {
                             `${result?.train_metadata?.train_id}-${result?.time_data?.task_created}`
                         );
                     });
-                    this.dataSource = new MatTableDataSource(data);
+                    this.dataSource.data = data;
                     setTimeout(() => {
                         let totalTasks =
                             res?.analytics?.summary?.total_tasks || 0;
