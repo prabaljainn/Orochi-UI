@@ -2,7 +2,7 @@
   <file id="ngi18n">
     <unit id="3080483882937310852">
       <notes>
-        <note>src/@fuse/components/navigation/vertical/vertical.component.ts:147</note>
+        <note>src/@fuse/components/navigation/vertical/vertical.component.ts:149</note>
       </notes>
       <segment>
         <source>Normal</source>
@@ -11,7 +11,7 @@
     </unit>
     <unit id="3905533329051691155">
       <notes>
-        <note>src/@fuse/components/navigation/vertical/vertical.component.ts:151</note>
+        <note>src/@fuse/components/navigation/vertical/vertical.component.ts:153</note>
       </notes>
       <segment>
         <source>Large</source>
@@ -20,7 +20,7 @@
     </unit>
     <unit id="1067433641518800382">
       <notes>
-        <note>src/@fuse/components/navigation/vertical/vertical.component.ts:155</note>
+        <note>src/@fuse/components/navigation/vertical/vertical.component.ts:157</note>
       </notes>
       <segment>
         <source>Extra Large</source>
@@ -441,9 +441,18 @@
         <target>Task Details</target>
       </segment>
     </unit>
+    <unit id="3234422121509216221">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:77</note>
+      </notes>
+      <segment>
+        <source>Previous 10 Frames</source>
+        <target>Previous 10 Frames</target>
+      </segment>
+    </unit>
     <unit id="7078707660902818442">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:58</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:64</note>
       </notes>
       <segment>
         <source>Previous Frame</source>
@@ -452,7 +461,7 @@
     </unit>
     <unit id="8564202903947049539">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:72</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:78</note>
       </notes>
       <segment>
         <source>Play</source>
@@ -461,7 +470,7 @@
     </unit>
     <unit id="9042260521669277115">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:81</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:87</note>
       </notes>
       <segment>
         <source>Pause</source>
@@ -470,16 +479,34 @@
     </unit>
     <unit id="1941817722784982167">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:92</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:98</note>
       </notes>
       <segment>
         <source>Next Frame</source>
         <target>Next Frame</target>
       </segment>
     </unit>
+    <unit id="6132512480620384313">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:142</note>
+      </notes>
+      <segment>
+        <source>Next 10 Frames</source>
+        <target>Next 10 Frames</target>
+      </segment>
+    </unit>
+    <unit id="7279502880466273282">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:156</note>
+      </notes>
+      <segment>
+        <source>Reset Video</source>
+        <target>Reset Video</target>
+      </segment>
+    </unit>
     <unit id="1356460275822781324">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:144</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:150</note>
       </notes>
       <segment>
         <source>Zoom Out</source>
@@ -488,7 +515,7 @@
     </unit>
     <unit id="1470758907984185227">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:161</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:167</note>
       </notes>
       <segment>
         <source>Zoom In</source>
@@ -497,11 +524,86 @@
     </unit>
     <unit id="8791824480246623851">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:172</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:178</note>
       </notes>
       <segment>
         <source>Reset Zoom</source>
         <target>Reset Zoom</target>
+      </segment>
+    </unit>
+    <unit id="4743002849260529978">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:6</note>
+      </notes>
+      <segment>
+        <source>Items per page:</source>
+        <target>Items per page:</target>
+      </segment>
+    </unit>
+    <unit id="8642445555713453888">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:7</note>
+      </notes>
+      <segment>
+        <source>First page</source>
+        <target>First page</target>
+      </segment>
+    </unit>
+    <unit id="6784758141439994527">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:8</note>
+      </notes>
+      <segment>
+        <source>Last page</source>
+        <target>Last page</target>
+      </segment>
+    </unit>
+    <unit id="3337301694210287595">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:9</note>
+      </notes>
+      <segment>
+        <source>Next page</source>
+        <target>Next page</target>
+      </segment>
+    </unit>
+    <unit id="3629960544875360046">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:10</note>
+      </notes>
+      <segment>
+        <source>Previous page</source>
+        <target>Previous page</target>
+      </segment>
+    </unit>
+    <unit id="3522470007354852946">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:17</note>
+      </notes>
+      <segment>
+        <source>0 of 
+          <ph id="0" equiv="PH" disp="length"/>
+        </source>
+        <target>0 of 
+          <ph id="0" equiv="PH" disp="length"/>
+        </target>
+      </segment>
+    </unit>
+    <unit id="6884890780315204652">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:25</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="PH" disp="startIndex + 1"/> - 
+          <ph id="1" equiv="PH_1" disp="endIndex"/> of 
+          <ph id="2" equiv="PH_2" disp="length"/>
+        </source>
+        <target>
+          <ph id="0" equiv="PH" disp="startIndex + 1"/> - 
+          <ph id="1" equiv="PH_1" disp="endIndex"/> of 
+          <ph id="2" equiv="PH_2" disp="length"/>
+        </target>
       </segment>
     </unit>
   </file>

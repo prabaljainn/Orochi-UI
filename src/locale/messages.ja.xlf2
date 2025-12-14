@@ -504,5 +504,107 @@
         <target>ズームをリセット</target>
       </segment>
     </unit>
+    <unit id="3234422121509216221">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:77</note>
+      </notes>
+      <segment>
+        <source>Previous 10 Frames</source>
+        <target>前の10フレーム</target>
+      </segment>
+    </unit>
+    <unit id="6132512480620384313">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:142</note>
+      </notes>
+      <segment>
+        <source>Next 10 Frames</source>
+        <target>次の10フレーム</target>
+      </segment>
+    </unit>
+    <unit id="7279502880466273282">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:156</note>
+      </notes>
+      <segment>
+        <source>Reset Video</source>
+        <target>ビデオをリセット</target>
+      </segment>
+    </unit>
+    <unit id="4743002849260529978">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:6</note>
+      </notes>
+      <segment>
+        <source>Items per page:</source>
+        <target>1ページあたりの項目数:</target>
+      </segment>
+    </unit>
+    <unit id="8642445555713453888">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:7</note>
+      </notes>
+      <segment>
+        <source>First page</source>
+        <target>最初のページ</target>
+      </segment>
+    </unit>
+    <unit id="6784758141439994527">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:8</note>
+      </notes>
+      <segment>
+        <source>Last page</source>
+        <target>最後のページ</target>
+      </segment>
+    </unit>
+    <unit id="3337301694210287595">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:9</note>
+      </notes>
+      <segment>
+        <source>Next page</source>
+        <target>次のページ</target>
+      </segment>
+    </unit>
+    <unit id="3629960544875360046">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:10</note>
+      </notes>
+      <segment>
+        <source>Previous page</source>
+        <target>前のページ</target>
+      </segment>
+    </unit>
+    <unit id="3522470007354852946">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:17</note>
+      </notes>
+      <segment>
+        <source>0 of 
+          <ph id="0" equiv="PH" disp="length"/>
+        </source>
+        <target>0 の
+          <ph id="0" equiv="PH" disp="length"/>
+        </target>
+      </segment>
+    </unit>
+    <unit id="6884890780315204652">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:25</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="PH" disp="startIndex + 1"/> - 
+          <ph id="1" equiv="PH_1" disp="endIndex"/> of 
+          <ph id="2" equiv="PH_2" disp="length"/>
+        </source>
+        <target>
+          <ph id="0" equiv="PH" disp="startIndex + 1"/>-
+          <ph id="1" equiv="PH_1" disp="endIndex"/> の 
+          <ph id="2" equiv="PH_2" disp="length"/>
+        </target>
+      </segment>
+    </unit>
   </file>
 </xliff>
