@@ -30,6 +30,7 @@ import {
     ViewChildren,
     ViewEncapsulation,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { NavigationEnd, Router } from '@angular/router';
@@ -86,6 +87,7 @@ import {
         LanguagesComponent,
         UserComponent,
         MatMenuModule,
+		MatButtonModule
     ],
 })
 export class FuseVerticalNavigationComponent
