@@ -355,7 +355,9 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
                         .get(url)
                         ?.filename.split('.')?.[0] ?? '',
                 frameRate: 30,
-                startTime: currentTime
+                startTime: currentTime,
+                videos: this.videos,
+                currentIndex: index
             },
         });
 

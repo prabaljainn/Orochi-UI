@@ -14,12 +14,15 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { BouncyLoaderComponent } from 'app/widgets/bouncy-loader/bouncy-loader.component';
+import { VideoItem } from '../video-grid.component';
 
 export interface VideoDialogData {
     url: string;
     filename?: string;
     frameRate?: number; // optional, default 30
     startTime?: number; // optional start time in seconds
+    videos?: VideoItem[];
+    currentIndex?: number;
 }
 
 @Component({
@@ -62,6 +65,12 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
     seeking = false;
     private wasPlayingBeforeSeek = false;
 
+    // navigation
+    videos: VideoItem[] = [];
+    currentVideoIndex = -1;
+    hasPrev = false;
+    hasNext = false;
+
     // listeners bound references for removal
     private onLoadedMetadataBound = this.onLoadedMetadata.bind(this);
     private onTimeUpdateBound = this.onTimeUpdate.bind(this);
@@ -78,6 +87,22 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
         private dialogRef: MatDialogRef<VideoPlayerDialogComponent>,
         private cd: ChangeDetectorRef
     ) {
+        if (data.videos && typeof data.currentIndex === 'number') {
+            this.videos = data.videos;
+            this.currentVideoIndex = data.currentIndex;
+        }
+
+        this.updateNavState();
+        
+        // If we have local state, use it, otherwise use direct data
+        // But logic is simpler if we treat 'data' as the initial state
+        // and then loadVideo handles the specific one.
+        
+        // For the *initial* load, we use the data passed in (which might have a specific SafeResourceUrl we want to use 
+        // that matches currentIndex, but we need to re-derive it if we switch).
+        // Actually, let's just use what's passed for the very first frame to avoid flashing, 
+        // but set up state for next/prev.
+        
         this.safeUrl = data.url;
         this.filename = data.filename || '';
         this.frameRate = data.frameRate || 30;
@@ -392,5 +417,69 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
         const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
         if (hrs > 0) return `${pad(hrs)}:${pad(mins)}:${pad(secs)}`;
         return `${pad(mins)}:${pad(secs)}`;
+    }
+
+    updateNavState() {
+        if (!this.videos || this.videos.length === 0) {
+            this.hasPrev = false;
+            this.hasNext = false;
+            return;
+        }
+        this.hasPrev = this.currentVideoIndex > 0;
+        this.hasNext = this.currentVideoIndex < this.videos.length - 1;
+    }
+
+    prevVideo() {
+        if (this.hasPrev) {
+            this.loadVideo(this.currentVideoIndex - 1);
+        }
+    }
+
+    nextVideo() {
+        if (this.hasNext) {
+            this.loadVideo(this.currentVideoIndex + 1);
+        }
+    }
+
+    loadVideo(index: number) {
+        if (index < 0 || index >= this.videos.length) return;
+        
+        this.currentVideoIndex = index;
+        const video = this.videos[index];
+        this.filename = video.filename.split('.')?.[0] ?? '';
+        
+        // Sanitize URL
+        this.safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(video.presigned_url);
+        
+        this.updateNavState();
+        this.isLoading = true;
+        this.cd.detectChanges();
+
+        const v = this.videoRef.nativeElement;
+        
+        // Reset player state
+        this.playing = false;
+        this.currentTime = 0;
+        this.duration = 0;
+        v.pause();
+        // src update triggers loading
+        // The bindings like [src] in template will update automatically because we changed this.safeUrl
+        // BUT we need to ensure the video element reloads.
+        
+        // Trigger load explicitly if needed, but Angular binding change usually does it.
+        // Let's rely on change detection update of [src].
+        v.load();
+        
+        // We might want to autoplay on switch
+        // Wait for 'canplay' or similar handled by existing listeners?
+        // Existing listeners are attached in ngAfterViewInit.
+        // But we should probably try to play once ready.
+        
+        // We can add a one-time listener for 'canplay' for this specific switch if we want auto-play behavior
+        const onCanPlay = () => {
+             this.togglePlay(); // Try to play
+             v.removeEventListener('canplay', onCanPlay);
+        };
+        v.addEventListener('canplay', onCanPlay);
     }
 }

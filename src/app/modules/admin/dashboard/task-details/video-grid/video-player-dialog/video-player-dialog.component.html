@@ -1,4 +1,4 @@
-<div class="w-full flex flex-col gap-4 bg-card rounded-md">
+<div class="w-full flex flex-col gap-4 bg-[#FAFAFA] rounded-md">
     <!-- header -->
     <div class="flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">
@@ -16,33 +16,55 @@
         </div>
     </div>
 
-    <!-- video area -->
-    <div class="w-full bg-black rounded-md overflow-hidden relative">
-        <!-- (pointerdown)="onPointerDown($event)"
-            (pointermove)="onPointerMove($event)"
-            (pointerup)="onPointerUp($event)"
-            (pointercancel)="onPointerUp($event)" -->
-        <div
-            #videoWrapper
-            class="w-full h-[70vh] flex items-center justify-center bg-black touch-none relative"
-            style="transition: transform 0.08s linear"
+    <!-- Main Content: Buttons + Video -->
+    <div class="flex items-center gap-4 w-full">
+        <!-- Prev Button -->
+        <button
+            (click)="prevVideo()"
+            [disabled]="!hasPrev"
+            [class.opacity-0]="!hasPrev"
+            [class.pointer-events-none]="!hasPrev"
+            class="flex-none w-12 h-12 flex items-center justify-center rounded-full bg-default text-default border border-default hover:bg-hover transition-all duration-300 cursor-pointer shadow-sm disabled:opacity-30 disabled:cursor-not-allowed group"
         >
-            <!-- Loader -->
-             <div *ngIf="isLoading" class="absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
-                <app-bouncy-loader></app-bouncy-loader>
-             </div>
+            <mat-icon class="icon-size-8 transition-transform group-hover:-translate-x-0.5">chevron_left</mat-icon>
+        </button>
 
-            <video
-                #videoRef
-                [src]="safeUrl"
-                playsinline
-                autoplay
-                preload="auto"
-                muted
-                loop
-                class="w-full h-full object-contain"
-            ></video>
+        <!-- video area -->
+        <div class="flex-1 bg-black rounded-md overflow-hidden relative">
+            <div
+                #videoWrapper
+                (click)="togglePlay()"
+                class="w-full h-[70vh] flex items-center justify-center bg-black touch-none relative cursor-pointer"
+                style="transition: transform 0.08s linear"
+            >
+                <!-- Loader -->
+                 <div *ngIf="isLoading" class="absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
+                    <app-bouncy-loader></app-bouncy-loader>
+                 </div>
+    
+                <video
+                    #videoRef
+                    [src]="safeUrl"
+                    playsinline
+                    autoplay
+                    preload="auto"
+                    muted
+                    loop
+                    class="w-full h-full object-contain"
+                ></video>
+            </div>
         </div>
+
+        <!-- Next Button -->
+        <button
+            (click)="nextVideo()"
+            [disabled]="!hasNext"
+            [class.opacity-0]="!hasNext"
+            [class.pointer-events-none]="!hasNext"
+            class="flex-none w-12 h-12 flex items-center justify-center rounded-full bg-default text-default border border-default hover:bg-hover transition-all duration-300 cursor-pointer shadow-sm disabled:opacity-30 disabled:cursor-not-allowed group"
+        >
+            <mat-icon class="icon-size-8 transition-transform group-hover:translate-x-0.5">chevron_right</mat-icon>
+        </button>
     </div>
 
     <!-- controls -->
