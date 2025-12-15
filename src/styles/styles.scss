@@ -72,6 +72,10 @@ input[type="number"] {
     background: var(--fuse-bg-card) !important;
 }
 
+.mat-mdc-dialog-panel{
+	max-width: none !important;
+}
+
 /**
  * ----------------------------------------
  * animation slide-right

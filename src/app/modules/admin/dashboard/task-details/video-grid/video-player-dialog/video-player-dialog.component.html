@@ -1,4 +1,4 @@
-<div class="w-full flex flex-col gap-4 bg-[#FAFAFA] rounded-md">
+<div class="w-full flex flex-col gap-4 rounded-md">
     <!-- header -->
     <div class="flex items-center justify-between gap-4">
         <div class="flex items-center gap-3">
@@ -19,15 +19,23 @@
     <!-- Main Content: Buttons + Video -->
     <div class="flex items-center gap-4 w-full">
         <!-- Prev Button -->
-        <button
-            (click)="prevVideo()"
-            [disabled]="!hasPrev"
-            [class.opacity-0]="!hasPrev"
-            [class.pointer-events-none]="!hasPrev"
-            class="flex-none w-12 h-12 flex items-center justify-center rounded-full bg-default text-default border border-default hover:bg-hover transition-all duration-300 cursor-pointer shadow-sm disabled:opacity-30 disabled:cursor-not-allowed group"
-        >
-            <mat-icon class="icon-size-8 transition-transform group-hover:-translate-x-0.5">chevron_left</mat-icon>
-        </button>
+            <div class="p-1 bg-card-secondary rounded-full hover:scale-125 transition-all duration-300">
+                <div class="w-8 h-8 px-2 py-1 rounded-full bg-card flex items-center justify-center">
+                    <button
+                        class="flex justify-center items-center disabled:opacity-60"
+                        (click)="prevVideo()"
+                        [disabled]="!hasPrev"
+                    >
+                        <mat-icon
+                            class="icon-size-6 text-default cursor-pointer"
+                            i18n-matTooltip
+                            matTooltip="Previous Video"
+                        >
+                            skip_previous
+                        </mat-icon>
+                    </button>
+                </div>
+            </div>
 
         <!-- video area -->
         <div class="flex-1 bg-black rounded-md overflow-hidden relative">
@@ -38,10 +46,13 @@
                 style="transition: transform 0.08s linear"
             >
                 <!-- Loader -->
-                 <div *ngIf="isLoading" class="absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
+                <div
+                    *ngIf="isLoading"
+                    class="absolute inset-0 flex items-center justify-center z-50 pointer-events-none"
+                >
                     <app-bouncy-loader></app-bouncy-loader>
-                 </div>
-    
+                </div>
+
                 <video
                     #videoRef
                     [src]="safeUrl"
@@ -56,74 +67,84 @@
         </div>
 
         <!-- Next Button -->
-        <button
-            (click)="nextVideo()"
-            [disabled]="!hasNext"
-            [class.opacity-0]="!hasNext"
-            [class.pointer-events-none]="!hasNext"
-            class="flex-none w-12 h-12 flex items-center justify-center rounded-full bg-default text-default border border-default hover:bg-hover transition-all duration-300 cursor-pointer shadow-sm disabled:opacity-30 disabled:cursor-not-allowed group"
-        >
-            <mat-icon class="icon-size-8 transition-transform group-hover:translate-x-0.5">chevron_right</mat-icon>
-        </button>
+        <div class="p-1 bg-card-secondary rounded-full hover:scale-125 transition-all duration-300">
+            <div class="w-8 h-8 px-2 py-1 rounded-full bg-card flex items-center">
+                <button
+                    class="flex justify-center items-center disabled:opacity-60"
+                    (click)="nextVideo()"
+                    [disabled]="!hasNext"
+                >
+                    <mat-icon
+                        class="icon-size-6 text-default cursor-pointer"
+                        i18n-matTooltip
+                        matTooltip="Next Video"
+                    >
+                        skip_next
+                    </mat-icon>
+                </button>
+            </div>
+        </div>
     </div>
 
     <!-- controls -->
     <div class="flex flex-col gap-3">
         <!-- playback + frame controls -->
         <div class="flex flex-wrap items-center gap-3">
-            <div
-                class="p-2 rounded-lg bg-card-secondary flex items-center gap-2"
-            >
-                <!-- Prev frame -->
-                <button
-                    class="flex justify-center items-center"
-                    (click)="stepFrame(-1)"
+            <div class="p-1 bg-card-secondary rounded-full">
+                <div
+                    class="px-2 py-1 rounded-full bg-card flex items-center gap-2"
                 >
-                    <mat-icon
-                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                        [svgIcon]="'sudocode:double-arrow-left'"
-                        i18n-matTooltip
-                        matTooltip="Previous Frame"
-                    ></mat-icon>
-                </button>
-
-                <!-- Play/Pause -->
-                <button
-                    class="flex justify-center items-center"
-                    (click)="togglePlay()"
-                >
-                    <!-- Play -->
-                    <mat-icon
-                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                        *ngIf="!playing"
-                        i18n-matTooltip
-                        matTooltip="Play"
+                    <!-- Prev frame -->
+                    <button
+                        class="flex justify-center items-center"
+                        (click)="stepFrame(-1)"
                     >
-                        play_circle
-                    </mat-icon>
-                    <!-- Pause -->
-                    <mat-icon
-                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                        *ngIf="playing"
-                        i18n-matTooltip
-                        matTooltip="Pause"
-                    >
-                        pause_circle
-                    </mat-icon>
-                </button>
+                        <mat-icon
+                            class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                            [svgIcon]="'sudocode:double-arrow-left'"
+                            i18n-matTooltip
+                            matTooltip="Previous Frame"
+                        ></mat-icon>
+                    </button>
 
-                <!-- Next frame -->
-                <button
-                    class="flex justify-center items-center"
-                    (click)="stepFrame(1)"
-                    i18n-matTooltip
-                    matTooltip="Next Frame"
-                >
-                    <mat-icon
-                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                        [svgIcon]="'sudocode:double-arrow-right'"
-                    ></mat-icon>
-                </button>
+                    <!-- Play/Pause -->
+                    <button
+                        class="flex justify-center items-center"
+                        (click)="togglePlay()"
+                    >
+                        <!-- Play -->
+                        <mat-icon
+                            class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                            *ngIf="!playing"
+                            i18n-matTooltip
+                            matTooltip="Play"
+                        >
+                            play_circle
+                        </mat-icon>
+                        <!-- Pause -->
+                        <mat-icon
+                            class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                            *ngIf="playing"
+                            i18n-matTooltip
+                            matTooltip="Pause"
+                        >
+                            pause_circle
+                        </mat-icon>
+                    </button>
+
+                    <!-- Next frame -->
+                    <button
+                        class="flex justify-center items-center"
+                        (click)="stepFrame(1)"
+                        i18n-matTooltip
+                        matTooltip="Next Frame"
+                    >
+                        <mat-icon
+                            class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                            [svgIcon]="'sudocode:double-arrow-right'"
+                        ></mat-icon>
+                    </button>
+                </div>
             </div>
 
             <!-- seek bar (robust bindings) -->

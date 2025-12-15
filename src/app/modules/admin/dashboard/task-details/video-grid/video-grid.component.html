@@ -65,99 +65,103 @@
             <span class="text-gray-500"> Starting videos… </span>
         </div>
         } @else{
-        <div class="p-2 rounded-lg bg-card-secondary flex items-center gap-2">
-            <!-- Prev 10 frames -->
-            <button
-                class="flex justify-center items-center"
-                (click)="stepFrame(-10)"
+        <div class="p-1 bg-card-secondary rounded-full">
+            <div
+                class="px-2 py-1 rounded-full bg-card flex items-center gap-2"
             >
-                <mat-icon
-                    class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                    i18n-matTooltip
-                    matTooltip="Previous 10 Frames"
+                <!-- Prev 10 frames -->
+                <button
+                    class="flex justify-center items-center"
+                    (click)="stepFrame(-10)"
                 >
-                    fast_rewind
-                </mat-icon>
-            </button>
+                    <mat-icon
+                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                        i18n-matTooltip
+                        matTooltip="Previous 10 Frames"
+                    >
+                        fast_rewind
+                    </mat-icon>
+                </button>
 
-            <!-- Prev frame -->
-            <button
-                class="flex justify-center items-center"
-                (click)="stepFrame(-1)"
-            >
-                <mat-icon
-                    class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                    [svgIcon]="'sudocode:double-arrow-left'"
-                    i18n-matTooltip
-                    matTooltip="Previous Frame"
-                ></mat-icon>
-            </button>
-
-            <!-- Play/Pause -->
-            <button
-                class="flex justify-center items-center"
-                (click)="togglePlay()"
-            >
-                <!-- Play -->
-                <mat-icon
-                    class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                    *ngIf="!playing"
-                    i18n-matTooltip
-                    matTooltip="Play"
+                <!-- Prev frame -->
+                <button
+                    class="flex justify-center items-center"
+                    (click)="stepFrame(-1)"
                 >
-                    play_circle
-                </mat-icon>
-                <!-- Pause -->
-                <mat-icon
-                    class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                    *ngIf="playing"
-                    i18n-matTooltip
-                    matTooltip="Pause"
-                >
-                    pause_circle
-                </mat-icon>
-            </button>
+                    <mat-icon
+                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                        [svgIcon]="'sudocode:double-arrow-left'"
+                        i18n-matTooltip
+                        matTooltip="Previous Frame"
+                    ></mat-icon>
+                </button>
 
-            <!-- Next frame -->
-            <button
-                class="flex justify-center items-center"
-                (click)="stepFrame(1)"
-                i18n-matTooltip
-                matTooltip="Next Frame"
-            >
-                <mat-icon
-                    class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                    [svgIcon]="'sudocode:double-arrow-right'"
-                ></mat-icon>
-            </button>
-
-            <!-- Next 10 frames -->
-            <button
-                class="flex justify-center items-center"
-                (click)="stepFrame(10)"
-            >
-                <mat-icon
-                    class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                    i18n-matTooltip
-                    matTooltip="Next 10 Frames"
+                <!-- Play/Pause -->
+                <button
+                    class="flex justify-center items-center"
+                    (click)="togglePlay()"
                 >
-                    fast_forward
-                </mat-icon>
-            </button>
+                    <!-- Play -->
+                    <mat-icon
+                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                        *ngIf="!playing"
+                        i18n-matTooltip
+                        matTooltip="Play"
+                    >
+                        play_circle
+                    </mat-icon>
+                    <!-- Pause -->
+                    <mat-icon
+                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                        *ngIf="playing"
+                        i18n-matTooltip
+                        matTooltip="Pause"
+                    >
+                        pause_circle
+                    </mat-icon>
+                </button>
 
-            <!-- Reset -->
-            <button
-                class="flex justify-center items-center"
-                (click)="resetVideo()"
-            >
-                <mat-icon
-                    class="icon-size-5 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                <!-- Next frame -->
+                <button
+                    class="flex justify-center items-center"
+                    (click)="stepFrame(1)"
                     i18n-matTooltip
-                    matTooltip="Reset Video"
+                    matTooltip="Next Frame"
                 >
-                    replay
-                </mat-icon>
-            </button>
+                    <mat-icon
+                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                        [svgIcon]="'sudocode:double-arrow-right'"
+                    ></mat-icon>
+                </button>
+
+                <!-- Next 10 frames -->
+                <button
+                    class="flex justify-center items-center"
+                    (click)="stepFrame(10)"
+                >
+                    <mat-icon
+                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                        i18n-matTooltip
+                        matTooltip="Next 10 Frames"
+                    >
+                        fast_forward
+                    </mat-icon>
+                </button>
+
+                <!-- Reset -->
+                <button
+                    class="flex justify-center items-center"
+                    (click)="resetVideo()"
+                >
+                    <mat-icon
+                        class="icon-size-5 text-default cursor-pointer hover:scale-125 transition-all duration-300"
+                        i18n-matTooltip
+                        matTooltip="Reset Video"
+                    >
+                        replay
+                    </mat-icon>
+                </button>
+            </div>
         </div>
 
         <!-- Progress Bar -->

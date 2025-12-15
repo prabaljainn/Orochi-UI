@@ -348,6 +348,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
 
         const dialogRef = this.dialog.open(VideoPlayerDialogComponent, {
             width: '95%',
+			minWidth: '95%',
             data: {
                 url: url,
                 filename:
