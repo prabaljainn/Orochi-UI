@@ -19,30 +19,34 @@
     <!-- Main Content: Buttons + Video -->
     <div class="flex items-center gap-4 w-full">
         <!-- Prev Button -->
-            <div class="p-1 bg-card-secondary rounded-full hover:scale-125 transition-all duration-300">
-                <div class="w-8 h-8 px-2 py-1 rounded-full bg-card flex items-center justify-center">
-                    <button
-                        class="flex justify-center items-center disabled:opacity-60"
-                        (click)="prevVideo()"
-                        [disabled]="!hasPrev"
-                    >
-                        <mat-icon
-                            class="icon-size-6 text-default cursor-pointer"
-                            i18n-matTooltip
-                            matTooltip="Previous Video"
-                        >
-                            skip_previous
-                        </mat-icon>
-                    </button>
-                </div>
-            </div>
+        <div
+            class="p-1 bg-card-secondary rounded-full hover:scale-125 transition-all duration-300"
+        >
+            <button
+                class="w-8 h-8 px-2 py-1 rounded-full bg-card flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+                (click)="prevVideo()"
+                [disabled]="!hasPrev"
+            >
+                <mat-icon
+                    class="icon-size-4 text-default cursor-pointer disabled:cursor-not-allowed"
+                    i18n-matTooltip
+                    matTooltip="Previous Video"
+                    svgIcon="heroicons_solid:chevron-left"
+                >
+                </mat-icon>
+            </button>
+        </div>
 
         <!-- video area -->
-        <div class="flex-1 bg-black rounded-md overflow-hidden relative">
+        <div class="flex-1 bg-black rounded-md overflow-hidden relative group">
             <div
                 #videoWrapper
                 (click)="togglePlay()"
-                class="w-full h-[70vh] flex items-center justify-center bg-black touch-none relative cursor-pointer"
+                (pointerdown)="onMainPointerDown($event)"
+                (pointermove)="onMainPointerMove($event)"
+                (pointerup)="onMainPointerUp($event)"
+                (pointercancel)="onMainPointerUp($event)"
+                class="w-full h-[70vh] flex items-center justify-center bg-black touch-none relative cursor-pointer origin-center"
                 style="transition: transform 0.08s linear"
             >
                 <!-- Loader -->
@@ -61,28 +65,58 @@
                     preload="auto"
                     muted
                     loop
-                    class="w-full h-full object-contain"
+                    class="w-full h-full object-contain pointer-events-none"
                 ></video>
+            </div>
+
+            <!-- Minimap Overlay (Only visible when zoomed) -->
+            <div
+                *ngIf="zoom > 1"
+                class="absolute bottom-4 right-4 w-48 aspect-video bg-black/50 border border-white/20 rounded shadow-lg overflow-hidden z-[100] transition-opacity duration-300"
+            >
+                <div class="relative w-full h-full">
+                    <!-- Minimap Video (Muted, Synced) -->
+                    <video
+                        #minimapVideoRef
+                        [src]="safeUrl"
+                        playsinline
+                        muted
+                        class="w-full h-full object-cover opacity-60 pointer-events-none"
+                    ></video>
+
+                    <!-- Viewport Rectangle -->
+                    <div
+                        class="absolute border-2 border-primary bg-primary/20 hover:bg-primary/30 cursor-move transition-colors duration-150"
+                        [style.left.%]="viewportLeftPercent"
+                        [style.top.%]="viewportTopPercent"
+                        [style.width.%]="viewportWidthPercent"
+                        [style.height.%]="viewportHeightPercent"
+                        (pointerdown)="onMinimapPointerDown($event)"
+                        (pointermove)="onMinimapPointerMove($event)"
+                        (pointerup)="onMinimapPointerUp($event)"
+                        (pointercancel)="onMinimapPointerUp($event)"
+                    ></div>
+                </div>
             </div>
         </div>
 
         <!-- Next Button -->
-        <div class="p-1 bg-card-secondary rounded-full hover:scale-125 transition-all duration-300">
-            <div class="w-8 h-8 px-2 py-1 rounded-full bg-card flex items-center">
-                <button
-                    class="flex justify-center items-center disabled:opacity-60"
-                    (click)="nextVideo()"
-                    [disabled]="!hasNext"
+        <div
+            class="p-1 bg-card-secondary rounded-full hover:scale-125 transition-all duration-300"
+        >
+            <button
+                class="w-8 h-8 px-2 py-1 rounded-full bg-card flex items-center disabled:opacity-60 disabled:cursor-not-allowed"
+                (click)="nextVideo()"
+                [disabled]="!hasNext"
+            >
+                <mat-icon
+                    class="icon-size-4 text-default"
+                    i18n-matTooltip
+                    matTooltip="Next Video"
+                    svgIcon="heroicons_solid:chevron-right"
                 >
-                    <mat-icon
-                        class="icon-size-6 text-default cursor-pointer"
-                        i18n-matTooltip
-                        matTooltip="Next Video"
-                    >
-                        skip_next
-                    </mat-icon>
-                </button>
-            </div>
+                </mat-icon>
+            </button>
         </div>
     </div>
 
