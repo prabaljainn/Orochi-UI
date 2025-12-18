@@ -60,7 +60,8 @@
                             }
                         ],
                         "stylePreprocessorOptions": {
-                            "includePaths": ["src/@fuse/styles"]
+                            "includePaths": ["src/@fuse/styles",
+                        "src/assets/huge-icons/hugeicons.css"]
                         },
                         "styles": [
                             "src/@fuse/styles/tailwind.scss",
@@ -68,7 +69,8 @@
                             "src/styles/vendors.scss",
                             "src/@fuse/styles/main.scss",
                             "src/styles/styles.scss",
-                            "src/styles/tailwind.scss"
+                            "src/styles/tailwind.scss",
+                            "src/assets/huge-icons/hugeicons.css"
                         ],
                         "scripts": []
                     },
@@ -161,7 +163,7 @@
                             "src/favicon-32x32.png",
                             "src/assets"
                         ],
-                        "styles": ["src/styles/styles.scss"],
+                        "styles": ["src/styles/styles.scss","src/assets/huge-icons/hugeicons.css"],
                         "scripts": []
                     }
                 }

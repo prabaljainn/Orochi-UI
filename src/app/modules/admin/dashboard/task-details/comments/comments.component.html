@@ -5,12 +5,9 @@
         <div class="flex justify-end items-center gap-2">
             <button
                 class="bg-primary text-md text-on-primary font-medium rounded-md px-4 py-2 flex items-center gap-1 hover:bg-primary/90 transition-all duration-300"
-                (click)="getComments()"
-            >
-                <mat-icon
-                    class="icon-size-4 text-white"
-                    svgIcon="heroicons_outline:arrow-path-rounded-square"
-                ></mat-icon>
+                (click)="getComments()">
+                <mat-icon class="icon-size-4 text-white"
+                    svgIcon="heroicons_outline:arrow-path-rounded-square"></mat-icon>
                 <span i18n>Refresh</span>
             </button>
         </div>
@@ -28,14 +25,9 @@
             <!-- Main Comment -->
             <div class="flex gap-2">
                 <!-- Profile Picture -->
-                <div
-                    class="w-8 h-8 rounded-full bg-card-secondary flex-shrink-0 flex items-center justify-center p-2"
-                >
-                    <mat-icon
-                        class="text-default icon-size-4"
-                        svgIcon="heroicons_outline:user"
-                        style="width: 12px; height: 12px"
-                    ></mat-icon>
+                <div class="w-8 h-8 rounded-full bg-card-secondary flex-shrink-0 flex items-center justify-center p-2">
+                    <mat-icon class="text-default icon-size-4" svgIcon="heroicons_outline:user"
+                        style="width: 12px; height: 12px"></mat-icon>
                 </div>
 
                 <!-- Comment Content -->
@@ -50,54 +42,33 @@
                             <span class="text-xs text-default">
                                 {{ formatTimeAgo(comment.created_date) }}
                             </span>
-                            <div
-                                class="border text-xs font-medium rounded-md p-1"
-                            >
+                            <div class="border text-xs font-medium rounded-md p-1">
                                 {{ comment.comment_type_display }}
                             </div>
                         </div>
 
                         <!-- Action Buttons -->
                         <div class="flex items-center gap-4">
-                            <button
-                                class="flex items-center gap-1 text-xs rotate-180"
-                                (click)="
+                            <button class="flex items-center gap-1 text-xs rotate-180" (click)="
                                     parentCommentId.set(comment.id);
                                     this.commentForm.patchValue({ message: '' })
-                                "
-                            >
-                                <mat-icon
-                                    class="icon-size-4 text-default"
-                                    svgIcon="heroicons_outline:arrow-uturn-left"
-                                ></mat-icon>
+                                ">
+                                <mat-icon class="icon-size-4 text-default"
+                                    svgIcon="heroicons_outline:arrow-uturn-left"></mat-icon>
                             </button>
-                            <button
-                                class="flex items-center gap-1 text-xs"
-                                (click)="deleteComment(comment)"
-                            >
-                                <mat-icon
-                                    class="icon-size-4 text-default"
-                                    svgIcon="heroicons_outline:trash"
-                                ></mat-icon>
+                            <button class="flex items-center gap-1 text-xs" (click)="deleteComment(comment)">
+                                <mat-icon class="icon-size-4 text-default" svgIcon="heroicons_outline:trash"></mat-icon>
                             </button>
                         </div>
                     </div>
 
                     <!-- Comment Input Field -->
-                    <input
-                        class="w-full px-3 py-2 border rounded-md text-sm text-default italic bg-card-secondary"
-                        type="text"
-                        [value]="comment.message"
-                        readonly
-						i18n-placeholder
-                        placeholder="Comment"
-                    />
+                    <input class="w-full px-3 py-2 border rounded-md text-sm text-default italic bg-card-secondary"
+                        type="text" [value]="comment.message" readonly i18n-placeholder placeholder="Comment" />
 
                     @if (parentCommentId() === comment.id) {
                     <!-- Reply Input Section for main comment -->
-                    <ng-container
-                        *ngTemplateOutlet="commentInputTemplate"
-                    ></ng-container>
+                    <ng-container *ngTemplateOutlet="commentInputTemplate"></ng-container>
                     }
                 </div>
             </div>
@@ -110,77 +81,50 @@
                     <div class="flex gap-2">
                         <!-- Profile Picture -->
                         <div
-                            class="w-8 h-8 rounded-full bg-card-secondary flex-shrink-0 flex items-center justify-center p-2"
-                        >
-                            <mat-icon
-                                class="text-default icon-size-4"
-                                svgIcon="heroicons_outline:user"
-                                style="width: 12px; height: 12px"
-                            ></mat-icon>
+                            class="w-8 h-8 rounded-full bg-card-secondary flex-shrink-0 flex items-center justify-center p-2">
+                            <mat-icon class="text-default icon-size-4" svgIcon="heroicons_outline:user"
+                                style="width: 12px; height: 12px"></mat-icon>
                         </div>
 
                         <!-- Reply Content -->
                         <div class="flex-1 space-y-2">
                             <!-- Author and Timestamp -->
-                            <div
-                                class="flex items-center justify-between gap-2"
-                            >
+                            <div class="flex items-center justify-between gap-2">
                                 <div class="flex items-center gap-2">
-                                    <span
-                                        class="font-semibold text-default text-sm"
-                                    >
+                                    <span class="font-semibold text-default text-sm">
                                         {{ reply.author.username }}
                                     </span>
                                     <span class="text-xs text-default">
                                         {{ formatTimeAgo(reply.created_date) }}
                                     </span>
-                                    <div
-                                        class="border text-xs font-medium rounded-md p-1"
-                                    >
+                                    <div class="border text-xs font-medium rounded-md p-1">
                                         {{ reply.comment_type_display }}
                                     </div>
                                 </div>
 
                                 <!-- Action Buttons -->
                                 <div class="flex items-center gap-4">
-                                    <button
-                                        class="flex items-center gap-1 text-xs"
-                                        (click)="deleteComment(reply)"
-                                    >
-                                        <mat-icon
-                                            class="icon-size-4 text-default"
-                                            svgIcon="heroicons_outline:trash"
-                                        ></mat-icon>
+                                    <button class="flex items-center gap-1 text-xs" (click)="deleteComment(reply)">
+                                        <mat-icon class="icon-size-4 text-default"
+                                            svgIcon="heroicons_outline:trash"></mat-icon>
                                     </button>
                                 </div>
                             </div>
 
                             <!-- Reply Input Field -->
-                            <input
-                                type="text"
-                                [value]="reply.message"
-                                readonly
+                            <input type="text" [value]="reply.message" readonly
                                 class="w-full px-3 py-2 border rounded-md text-sm text-default italic bg-card-secondary"
-                                i18n-placeholder
-                                placeholder="reply"
-                            />
+                                i18n-placeholder placeholder="reply" />
                         </div>
                     </div>
                     }
                 </div>
             </div>
             } } @empty {
-            <div
-                class="flex-auto flex flex-col items-center justify-center gap-2 p-4"
-            >
-                <mat-icon
-                    class="text-primary icon-size-20"
-                    svgIcon="sudocode:no-comments"
-                ></mat-icon>
-                <div
-                    class="text-center text-base text-default font-semibold"
-                    i18n
-                >
+            <div class="flex-auto flex flex-col items-center justify-center gap-2 p-4">
+                <mat-icon class="text-[#00000020] dark:text-[#ffffff20] icon-size-20"
+                    svgIcon="sudocode:no-comments"></mat-icon>
+                <div class="text-center text-base text-default font-semibold" i18n>
                     No comments found yet
                 </div>
             </div>
@@ -197,34 +141,24 @@
                 <!-- Input Field and Controls -->
                 <div class="flex-1 flex flex-col gap-2">
                     <div class="w-full flex items-center gap-2">
-                        <mat-form-field
-                            class="w-36 task-comments-input-wrapper h-10 filter-dropdown"
-                            appearance="outline"
-                        >
+                        <mat-form-field class="w-36 task-comments-input-wrapper h-10 filter-dropdown"
+                            appearance="outline">
                             <mat-label i18n>Type</mat-label>
                             <mat-select formControlName="comment_type">
                                 @for (commentType of commentTypeList; track
                                 commentType.key) {
                                 <mat-option [value]="commentType.key">{{
                                     commentType.displayValue
-                                }}</mat-option>
+                                    }}</mat-option>
                                 }
                             </mat-select>
                         </mat-form-field>
 
-                        <mat-form-field
-                            class="w-full task-comments-input-wrapper h-10 filter-dropdown"
-                            appearance="outline"
-                            style="--mat-form-field-container-height: 2.5rem"
-                        >
+                        <mat-form-field class="w-full task-comments-input-wrapper h-10 filter-dropdown"
+                            appearance="outline" style="--mat-form-field-container-height: 2.5rem">
                             <mat-label i18n>Add a comment...</mat-label>
-                            <input
-                                matInput
-                                formControlName="message"
-								i18n-placeholder
-                                placeholder="Add a comment..."
-                                class="text-sm"
-                            />
+                            <input matInput formControlName="message" i18n-placeholder placeholder="Add a comment..."
+                                class="text-sm" />
                         </mat-form-field>
 
                         @if (parentCommentId()) {
@@ -233,12 +167,8 @@
                             (click)="
                                 parentCommentId.set(null);
                                 this.commentForm.patchValue({ message: '' })
-                            "
-                        >
-                            <mat-icon
-                                class="icon-size-4 text-primary"
-                                svgIcon="heroicons_outline:x-mark"
-                            ></mat-icon>
+                            ">
+                            <mat-icon class="icon-size-4 text-primary" svgIcon="heroicons_outline:x-mark"></mat-icon>
                         </button>
                         }
 
@@ -247,13 +177,9 @@
                             [disabled]="
                                 !commentForm.value.message ||
                                 !commentForm.value.comment_type
-                            "
-                            (click)="createComment()"
-                        >
-                            <mat-icon
-                                class="icon-size-4 text-white"
-                                svgIcon="heroicons_outline:paper-airplane"
-                            ></mat-icon>
+                            " (click)="createComment()">
+                            <mat-icon class="icon-size-4 text-white"
+                                svgIcon="heroicons_outline:paper-airplane"></mat-icon>
                         </button>
                     </div>
                 </div>

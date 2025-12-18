@@ -35,7 +35,7 @@ export interface VideoItem {
         MatProgressSpinnerModule,
         MatIconModule,
         MatTooltipModule,
-		BouncyLoaderComponent
+        BouncyLoaderComponent
     ],
     templateUrl: './video-grid.component.html',
 })
@@ -55,7 +55,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     playing = false; // Track global playing state
     safeUrlToVideoMetaMap: Map<SafeResourceUrl, VideoItem> = new Map();
-    
+
     maxDuration = 0;
     currentProgress = 0;
     isDragging = false;
@@ -66,7 +66,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
         private sanitizer: DomSanitizer,
         private cd: ChangeDetectorRef,
         private dialog: MatDialog
-    ) {}
+    ) { }
 
     ngAfterViewInit() {
         this.setupPage();
@@ -109,11 +109,11 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
             start,
             start + this.pageSize
         );
-        
+
         // Reset loading state for the new page
         this.loadedVideoIndices.clear();
         this.areAllVideosLoaded = pageItems.length === 0;
-        
+
         this.safeUrlsOnPage = pageItems.map((v) => {
             let safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
                 v.presigned_url
@@ -121,12 +121,12 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
             this.safeUrlToVideoMetaMap.set(safeUrl, v);
             return safeUrl;
         });
-        
+
         // If no videos, we might want to update UI immediately
         if (this.areAllVideosLoaded) {
-             setTimeout(() => {
+            setTimeout(() => {
                 this.cd.detectChanges();
-             }, 0);
+            }, 0);
         }
     }
 
@@ -159,7 +159,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
             elems.forEach((e) => {
                 try {
                     e.pause();
-                } catch {}
+                } catch { }
             });
             this.autoplayBlocked = true;
             this.playing = false;
@@ -221,7 +221,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
                 console.error('Error stepping frame', error);
             }
         });
-        
+
         // Sync progress bar
         if (elems.length > 0) {
             // Recalculate max time to ensure progress bar reflects the new state
@@ -237,11 +237,11 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
         this.currentProgress = 0;
         const elems =
             this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
-        
+
         elems.forEach((v) => {
             try {
                 v.currentTime = 0;
- 				v.pause();
+                v.pause();
             } catch (error) {
                 console.error('Error resetting video:', error);
             }
@@ -256,7 +256,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
         elems.forEach((v) => {
             try {
                 v.currentTime = 0;
-            } catch {}
+            } catch { }
             v.muted = !unmuteAfter ? true : false;
             v.playsInline = true;
         });
@@ -276,7 +276,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
             try {
                 v.pause();
                 v.currentTime = 0;
-            } catch {}
+            } catch { }
             v.muted = !unmuteAfter ? true : false;
         });
         await new Promise((res) => setTimeout(res, 60));
@@ -340,7 +340,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
         elems.forEach((v) => {
             try {
                 v.pause();
-            } catch {}
+            } catch { }
         });
 
         const videoElem = this.videoElems?.get(index)?.nativeElement;
@@ -348,7 +348,8 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
 
         const dialogRef = this.dialog.open(VideoPlayerDialogComponent, {
             width: '95%',
-			minWidth: '95%',
+            minWidth: '95%',
+            panelClass: 'custom-mat-dialog',
             data: {
                 url: url,
                 filename:
@@ -369,14 +370,14 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
             elems.forEach((v) => {
                 try {
                     v.play().catch(console.error);
-                } catch {}
+                } catch { }
             });
         });
     }
 
     onMetadataLoaded(event: Event, index: number) {
         const video = event.target as HTMLVideoElement;
-        
+
         // Track this video as loaded
         this.loadedVideoIndices.add(index);
 
@@ -387,10 +388,10 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
 
         // Check if all videos for the current page are loaded
         if (this.loadedVideoIndices.size === this.safeUrlsOnPage.length) {
-             this.areAllVideosLoaded = true;
-             // Now that all are loaded, try to play them together
-             this.tryPlayAll();
-             this.cd.detectChanges();
+            this.areAllVideosLoaded = true;
+            // Now that all are loaded, try to play them together
+            this.tryPlayAll();
+            this.cd.detectChanges();
         }
     }
 
@@ -429,7 +430,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
 
         // Restart
         if (this.playing) {
-             const promises = elems.map((v) =>
+            const promises = elems.map((v) =>
                 v.play().catch((err) => console.warn('loop restart error', err))
             );
             await Promise.all(promises);
@@ -462,7 +463,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
             // Pause all without setting global playing state to false permanently if we want to resume
             this.playing = false;
             this.stopProgressLoop();
-            
+
             const elems = this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
             elems.forEach(v => v.pause());
         }
@@ -473,7 +474,7 @@ export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {
         if (this.wasPlayingBeforeDrag) {
             this.playing = true;
             this.startProgressLoop();
-            
+
             const elems = this.videoElems?.toArray().map((q) => q.nativeElement) ?? [];
             elems.forEach(v => v.play().catch(e => console.error(e)));
         }

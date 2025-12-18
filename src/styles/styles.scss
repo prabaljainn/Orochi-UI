@@ -37,11 +37,9 @@ input[type="number"] {
 }
 
 .sign-in-background {
-    background: linear-gradient(
-        180deg,
-        rgba(0, 0, 0, 1) 0%,
-        rgba(13, 94, 166, 1) 100%
-    );
+    background: linear-gradient(180deg,
+            rgba(0, 0, 0, 1) 0%,
+            rgba(13, 94, 166, 1) 100%);
 }
 
 .filter-dropdown {
@@ -72,8 +70,8 @@ input[type="number"] {
     background: var(--fuse-bg-card) !important;
 }
 
-.mat-mdc-dialog-panel{
-	max-width: none !important;
+.mat-mdc-dialog-panel {
+    max-width: none !important;
 }
 
 /**
@@ -82,8 +80,7 @@ input[type="number"] {
  * ----------------------------------------
  */
 .slide-right {
-    -webkit-animation: slide-right 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-        both;
+    -webkit-animation: slide-right 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
     animation: slide-right 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
@@ -92,16 +89,19 @@ input[type="number"] {
         -webkit-transform: translateX(-100px);
         transform: translateX(-100px);
     }
+
     100% {
         -webkit-transform: translateX(0);
         transform: translateX(0);
     }
 }
+
 @keyframes slide-right {
     0% {
         -webkit-transform: translateX(-100px);
         transform: translateX(-100px);
     }
+
     100% {
         -webkit-transform: translateX(0);
         transform: translateX(0);
@@ -123,16 +123,19 @@ input[type="number"] {
         -webkit-transform: translateX(100px);
         transform: translateX(100px);
     }
+
     100% {
         -webkit-transform: translateX(0);
         transform: translateX(0);
     }
 }
+
 @keyframes slide-left {
     0% {
         -webkit-transform: translateX(100px);
         transform: translateX(100px);
     }
+
     100% {
         -webkit-transform: translateX(0);
         transform: translateX(0);
@@ -145,25 +148,28 @@ input[type="number"] {
  * ----------------------------------------
  */
 .slide-bottom {
-    -webkit-animation: slide-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
-        both;
+    -webkit-animation: slide-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
     animation: slide-bottom 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
+
 @-webkit-keyframes slide-bottom {
     0% {
         -webkit-transform: translateY(-100px);
         transform: translateY(-100px);
     }
+
     100% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
     }
 }
+
 @keyframes slide-bottom {
     0% {
         -webkit-transform: translateY(-100px);
         transform: translateY(-100px);
     }
+
     100% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
@@ -185,18 +191,52 @@ input[type="number"] {
         -webkit-transform: translateY(100px);
         transform: translateY(100px);
     }
+
     100% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
     }
 }
+
 @keyframes slide-top {
     0% {
         -webkit-transform: translateY(100px);
         transform: translateY(100px);
     }
+
     100% {
         -webkit-transform: translateY(0);
         transform: translateY(0);
+    }
+}
+
+.glass-card {
+    /* Premium "Thick Glass" Effect */
+    background: rgba(255, 255, 255, 0.65);
+    /* Increased opacity for "tile" look */
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+
+    /* Double border trick for depth */
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow:
+        0 8px 32px 0 rgba(31, 38, 135, 0.07),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+    /* Inner shine */
+
+    transition: all 0.3s ease;
+}
+
+.dark .glass-card {
+    background: #0b0c0f;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 8px 32px 0 rgba(0, 0, 0, 0.4),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.custom-mat-dialog {
+    .mat-mdc-dialog-surface {
+        padding: 0 !important;
     }
 }

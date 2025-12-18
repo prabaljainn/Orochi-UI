@@ -1,208 +1,132 @@
 <div class="flex flex-col gap-4">
     <!-- Video grid: 3 cols x 2 rows = 6 -->
-    <div
-        class="grid gap-3 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-        style="grid-auto-rows: 18rem"
-    >
-        <div
-            *ngFor="
+    <div class="grid gap-4  p-4 rounded-lg grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" style="grid-auto-rows: 18rem">
+        <div *ngFor="
                 let url of safeUrlsOnPage;
                 let i = index;
                 trackBy: trackByIndex
             "
-            class="bg-black rounded-md overflow-hidden flex flex-col items-center justify-center hover:border hover:border-primary transition-all duration-300 relative"
-            (click)="openVideoDialog(url, i)"
-        >
+            class="group bg-white/40 dark:bg-black/20 backdrop-blur-md rounded-2xl overflow-hidden flex flex-col items-center justify-center border border-white/40 dark:border-white/10 shadow-lg hover:shadow-xl transition-all duration-300 relative hover:scale-[1.02]"
+            (click)="openVideoDialog(url, i)">
             <!-- Loader -->
-            <div
-                *ngIf="!areAllVideosLoaded"
-                class="absolute inset-0 flex items-center justify-center z-10"
-            >
+            <div *ngIf="!areAllVideosLoaded" class="absolute inset-0 flex items-center justify-center z-10">
                 <app-bouncy-loader></app-bouncy-loader>
             </div>
 
-            <video
-                #videoPlayer
-                [src]="url"
-                muted
-                playsinline
-                preload="metadata"
-                [style.visibility]="areAllVideosLoaded ? 'visible' : 'hidden'"
-                class="w-full h-[90%] object-cover"
-                (error)="console.error('video error', $event)"
-                (loadedmetadata)="onMetadataLoaded($event, i)"
-            ></video>
+            <video #videoPlayer [src]="url" muted playsinline preload="metadata"
+                [style.visibility]="areAllVideosLoaded ? 'visible' : 'hidden'" class="w-full h-full object-cover"
+                (error)="console.error('video error', $event)" (loadedmetadata)="onMetadataLoaded($event, i)"></video>
+
+            <!-- Minimal Gradient Title Overlay -->
             <div
-                class="w-full h-[10%] flex justify-between items-center p-2 bg-card-secondary text-default"
-            >
-                <div class="text-md font-semibold truncate py-1">
+                class="absolute bottom-0 left-0 right-0 flex justify-between items-end p-3 pt-8 bg-gradient-to-t from-black/80 via-black/40 to-transparent text-white transition-all duration-300">
+                <div class="text-sm font-medium tracking-wide truncate pr-2 opacity-90">
                     {{ safeUrlToVideoMetaMap.get(url)?.filename?.split('.')?.[0] ?? 'Unknown' }}
                 </div>
-                <button class="flex justify-center items-center">
-                    <mat-icon
-                        class="icon-size-4 hover:text-primary transition-all duration-300 text-default"
-                        svgIcon="sudocode:expand-video"
-                    ></mat-icon>
+                <button
+                    class="flex justify-center items-center w-6 h-6 rounded-full hover:bg-white/20 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                    <i class="hgi hgi-stroke hgi-maximize-02 text-xl"></i>
                 </button>
             </div>
         </div>
 
         <!-- If fewer than pageSize items, fill empty slots for consistent layout -->
         <ng-container *ngIf="safeUrlsOnPage.length < pageSize">
-            <div
-                *ngFor="
+            <div *ngFor="
                     let _ of [].constructor(pageSize - safeUrlsOnPage.length)
-                "
-                class="bg-gray-100 rounded-md border"
-            ></div>
+                " class="bg-white/5 dark:bg-white/5 rounded-2xl border border-white/10 border-dashed"></div>
         </ng-container>
     </div>
 
-    <!-- Bottom controls / status -->
-    <div class="flex items-center justify-between text-sm text-gray-600">
-        @if(loading){
-        <div class="text-right">
-            <span class="text-gray-500"> Starting videos… </span>
-        </div>
-        } @else{
-        <div class="p-1 bg-card-secondary rounded-full">
-            <div
-                class="px-2 py-1 rounded-full bg-card flex items-center gap-2"
-            >
-                <!-- Prev 10 frames -->
-                <button
-                    class="flex justify-center items-center"
-                    (click)="stepFrame(-10)"
-                >
-                    <mat-icon
-                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                        i18n-matTooltip
-                        matTooltip="Previous 10 Frames"
-                    >
-                        fast_rewind
-                    </mat-icon>
-                </button>
 
-                <!-- Prev frame -->
-                <button
-                    class="flex justify-center items-center"
-                    (click)="stepFrame(-1)"
-                >
-                    <mat-icon
-                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                        [svgIcon]="'sudocode:double-arrow-left'"
-                        i18n-matTooltip
-                        matTooltip="Previous Frame"
-                    ></mat-icon>
-                </button>
-
-                <!-- Play/Pause -->
-                <button
-                    class="flex justify-center items-center"
-                    (click)="togglePlay()"
-                >
-                    <!-- Play -->
-                    <mat-icon
-                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                        *ngIf="!playing"
-                        i18n-matTooltip
-                        matTooltip="Play"
-                    >
-                        play_circle
-                    </mat-icon>
-                    <!-- Pause -->
-                    <mat-icon
-                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                        *ngIf="playing"
-                        i18n-matTooltip
-                        matTooltip="Pause"
-                    >
-                        pause_circle
-                    </mat-icon>
-                </button>
-
-                <!-- Next frame -->
-                <button
-                    class="flex justify-center items-center"
-                    (click)="stepFrame(1)"
-                    i18n-matTooltip
-                    matTooltip="Next Frame"
-                >
-                    <mat-icon
-                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                        [svgIcon]="'sudocode:double-arrow-right'"
-                    ></mat-icon>
-                </button>
-
-                <!-- Next 10 frames -->
-                <button
-                    class="flex justify-center items-center"
-                    (click)="stepFrame(10)"
-                >
-                    <mat-icon
-                        class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                        i18n-matTooltip
-                        matTooltip="Next 10 Frames"
-                    >
-                        fast_forward
-                    </mat-icon>
-                </button>
-
-                <!-- Reset -->
-                <button
-                    class="flex justify-center items-center"
-                    (click)="resetVideo()"
-                >
-                    <mat-icon
-                        class="icon-size-5 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                        i18n-matTooltip
-                        matTooltip="Reset Video"
-                    >
-                        replay
-                    </mat-icon>
-                </button>
-            </div>
-        </div>
-
-        <!-- Progress Bar -->
-        <div class="flex-1 px-4">
-            <input
-                type="range"
-                [min]="0"
-                [max]="maxDuration"
-                [value]="currentProgress"
-                (input)="onSeek($event)"
-                (mousedown)="onSeekStart()"
-                (mouseup)="onSeekEnd()"
-                class="w-full h-2 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-primary"
-            />
-        </div>
-        }
-
-        <div class="flex items-center gap-3">
-            <button
-                (click)="prevPage()"
-                [disabled]="currentPage === 0"
-                class="px-2 py-1 flex justify-center items-center gap-2 rounded-md border disabled:opacity-50"
-            >
-                <mat-icon
-                    class="icon-size-3"
-                    svgIcon="heroicons_outline:chevron-left"
-                ></mat-icon>
-                Prev
+</div>
+<!-- Bottom controls / status -->
+<div class="flex items-center justify-between text-sm text-slate-600 glass-card   p-2 rounded-2xl border  ">
+    @if(loading){
+    <div class="text-right w-full pr-4 text-slate-500">
+        <span> Starting videos… </span>
+    </div>
+    } @else{
+    <div class="p-1">
+        <div class="px-2 py-1 flex items-center gap-1 border border-black/10 dark:border-white/10 rounded-[2rem]">
+            <!-- Prev 10 frames -->
+            <button class="flex justify-center items-center w-8 h-8 rounded-full hover:bg-white/20 transition-colors"
+                (click)="stepFrame(-10)">
+                <mat-icon class="icon-size-5 text-slate-600 dark:text-white" i18n-matTooltip
+                    matTooltip="Previous 10 Frames">
+                    fast_rewind
+                </mat-icon>
             </button>
-            <span>Showing {{ showingRange }} of {{ videos.length }}</span>
+
+            <!-- Prev frame -->
+            <button class="flex justify-center items-center w-8 h-8 rounded-full hover:bg-white/20 transition-colors"
+                (click)="stepFrame(-1)">
+                <mat-icon class="icon-size-5 text-slate-600 dark:text-white" [svgIcon]="'sudocode:double-arrow-left'"
+                    i18n-matTooltip matTooltip="Previous Frame"></mat-icon>
+            </button>
+
+            <!-- Play/Pause -->
             <button
-                (click)="nextPage()"
-                [disabled]="currentPage + 1 >= totalPages"
-                class="px-2 py-1 flex justify-center items-center gap-2 rounded-md border disabled:opacity-50"
-            >
-                Next
-                <mat-icon
-                    class="icon-size-3"
-                    svgIcon="heroicons_outline:chevron-right"
-                ></mat-icon>
+                class="flex justify-center scale-150 items-center w-10 h-10 rounded-full bg-white/50 dark:bg-white/10 hover:bg-white/70 dark:hover:bg-white/20 transition-all shadow-sm"
+                (click)="togglePlay()">
+                <!-- Play -->
+                <mat-icon class="icon-size-6 text-slate-600 dark:text-white" *ngIf="!playing" i18n-matTooltip
+                    matTooltip="Play">
+                    play_circle
+                </mat-icon>
+
+                <!-- Pause -->
+                <mat-icon class="icon-size-6 text-slate-600 dark:text-white" *ngIf="playing" i18n-matTooltip
+                    matTooltip="Pause">
+                    pause_circle
+                </mat-icon>
+            </button>
+
+            <!-- Next frame -->
+            <button class="flex justify-center items-center w-8 h-8 rounded-full hover:bg-white/20 transition-colors"
+                (click)="stepFrame(1)">
+                <mat-icon class="icon-size-5 text-slate-600 dark:text-white" [svgIcon]="'sudocode:double-arrow-right'"
+                    i18n-matTooltip matTooltip="Next Frame"></mat-icon>
+            </button>
+
+            <!-- Next 10 frames -->
+            <button class="flex justify-center items-center w-8 h-8 rounded-full hover:bg-white/20 transition-colors"
+                (click)="stepFrame(10)">
+                <mat-icon class="icon-size-5 text-slate-600 dark:text-white" i18n-matTooltip
+                    matTooltip="Next 10 Frames">
+                    fast_forward
+                </mat-icon>
+            </button>
+
+            <!-- Reset -->
+            <button class="flex justify-center items-center w-8 h-8 rounded-full hover:bg-white/20 transition-colors"
+                (click)="resetVideo()">
+                <mat-icon class="icon-size-4 text-slate-600 dark:text-white" i18n-matTooltip matTooltip="Reset Video">
+                    replay
+                </mat-icon>
             </button>
         </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="flex-1 px-4">
+        <input type="range" [min]="0" [max]="maxDuration" [value]="currentProgress" (input)="onSeek($event)"
+            (mousedown)="onSeekStart()" (mouseup)="onSeekEnd()"
+            class="w-full h-1.5 bg-slate-300 dark:bg-slate-600 rounded-lg appearance-none cursor-pointer accent-orange-400 hover:accent-orange-500" />
+    </div>
+    }
+
+    <div class="flex items-center gap-3">
+        <button (click)="prevPage()" [disabled]="currentPage === 0"
+            class="px-2 py-1 flex justify-center items-center gap-2 rounded-md border disabled:opacity-50">
+            <mat-icon class="icon-size-3" svgIcon="heroicons_outline:chevron-left"></mat-icon>
+            Prev
+        </button>
+        <span>Showing {{ showingRange }} of {{ videos.length }}</span>
+        <button (click)="nextPage()" [disabled]="currentPage + 1 >= totalPages"
+            class="px-2 py-1 flex justify-center items-center gap-2 rounded-md border disabled:opacity-50">
+            Next
+            <mat-icon class="icon-size-3" svgIcon="heroicons_outline:chevron-right"></mat-icon>
+        </button>
     </div>
 </div>

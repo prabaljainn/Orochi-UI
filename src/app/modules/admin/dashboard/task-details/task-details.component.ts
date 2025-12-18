@@ -44,6 +44,7 @@ import { VideoGridComponent } from './video-grid/video-grid.component';
 		VideoGridComponent,
     ],
     templateUrl: './task-details.component.html',
+    styleUrls: ['./task-details.component.scss']
 })
 export class TaskDetailsComponent implements OnInit {
 	title = $localize`Task Details`;
