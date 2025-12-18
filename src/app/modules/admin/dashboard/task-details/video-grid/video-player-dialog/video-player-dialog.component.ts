@@ -66,6 +66,11 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
     lastPointerX = 0;
     lastPointerY = 0;
 
+    // Feedback state
+    feedbackIcon: string | null = null;
+    feedbackTimeout: any;
+    showHelp = false;
+
     // seeking helpers
     seeking = false;
     private wasPlayingBeforeSeek = false;
@@ -90,6 +95,12 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
     };
     private onPlayingBound = () => {
         this.isLoading = false;
+        this.playing = true;
+        this.cd.detectChanges();
+    };
+
+    private onPauseBound = () => {
+        this.playing = false;
         this.cd.detectChanges();
     };
 
@@ -140,6 +151,7 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
         v.addEventListener('waiting', this.onWaitingBound);
         v.addEventListener('canplay', this.onCanPlayBound);
         v.addEventListener('playing', this.onPlayingBound);
+        v.addEventListener('pause', this.onPauseBound);
 
         // attempt to play (the click that opened dialog is a user gesture)
         // Check if paused to avoid redundant calls if browser somehow started it (unlikely without autoplay)
@@ -170,6 +182,7 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
             v.removeEventListener('waiting', this.onWaitingBound);
             v.removeEventListener('canplay', this.onCanPlayBound);
             v.removeEventListener('playing', this.onPlayingBound);
+            v.removeEventListener('pause', this.onPauseBound);
             v.src = '';
         } catch {}
     }
@@ -663,18 +676,82 @@ export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {
     // keyboard shortcuts
     @HostListener('window:keydown', ['$event'])
     handleKeydown(event: KeyboardEvent) {
-        if (event.key === ' ' || event.code === 'Space') {
+        // Ignore if user is typing in an input
+        if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) return;
+
+        const key = event.key.toLowerCase();
+        const code = event.code;
+
+        if (code === 'Space' || key === 'k') {
             event.preventDefault();
             this.togglePlay();
-        } else if (event.key === 'ArrowRight') {
+            this.showFeedback(this.playing ? 'play_circle' : 'pause_circle');
+        } else if (code === 'ArrowRight' || key === 'l') {
+            event.preventDefault();
+            this.seekRelative(5);
+            this.showFeedback('fast_forward');
+        } else if (code === 'ArrowLeft' || key === 'j') {
+            event.preventDefault();
+            this.seekRelative(-5);
+            this.showFeedback('fast_rewind');
+        } else if (key === '.') {
             event.preventDefault();
             this.stepFrame(1);
-        } else if (event.key === 'ArrowLeft') {
+            this.showFeedback('skip_next');
+        } else if (key === ',') {
             event.preventDefault();
             this.stepFrame(-1);
-        } else if (event.key === 'Escape') {
+            this.showFeedback('skip_previous');
+        } else if (key === 'm') {
+            event.preventDefault();
+            this.toggleMute();
+        } else if (key === 'f') {
+            event.preventDefault();
+            this.toggleFullscreen();
+        } else if (key === '?') {
+            event.preventDefault();
+            this.showHelp = !this.showHelp;
+            this.cd.detectChanges();
+        } else if (key === 'escape') {
             this.close();
         }
+    }
+
+    seekRelative(seconds: number) {
+        const v = this.videoRef.nativeElement;
+        const target = (v.currentTime || 0) + seconds;
+        this.currentTime = target; // optimistic update
+        v.currentTime = target;
+        this.syncMinimapTime();
+        this.cd.detectChanges();
+    }
+
+    toggleMute() {
+        const v = this.videoRef.nativeElement;
+        v.muted = !v.muted;
+        this.showFeedback(v.muted ? 'volume_off' : 'volume_up');
+    }
+
+    toggleFullscreen() {
+        const elem = this.videoWrapper.nativeElement;
+        if (!document.fullscreenElement) {
+            elem.requestFullscreen().catch(err => {
+                console.warn(`Error attempting to enable fullscreen: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    showFeedback(icon: string) {
+        this.feedbackIcon = icon;
+        this.cd.detectChanges();
+        
+        if (this.feedbackTimeout) clearTimeout(this.feedbackTimeout);
+        this.feedbackTimeout = setTimeout(() => {
+            this.feedbackIcon = null;
+            this.cd.detectChanges();
+        }, 600);
     }
 
     // format time mm:ss or hh:mm:ss

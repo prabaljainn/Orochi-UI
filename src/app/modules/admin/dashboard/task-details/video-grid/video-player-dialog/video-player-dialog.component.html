@@ -1,188 +1,107 @@
-<div class="w-full flex flex-col gap-4 rounded-md">
-    <!-- header -->
-    <div class="flex items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
-            <h3 class="text-lg font-semibold">{{ filename }}</h3>
-            <span class="text-sm text-gray-500"
-                >• {{ formatTime(currentTime) }} /
-                {{ formatTime(duration) }}</span
-            >
+<div class="relative w-full h-[90vh] bg-black rounded-xl overflow-hidden group/player select-none" tabindex="0">
+    <!-- Main Video Layer -->
+    <div
+        #videoWrapper
+        class="absolute inset-0 flex items-center justify-center bg-black transition-transform duration-75 origin-center"
+        (click)="togglePlay()"
+        (pointerdown)="onMainPointerDown($event)"
+        (pointermove)="onMainPointerMove($event)"
+        (pointerup)="onMainPointerUp($event)"
+        (pointercancel)="onMainPointerUp($event)"
+    >
+        <div *ngIf="isLoading" class="absolute inset-0 z-50 flex items-center justify-center pointer-events-none">
+            <app-bouncy-loader></app-bouncy-loader>
         </div>
 
-        <div class="flex items-center gap-2">
-            <button (click)="close()" class="px-3 py-1 rounded border text-sm">
-                Close
-            </button>
+        <video
+            #videoRef
+            [src]="safeUrl"
+            playsinline
+            preload="auto"
+            loop
+            class="w-full h-full object-contain pointer-events-none"
+        ></video>
+    </div>
+
+    <!-- Minimap (Only when zoomed) -->
+    <div
+        *ngIf="zoom > 1"
+        class="absolute top-4 right-4 w-48 aspect-video bg-black/60 border border-white/20 rounded-lg shadow-2xl overflow-hidden z-40 transition-opacity duration-300 backdrop-blur-sm pointer-events-auto"
+    >
+        <div class="relative w-full h-full">
+            <video
+                #minimapVideoRef
+                [src]="safeUrl"
+                playsinline
+                muted
+                class="w-full h-full object-cover opacity-60 pointer-events-none"
+            ></video>
+            <!-- Viewport Rect -->
+            <div
+                class="absolute border-2 border-primary/80 bg-primary/20 hover:bg-primary/30 cursor-move transition-colors duration-150 shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]"
+                [style.left.%]="viewportLeftPercent"
+                [style.top.%]="viewportTopPercent"
+                [style.width.%]="viewportWidthPercent"
+                [style.height.%]="viewportHeightPercent"
+                (pointerdown)="onMinimapPointerDown($event)"
+                (pointermove)="onMinimapPointerMove($event)"
+                (pointerup)="onMinimapPointerUp($event)"
+                (pointercancel)="onMinimapPointerUp($event)"
+            ></div>
         </div>
     </div>
 
-    <!-- Main Content: Buttons + Video -->
-    <div class="flex items-center gap-4 w-full">
-        <!-- Prev Button -->
-        <div
-            class="p-1 bg-card-secondary rounded-full hover:scale-125 transition-all duration-300"
-        >
-            <button
-                class="w-8 h-8 px-2 py-1 rounded-full bg-card flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed"
-                (click)="prevVideo()"
-                [disabled]="!hasPrev"
-            >
-                <mat-icon
-                    class="icon-size-4 text-default cursor-pointer disabled:cursor-not-allowed"
-                    i18n-matTooltip
-                    matTooltip="Previous Video"
-                    svgIcon="heroicons_solid:chevron-left"
-                >
-                </mat-icon>
-            </button>
-        </div>
-
-        <!-- video area -->
-        <div class="flex-1 bg-black rounded-md overflow-hidden relative group">
-            <div
-                #videoWrapper
-                (click)="togglePlay()"
-                (pointerdown)="onMainPointerDown($event)"
-                (pointermove)="onMainPointerMove($event)"
-                (pointerup)="onMainPointerUp($event)"
-                (pointercancel)="onMainPointerUp($event)"
-                class="w-full h-[70vh] flex items-center justify-center bg-black touch-none relative cursor-pointer origin-center"
-                style="transition: transform 0.08s linear"
-            >
-                <!-- Loader -->
-                <div
-                    *ngIf="isLoading"
-                    class="absolute inset-0 flex items-center justify-center z-50 pointer-events-none"
-                >
-                    <app-bouncy-loader></app-bouncy-loader>
-                </div>
-
-                <video
-                    #videoRef
-                    [src]="safeUrl"
-                    playsinline
-                    autoplay
-                    preload="auto"
-                    muted
-                    loop
-                    class="w-full h-full object-contain pointer-events-none"
-                ></video>
-            </div>
-
-            <!-- Minimap Overlay (Only visible when zoomed) -->
-            <div
-                *ngIf="zoom > 1"
-                class="absolute bottom-4 right-4 w-48 aspect-video bg-black/50 border border-white/20 rounded shadow-lg overflow-hidden z-[100] transition-opacity duration-300"
-            >
-                <div class="relative w-full h-full">
-                    <!-- Minimap Video (Muted, Synced) -->
-                    <video
-                        #minimapVideoRef
-                        [src]="safeUrl"
-                        playsinline
-                        muted
-                        class="w-full h-full object-cover opacity-60 pointer-events-none"
-                    ></video>
-
-                    <!-- Viewport Rectangle -->
-                    <div
-                        class="absolute border-2 border-primary bg-primary/20 hover:bg-primary/30 cursor-move transition-colors duration-150"
-                        [style.left.%]="viewportLeftPercent"
-                        [style.top.%]="viewportTopPercent"
-                        [style.width.%]="viewportWidthPercent"
-                        [style.height.%]="viewportHeightPercent"
-                        (pointerdown)="onMinimapPointerDown($event)"
-                        (pointermove)="onMinimapPointerMove($event)"
-                        (pointerup)="onMinimapPointerUp($event)"
-                        (pointercancel)="onMinimapPointerUp($event)"
-                    ></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Next Button -->
-        <div
-            class="p-1 bg-card-secondary rounded-full hover:scale-125 transition-all duration-300"
-        >
-            <button
-                class="w-8 h-8 px-2 py-1 rounded-full bg-card flex items-center disabled:opacity-60 disabled:cursor-not-allowed"
-                (click)="nextVideo()"
-                [disabled]="!hasNext"
-            >
-                <mat-icon
-                    class="icon-size-4 text-default"
-                    i18n-matTooltip
-                    matTooltip="Next Video"
-                    svgIcon="heroicons_solid:chevron-right"
-                >
-                </mat-icon>
-            </button>
+    <!-- Transient Feedback Icon -->
+    <div
+        *ngIf="feedbackIcon"
+        class="absolute inset-0 flex items-center justify-center z-50 pointer-events-none animate-ping-once"
+    >
+        <div class="p-6 bg-black/50 backdrop-blur-md rounded-full shadow-2xl border border-white/10">
+            <mat-icon [svgIcon]="feedbackIcon.includes(':') ? feedbackIcon : ''" class="icon-size-16 text-white drop-shadow-lg">
+                {{ !feedbackIcon.includes(':') ? feedbackIcon : '' }}
+            </mat-icon>
         </div>
     </div>
 
-    <!-- controls -->
-    <div class="flex flex-col gap-3">
-        <!-- playback + frame controls -->
-        <div class="flex flex-wrap items-center gap-3">
-            <div class="p-1 bg-card-secondary rounded-full">
-                <div
-                    class="px-2 py-1 rounded-full bg-card flex items-center gap-2"
-                >
-                    <!-- Prev frame -->
-                    <button
-                        class="flex justify-center items-center"
-                        (click)="stepFrame(-1)"
-                    >
-                        <mat-icon
-                            class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                            [svgIcon]="'sudocode:double-arrow-left'"
-                            i18n-matTooltip
-                            matTooltip="Previous Frame"
-                        ></mat-icon>
-                    </button>
+    <!-- Header Overlay (Title + Close) -->
+    <div class="absolute top-0 left-0 w-full p-4 flex justify-between items-start bg-gradient-to-b from-black/80 to-transparent z-40 opacity-0 group-hover/player:opacity-100 transition-opacity duration-300 pointer-events-none">
+        <div class="pointer-events-auto">
+            <h3 class="text-white font-medium text-lg drop-shadow-md">{{ filename }}</h3>
+        </div>
+        <button
+            (click)="close()"
+            class="pointer-events-auto w-10 h-10 rounded-full bg-white/10 backdrop-blur-md hover:bg-white/20 flex items-center justify-center text-white transition-all duration-200"
+            i18n-matTooltip matTooltip="Close (ESC)"
+        >
+            <mat-icon class="icon-size-6">close</mat-icon>
+        </button>
+    </div>
 
-                    <!-- Play/Pause -->
-                    <button
-                        class="flex justify-center items-center"
-                        (click)="togglePlay()"
-                    >
-                        <!-- Play -->
-                        <mat-icon
-                            class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                            *ngIf="!playing"
-                            i18n-matTooltip
-                            matTooltip="Play"
-                        >
-                            play_circle
-                        </mat-icon>
-                        <!-- Pause -->
-                        <mat-icon
-                            class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                            *ngIf="playing"
-                            i18n-matTooltip
-                            matTooltip="Pause"
-                        >
-                            pause_circle
-                        </mat-icon>
-                    </button>
+    <!-- Navigation Arrows (Side) -->
+    <button
+        *ngIf="hasPrev"
+        (click)="prevVideo()"
+        class="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 hover:bg-primary hover:text-white hover:scale-110 flex items-center justify-center text-white/80 transition-all duration-300 z-30 opacity-0 group-hover/player:opacity-100"
+        i18n-matTooltip matTooltip="Previous Video"
+    >
+        <mat-icon svgIcon="heroicons_solid:chevron-left" class="icon-size-6"></mat-icon>
+    </button>
+    <button
+        *ngIf="hasNext"
+        (click)="nextVideo()"
+        class="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/40 backdrop-blur-sm border border-white/10 hover:bg-primary hover:text-white hover:scale-110 flex items-center justify-center text-white/80 transition-all duration-300 z-30 opacity-0 group-hover/player:opacity-100"
+        i18n-matTooltip matTooltip="Next Video"
+    >
+        <mat-icon svgIcon="heroicons_solid:chevron-right" class="icon-size-6"></mat-icon>
+    </button>
 
-                    <!-- Next frame -->
-                    <button
-                        class="flex justify-center items-center"
-                        (click)="stepFrame(1)"
-                        i18n-matTooltip
-                        matTooltip="Next Frame"
-                    >
-                        <mat-icon
-                            class="icon-size-6 text-default cursor-pointer hover:scale-125 transition-all duration-300"
-                            [svgIcon]="'sudocode:double-arrow-right'"
-                        ></mat-icon>
-                    </button>
-                </div>
-            </div>
-
-            <!-- seek bar (robust bindings) -->
-            <div class="flex items-center gap-3 flex-1">
+    <!-- Bottom Control Bar (Glassmorphism) -->
+    <div class="absolute bottom-6 left-1/2 -translate-x-1/2 w-[90%] max-w-4xl bg-black/60 backdrop-blur-xl border border-white/10 rounded-2xl p-4 flex flex-col gap-2 z-40 shadow-2xl transition-all duration-300 opacity-0 group-hover/player:opacity-100 translate-y-4 group-hover/player:translate-y-0">
+        
+        <!-- Scrubber -->
+        <div class="flex items-center gap-4 text-xs font-mono text-gray-300">
+            <span>{{ formatTime(currentTime) }}</span>
+            <div class="relative flex-1 h-6 flex items-center group/scrubber">
                 <input
                     type="range"
                     min="0"
@@ -192,71 +111,122 @@
                     (pointerdown)="onSeekStart()"
                     (input)="onSeekChange($any($event.target).valueAsNumber)"
                     (change)="onSeekEnd($any($event.target).valueAsNumber)"
-                    class="w-full accent-primary"
+                    class="absolute inset-0 w-full h-full opacity-0 z-20 cursor-pointer"
                 />
+                <!-- Visible Track -->
+                <div class="w-full h-1 bg-white/20 rounded-full overflow-hidden relative">
+                    <div
+                        class="h-full bg-primary shadow-[0_0_10px_var(--primary-color)]"
+                        [style.width.%]="(currentTime / (duration || 1)) * 100"
+                    ></div>
+                </div>
+                <!-- Thumb indicator (visual only) -->
+                <div
+                    class="absolute h-3 w-3 bg-white rounded-full shadow-md z-10 pointer-events-none transition-transform duration-200 group-hover/scrubber:scale-150"
+                    [style.left.%]="(currentTime / (duration || 1)) * 100"
+                    style="transform: translateX(-50%);"
+                ></div>
             </div>
+            <span>{{ formatTime(duration) }}</span>
         </div>
 
-        <div class="flex justify-between items-center gap-3">
-            <!-- playback rate slider -->
+        <!-- Controls Row -->
+        <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
-                <label class="text-sm text-secondary">Speed</label>
-                <input
-                    type="range"
-                    min="0.25"
-                    max="2"
-                    step="0.05"
-                    [value]="playbackRate"
-                    (input)="setPlaybackRate($any($event.target).valueAsNumber)"
-                    class="w-40 accent-primary"
-                />
-                <div class="w-12 text-sm text-secondary text-center">
-                    {{ playbackRate | number : "1.2-2" }}x
-                </div>
+                <!-- Frame Step Back -->
+                <button (click)="stepFrame(-1)" class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors" matTooltip="Prev Frame (,)">
+                    <mat-icon svgIcon="sudocode:double-arrow-left" class="icon-size-5"></mat-icon>
+                </button>
+                
+                <!-- Play/Pause -->
+                <button (click)="togglePlay()" class="p-2 text-white hover:text-primary hover:scale-110 transition-all">
+                    <mat-icon *ngIf="!playing" class="icon-size-8">play_circle</mat-icon>
+                    <mat-icon *ngIf="playing" class="icon-size-8">pause_circle</mat-icon>
+                </button>
+
+                <!-- Frame Step Forward -->
+                <button (click)="stepFrame(1)" class="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-full transition-colors" matTooltip="Next Frame (.)">
+                    <mat-icon svgIcon="sudocode:double-arrow-right" class="icon-size-5"></mat-icon>
+                </button>
             </div>
 
-            <!-- zoom controls -->
-            <div class="flex items-center gap-3">
-                <label class="text-sm text-secondary">
-                    Zoom: {{ zoom | number : "1.2-2" }}x
-                </label>
-                <button
-                    (click)="zoomOut()"
-                    class="px-2 py-1 rounded border"
-                    i18n-matTooltip
-                    matTooltip="Zoom Out"
-                >
-                    -
+            <div class="flex items-center gap-4">
+                 <!-- Zoom Controls -->
+                 <div class="flex items-center gap-1 bg-white/5 rounded-full px-2 py-1 border border-white/5">
+                    <button (click)="zoomOut()" class="w-6 h-6 flex items-center justify-center text-white/70 hover:text-white">-</button>
+                    <span class="text-xs text-white/50 w-8 text-center">{{ zoom | number : "1.1-1" }}x</span>
+                    <button (click)="zoomIn()" class="w-6 h-6 flex items-center justify-center text-white/70 hover:text-white">+</button>
+                    <button (click)="resetZoom()" class="ml-1 text-white/50 hover:text-primary" matTooltip="Reset Zoom">
+                        <mat-icon class="icon-size-4">replay</mat-icon>
+                    </button>
+                </div>
+
+                <!-- Speed -->
+                <div class="flex items-center gap-2 group/speed relative">
+                    <mat-icon class="icon-size-5 text-gray-400">speed</mat-icon>
+                    <input
+                        type="range"
+                        min="0.25"
+                        max="2"
+                        step="0.25"
+                        [value]="playbackRate"
+                        (input)="setPlaybackRate($any($event.target).valueAsNumber)"
+                        class="w-20 accent-primary h-1 bg-white/20 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <span class="text-xs text-white/80 w-8">{{ playbackRate }}x</span>
+                </div>
+
+                <!-- Help Toggle -->
+                <button (click)="showHelp = !showHelp" class="p-2 text-white/50 hover:text-white transition-colors" matTooltip="Shortcuts (?)">
+                    <mat-icon class="icon-size-5">keyboard_command_key</mat-icon>
                 </button>
-                <input
-                    type="range"
-                    [min]="minZoom"
-                    [max]="maxZoom"
-                    step="0.05"
-                    [value]="zoom"
-                    (input)="setZoom($any($event.target).valueAsNumber)"
-                    class="w-40 accent-primary"
-                />
-                <button
-                    (click)="zoomIn()"
-                    class="px-2 py-1 rounded border"
-                    i18n-matTooltip
-                    matTooltip="Zoom In"
-                >
-                    +
-                </button>
-                <button
-                    (click)="resetZoom()"
-                    class="p-2 rounded border flex justify-center items-center"
-                >
-                    <mat-icon
-                        class="icon-size-3 text-default cursor-pointer"
-                        i18n-matTooltip
-                        matTooltip="Reset Zoom"
-                    >
-                        replay
-                    </mat-icon>
-                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Help Overlay -->
+    <div
+        *ngIf="showHelp"
+        class="absolute inset-0 bg-black/80 backdrop-blur-md z-[60] flex items-center justify-center p-8"
+        (click)="showHelp = false"
+    >
+        <div class="bg-card border border-white/10 rounded-2xl p-8 max-w-lg w-full text-white shadow-2xl relative" (click)="$event.stopPropagation()">
+            <button (click)="showHelp = false" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <mat-icon>close</mat-icon>
+            </button>
+            <h2 class="text-2xl font-bold mb-6">Keyboard Shortcuts</h2>
+            <div class="grid grid-cols-2 gap-y-4 gap-x-8">
+                <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Play / Pause</span>
+                    <span class="font-mono bg-white/10 px-2 rounded">Space / K</span>
+                </div>
+                <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Seek +/- 5s</span>
+                    <span class="font-mono bg-white/10 px-2 rounded">Arrows ← →</span>
+                </div>
+                <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Next Frame</span>
+                    <span class="font-mono bg-white/10 px-2 rounded">. (period)</span>
+                </div>
+                <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Prev Frame</span>
+                    <span class="font-mono bg-white/10 px-2 rounded">, (comma)</span>
+                </div>
+                <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Mute Toggle</span>
+                    <span class="font-mono bg-white/10 px-2 rounded">M</span>
+                </div>
+                <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Fullscreen</span>
+                    <span class="font-mono bg-white/10 px-2 rounded">F</span>
+                </div>
+                <div class="flex justify-between border-b border-white/10 pb-2">
+                    <span class="text-gray-400">Close</span>
+                    <span class="font-mono bg-white/10 px-2 rounded">ESC</span>
+                </div>
+            </div>
+             <div class="mt-6 text-center text-sm text-gray-500">
+                Click anywhere to close
             </div>
         </div>
     </div>
