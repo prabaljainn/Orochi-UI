@@ -339,7 +339,7 @@
       </notes>
       <segment>
         <source>Hindi</source>
-        <target>नहीं</target>
+        <target>हिन्दी</target>
       </segment>
     </unit>
     <unit id="6570363013146073520">
@@ -393,7 +393,7 @@
       </notes>
       <segment>
         <source>Play</source>
-        <target>खेल</target>
+        <target>चलाएं</target>
       </segment>
     </unit>
     <unit id="9042260521669277115">
@@ -746,7 +746,7 @@
         <note>src/app/modules/auth/sign-in/sign-in.component.html:17</note>
       </notes>
       <segment>
-        <source>An Proprietary Intelligent Integrated Platform Ecosystem for Video Analytics, Monitoring, and Annotation</source>
+        <source>A Proprietary Intelligent Integrated Platform Ecosystem for Video Analytics, Monitoring, and Annotation</source>
         <target>वीडियो विश्लेषण, निगरानी और एनोटेशन के लिए एक स्वामित्वयुक्त बुद्धिमान एकीकृत प्लेटफ़ॉर्म पारिस्थितिकी तंत्र</target>
       </segment>
     </unit>

@@ -339,7 +339,7 @@
       </notes>
       <segment>
         <source>Hindi</source>
-        <target>いいえ</target>
+        <target>ヒンディー語</target>
       </segment>
     </unit>
     <unit id="6570363013146073520">
@@ -393,7 +393,7 @@
       </notes>
       <segment>
         <source>Play</source>
-        <target>遊ぶ</target>
+        <target>再生</target>
       </segment>
     </unit>
     <unit id="9042260521669277115">
@@ -746,7 +746,7 @@
         <note>src/app/modules/auth/sign-in/sign-in.component.html:17</note>
       </notes>
       <segment>
-        <source>An Proprietary Intelligent Integrated Platform Ecosystem for Video Analytics, Monitoring, and Annotation</source>
+        <source>A Proprietary Intelligent Integrated Platform Ecosystem for Video Analytics, Monitoring, and Annotation</source>
         <target>ビデオ解析・監視・アノテーションのための、独自開発による知的統合プラットフォーム・エコシステム</target>
       </segment>
     </unit>
