@@ -105,7 +105,8 @@ const config = {
             },
             fontFamily              : {
                 sans: `"Inter var", ${defaultTheme.fontFamily.sans.join(',')}`,
-                mono: `"IBM Plex Mono", ${defaultTheme.fontFamily.mono.join(',')}`
+                mono: `"IBM Plex Mono", ${defaultTheme.fontFamily.mono.join(',')}`,
+                sora: ['Sora', 'sans-serif']
             },
             opacity                 : {
                 12: '0.12',
@@ -284,9 +285,9 @@ const config = {
     plugins    : [
 
         // Fuse - Tailwind plugins
-        require(path.resolve(__dirname, ('src/@fuse/tailwind/plugins/utilities'))),
-        require(path.resolve(__dirname, ('src/@fuse/tailwind/plugins/icon-size'))),
-        require(path.resolve(__dirname, ('src/@fuse/tailwind/plugins/theming')))({themes}),
+        require(path.resolve(__dirname, 'src/@fuse/tailwind/plugins/utilities')),
+        require(path.resolve(__dirname, 'src/@fuse/tailwind/plugins/icon-size')),
+        require(path.resolve(__dirname, 'src/@fuse/tailwind/plugins/theming'))({themes}),
 
         // Other third party and/or custom plugins
         require('@tailwindcss/typography')({modifiers: ['sm', 'lg']})

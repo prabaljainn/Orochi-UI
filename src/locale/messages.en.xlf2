@@ -99,9 +99,18 @@
         <target> Not Annotated </target>
       </segment>
     </unit>
+    <unit id="4580988005648117665">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:115</note>
+      </notes>
+      <segment>
+        <source>Search</source>
+        <target>Search</target>
+      </segment>
+    </unit>
     <unit id="2341208127410331677">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.html:120,122</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:121,123</note>
       </notes>
       <segment>
         <source> FILTER BY </source>
@@ -110,7 +119,7 @@
     </unit>
     <unit id="3797570084942068182">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.html:126</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:127</note>
       </notes>
       <segment>
         <source>Select</source>
@@ -119,7 +128,7 @@
     </unit>
     <unit id="6201553740003783739">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.html:150</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:151</note>
       </notes>
       <segment>
         <source>TRAIN ID</source>
@@ -128,7 +137,7 @@
     </unit>
     <unit id="6644683034494569115">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.html:165</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:166</note>
       </notes>
       <segment>
         <source>TIME AND DATE</source>
@@ -137,7 +146,7 @@
     </unit>
     <unit id="1473467113021165135">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.html:180</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:181</note>
       </notes>
       <segment>
         <source>STATUS</source>
@@ -146,7 +155,7 @@
     </unit>
     <unit id="3858816479441073768">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.html:195</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:196</note>
       </notes>
       <segment>
         <source>VERDICT</source>
@@ -155,7 +164,7 @@
     </unit>
     <unit id="833320260701585870">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.html:219</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:220</note>
       </notes>
       <segment>
         <source>ANNOTATION</source>
@@ -164,7 +173,7 @@
     </unit>
     <unit id="4325854060977838530">
       <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.html:234</note>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:235</note>
       </notes>
       <segment>
         <source>ASSIGNEE</source>
@@ -263,7 +272,7 @@
     </unit>
     <unit id="1102717806459547726">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:14</note>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:11</note>
       </notes>
       <segment>
         <source>Refresh</source>
@@ -272,7 +281,7 @@
     </unit>
     <unit id="2662644497259948010">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:93</note>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:67</note>
       </notes>
       <segment>
         <source>Comment</source>
@@ -281,7 +290,7 @@
     </unit>
     <unit id="5572873179876552830">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:165</note>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:117</note>
       </notes>
       <segment>
         <source>reply</source>
@@ -290,7 +299,7 @@
     </unit>
     <unit id="5621735247460966280">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:183,185</note>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:127,129</note>
       </notes>
       <segment>
         <source> No comments found yet </source>
@@ -299,7 +308,7 @@
     </unit>
     <unit id="8650499415827640724">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:204</note>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:146</note>
       </notes>
       <segment>
         <source>Type</source>
@@ -308,7 +317,7 @@
     </unit>
     <unit id="6999356248762503689">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:225</note>
+        <note>src/app/modules/admin/dashboard/task-details/comments/comments.component.html:160</note>
       </notes>
       <segment>
         <source>Add a comment...</source>
@@ -344,7 +353,7 @@
     </unit>
     <unit id="2982422585844013726">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:41,43</note>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:25,27</note>
       </notes>
       <segment>
         <source> No Annotated Frames. </source>
@@ -353,79 +362,16 @@
     </unit>
     <unit id="4423253549935469768">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:124,126</note>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:91,93</note>
       </notes>
       <segment>
         <source> Details </source>
         <target> Details </target>
       </segment>
     </unit>
-    <unit id="4760173033440473119">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:133,135</note>
-      </notes>
-      <segment>
-        <source> Project Name </source>
-        <target> Project Name </target>
-      </segment>
-    </unit>
-    <unit id="9193001935256028830">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:143,145</note>
-      </notes>
-      <segment>
-        <source> Owner </source>
-        <target> Owner </target>
-      </segment>
-    </unit>
-    <unit id="4810347345927320513">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:153,155</note>
-      </notes>
-      <segment>
-        <source> Assignee </source>
-        <target> Assignee </target>
-      </segment>
-    </unit>
-    <unit id="8825952487324912813">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:164,166</note>
-      </notes>
-      <segment>
-        <source> Annotation </source>
-        <target> Annotation </target>
-      </segment>
-    </unit>
-    <unit id="3091819333763458246">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:171</note>
-      </notes>
-      <segment>
-        <source>Frames</source>
-        <target>Frames</target>
-      </segment>
-    </unit>
-    <unit id="4282587102956396340">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:177,179</note>
-      </notes>
-      <segment>
-        <source> Status </source>
-        <target> Status </target>
-      </segment>
-    </unit>
-    <unit id="5689202800227799783">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:187,189</note>
-      </notes>
-      <segment>
-        <source> Create Date </source>
-        <target> Create Date </target>
-      </segment>
-    </unit>
     <unit id="1763705795920808112">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:200,202</note>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:163,165</note>
       </notes>
       <segment>
         <source> Labels </source>
@@ -434,7 +380,7 @@
     </unit>
     <unit id="114816039455039903">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.ts:49</note>
+        <note>src/app/modules/admin/dashboard/task-details/task-details.component.ts:50</note>
       </notes>
       <segment>
         <source>Task Details</source>
@@ -443,7 +389,7 @@
     </unit>
     <unit id="3234422121509216221">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:77</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:56</note>
       </notes>
       <segment>
         <source>Previous 10 Frames</source>
@@ -452,7 +398,7 @@
     </unit>
     <unit id="7078707660902818442">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:64</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:65</note>
       </notes>
       <segment>
         <source>Previous Frame</source>
@@ -461,7 +407,7 @@
     </unit>
     <unit id="8564202903947049539">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:78</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:74</note>
       </notes>
       <segment>
         <source>Play</source>
@@ -470,7 +416,7 @@
     </unit>
     <unit id="9042260521669277115">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:87</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:80</note>
       </notes>
       <segment>
         <source>Pause</source>
@@ -479,7 +425,7 @@
     </unit>
     <unit id="1941817722784982167">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:98</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:89</note>
       </notes>
       <segment>
         <source>Next Frame</source>
@@ -488,7 +434,7 @@
     </unit>
     <unit id="6132512480620384313">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:142</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:96</note>
       </notes>
       <segment>
         <source>Next 10 Frames</source>
@@ -497,38 +443,236 @@
     </unit>
     <unit id="7279502880466273282">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:156</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:104</note>
       </notes>
       <segment>
         <source>Reset Video</source>
         <target>Reset Video</target>
       </segment>
     </unit>
-    <unit id="1356460275822781324">
+    <unit id="7233038032926777706">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:150</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:49</note>
       </notes>
       <segment>
-        <source>Zoom Out</source>
-        <target>Zoom Out</target>
+        <source>Close (ESC)</source>
+        <target>Close (ESC)</target>
       </segment>
     </unit>
-    <unit id="1470758907984185227">
+    <unit id="4818804396674444968">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:167</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:57</note>
       </notes>
       <segment>
-        <source>Zoom In</source>
-        <target>Zoom In</target>
+        <source>Previous Video</source>
+        <target>Previous Video</target>
       </segment>
     </unit>
-    <unit id="8791824480246623851">
+    <unit id="5410268042281979662">
       <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:178</note>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:62</note>
       </notes>
       <segment>
-        <source>Reset Zoom</source>
-        <target>Reset Zoom</target>
+        <source>Next Video</source>
+        <target>Next Video</target>
+      </segment>
+    </unit>
+    <unit id="7077694213809290564">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:17</note>
+      </notes>
+      <segment>
+        <source>An Proprietary Intelligent Integrated Platform Ecosystem for Video Analytics, Monitoring, and Annotation</source>
+        <target>An Proprietary Intelligent Integrated Platform Ecosystem for Video Analytics, Monitoring, and Annotation</target>
+      </segment>
+    </unit>
+    <unit id="7307822829282369259">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:48</note>
+      </notes>
+      <segment>
+        <source>New user?</source>
+        <target>New user?</target>
+      </segment>
+    </unit>
+    <unit id="5579867071769973287">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:56,58</note>
+      </notes>
+      <segment>
+        <source> Create an account </source>
+        <target> Create an account </target>
+      </segment>
+    </unit>
+    <unit id="5207635742003539443">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:151</note>
+      </notes>
+      <segment>
+        <source>Sign in</source>
+        <target>Sign in</target>
+      </segment>
+    </unit>
+    <unit id="7169763988476671054">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:78</note>
+      </notes>
+      <segment>
+        <source>Email or username</source>
+        <target>Email or username</target>
+      </segment>
+    </unit>
+    <unit id="3702338872876040900">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:92</note>
+      </notes>
+      <segment>
+        <source>Username is required</source>
+        <target>Username is required</target>
+      </segment>
+    </unit>
+    <unit id="1431416938026210429">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:225</note>
+      </notes>
+      <segment>
+        <source>Password</source>
+        <target>Password</target>
+      </segment>
+    </unit>
+    <unit id="3035570095838445091">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:109,111</note>
+      </notes>
+      <segment>
+        <source> Forgot password? </source>
+        <target> Forgot password? </target>
+      </segment>
+    </unit>
+    <unit id="205044832662301680">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:139</note>
+      </notes>
+      <segment>
+        <source>Password is required</source>
+        <target>Password is required</target>
+      </segment>
+    </unit>
+    <unit id="2727496946419791472">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:165</note>
+      </notes>
+      <segment>
+        <source>Forgot password?</source>
+        <target>Forgot password?</target>
+      </segment>
+    </unit>
+    <unit id="6233874611659035041">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:166</note>
+      </notes>
+      <segment>
+        <source>Enter your email to reset your password.</source>
+        <target>Enter your email to reset your password.</target>
+      </segment>
+    </unit>
+    <unit id="4768749765465246664">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:215</note>
+      </notes>
+      <segment>
+        <source>Email</source>
+        <target>Email</target>
+      </segment>
+    </unit>
+    <unit id="8552587679160911578">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:177</note>
+      </notes>
+      <segment>
+        <source>Email is required</source>
+        <target>Email is required</target>
+      </segment>
+    </unit>
+    <unit id="5508458189651454018">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:187</note>
+      </notes>
+      <segment>
+        <source>Send Reset Link</source>
+        <target>Send Reset Link</target>
+      </segment>
+    </unit>
+    <unit id="5907476126990913307">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:197</note>
+      </notes>
+      <segment>
+        <source>Create account</source>
+        <target>Create account</target>
+      </segment>
+    </unit>
+    <unit id="6028371114637047813">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:205</note>
+      </notes>
+      <segment>
+        <source>First Name</source>
+        <target>First Name</target>
+      </segment>
+    </unit>
+    <unit id="4407559560004943843">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:209</note>
+      </notes>
+      <segment>
+        <source>Last Name</source>
+        <target>Last Name</target>
+      </segment>
+    </unit>
+    <unit id="5248717555542428023">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:220</note>
+      </notes>
+      <segment>
+        <source>Username</source>
+        <target>Username</target>
+      </segment>
+    </unit>
+    <unit id="1267967133679326155">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:235</note>
+      </notes>
+      <segment>
+        <source>Create Account</source>
+        <target>Create Account</target>
+      </segment>
+    </unit>
+    <unit id="8387821074976463719">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.ts:148</note>
+      </notes>
+      <segment>
+        <source>Wrong email or password</source>
+        <target>Wrong email or password</target>
+      </segment>
+    </unit>
+    <unit id="6286035857631834761">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.ts:176</note>
+      </notes>
+      <segment>
+        <source>Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder.</source>
+        <target>Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder.</target>
+      </segment>
+    </unit>
+    <unit id="8583750011528095760">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.ts:185</note>
+      </notes>
+      <segment>
+        <source>Something went wrong, please try again.</source>
+        <target>Something went wrong, please try again.</target>
       </segment>
     </unit>
     <unit id="4743002849260529978">

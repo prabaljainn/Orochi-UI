@@ -1,4 +1,4 @@
 export const environment = {
     production: false,
-    loginTitle: 'Open Data Annotation Platform',
+    loginTitle: 'An Proprietary Intelligent Integrated Platform Ecosystem for Video Analytics, Monitoring, and Annotation',
 };

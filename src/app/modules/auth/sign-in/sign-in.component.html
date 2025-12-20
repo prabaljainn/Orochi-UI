@@ -1,328 +1,265 @@
-<div
-    class="w-screen h-screen flex flex-col flex-auto gap-4 min-w-0 p-8 sign-in-background"
->
-    <div class="w-full h-10 flex items-center justify-start text-white/70">
-        <span class="text-md font-semibold"> SUDO CODES </span>
-    </div>
-
-    <div
-        class="w-full h-[calc(100%-2.5rem)] flex items-center justify-center gap-4"
-    >
-        <div class="w-1/2 h-full hidden md:flex items-center justify-start">
-            <div class="w-8/12 text-white text-7xl font-semibold">
-                {{ loginTitle }}
-            </div>
+<div class="w-full min-h-screen flex flex-col md:flex-row bg-black overflow-hidden relative">
+    
+    <!-- Left Section (Hero) -->
+    <div class="hidden md:flex w-full md:w-1/2 p-12 lg:p-16 flex-col justify-between relative z-10">
+        <!-- Logo -->
+        <!-- Logo -->
+        <div class="text-white font-bold text-3xl tracking-wider uppercase font-sora logo-font">
+            SUDO CODES
         </div>
-        <div class="md:w-1/2 h-full flex items-center justify-center">
-            <div
-                class="bg-white w-full md:w-8/12 p-8 flex flex-col gap-8 rounded-lg"
-            >
-                <!-- Actions -->
-                <div class="flex items-center justify-between flex-wrap w-full">
-                    @if (showCreateUser() || showForgotPassword() ||
-                    signInForm.get('username').value) {
-                    <mat-icon
-                        class="icon-size-5 cursor-pointer text-black font-semibold"
-                        [svgIcon]="'heroicons_solid:arrow-left'"
-                        (click)="
-                            showCreateUser.set(false);
-                            showForgotPassword.set(false);
-                            signInForm.reset();
-                            createUserForm.reset();
-                            forgotPasswordForm.reset()
-                        "
-                    ></mat-icon>
-                    } @else {
-                    <div
-                        class="text-base font-semibold flex gap-2 items-center"
-                    >
-                        <span>New user?</span>
+        
+        <!-- Hero Text -->
+        <div class="mt-auto mb-32">
+            <h1 class="text-white text-5xl lg:text-7xl font-normal leading-tight" style="font-family: 'Sora', sans-serif;">
+                <!-- @if (loginTitle) {
+                    {{ loginTitle }}
+                } @else { -->
+                    <span i18n>An Proprietary Intelligent Integrated Platform Ecosystem for Video Analytics, Monitoring, and Annotation</span>
+                <!-- } -->
+            </h1>
+        </div>
+    </div>
+    
+    <!-- Background Glow Effect (Optional, simulated) -->
+    <div class="absolute top-0 left-0 w-1/2 h-full bg-blue-900/10 blur-3xl pointer-events-none z-0 hidden md:block"></div>
+
+    <!-- Right Section (Login Card) -->
+    <div class="w-full md:w-1/2 flex items-center justify-center p-4 sm:p-8 relative z-20">
+        <!-- Card -->
+        <div class="bg-[#f5f5f5] w-full max-w-lg rounded-sm p-8 md:p-12 shadow-2xl">
+            
+            <!-- Actions (Updated styling) -->
+           <div class="flex items-center justify-between flex-wrap w-full mb-8">
+                @if (showCreateUser() || showForgotPassword() || signInForm.get('username').value) {
+                    <button mat-icon-button (click)="
+                        showCreateUser.set(false);
+                        showForgotPassword.set(false);
+                        signInForm.reset();
+                        createUserForm.reset();
+                        forgotPasswordForm.reset()
+                    ">
+                        <mat-icon
+                            class="text-black"
+                            [svgIcon]="'heroicons_solid:arrow-left'"
+                        ></mat-icon>
+                    </button>
+                } @else {
+                     <div class="text-sm font-medium text-gray-600 flex gap-1 items-center ml-auto">
+                        <span i18n>New user?</span>
                         <button
-                            class="bg-none underline"
+                            class="bg-none hover:underline text-black font-bold"
                             (click)="
                                 showCreateUser.set(true);
                                 showForgotPassword.set(false)
                             "
+                            i18n
                         >
                             Create an account
                         </button>
                     </div>
-                    } @if (!showForgotPassword()) {
-                    <button
-                        class="bg-none underline text-base font-semibold"
-                        (click)="
-                            showForgotPassword.set(true);
-                            showCreateUser.set(false)
-                        "
-                    >
-                        Forgot password?
-                    </button>
-                    }
-                </div>
+                }
+            </div>
 
+
+            <!-- Forms Container -->
+           <div class="w-full">
+            
                 <!-- Sign in form -->
                 @if (!showCreateUser() && !showForgotPassword()) {
-                <div class="text-3xl font-semibold">Sign in</div>
+                    <h2 class="text-4xl font-bold text-black mb-8 tracking-tight" i18n>Sign in</h2>
 
-                <form
-                    class="flex flex-col gap-2"
-                    [formGroup]="signInForm"
-                    #signInNgForm="ngForm"
-                >
-                    <!-- Email field -->
-                    <mat-form-field appearance="outline" class="w-full">
-                        <mat-label>Username</mat-label>
-                        <input
-                            id="username"
-                            matInput
-                            [formControlName]="'username'"
-                        />
-                        @if(signInForm.get('username').hasError('required')) {
-                        <mat-error> Email address is required </mat-error>
-                        } @if(signInForm.get('username').hasError('username')) {
-                        <mat-error>
-                            Please enter a valid email address
-                        </mat-error>
-                        }
-                        <mat-icon
-                            matPrefix
-                            class="icon-size-5 text-black"
-                            [svgIcon]="'heroicons_outline:user2'"
-                        ></mat-icon>
-                    </mat-form-field>
-
-                    <!-- Password field -->
-                    <mat-form-field appearance="outline" class="w-full">
-                        <mat-label>Password</mat-label>
-                        <input
-                            id="password"
-                            matInput
-                            type="password"
-                            [formControlName]="'password'"
-                            #passwordField
-                        />
-                        <button
-                            mat-icon-button
-                            type="button"
-                            (click)="
-                                passwordField.type === 'password'
-                                    ? (passwordField.type = 'text')
-                                    : (passwordField.type = 'password')
-                            "
-                            matSuffix
-                        >
-                            <mat-icon
-                                class="icon-size-5 text-black"
-                                *ngIf="passwordField.type === 'password'"
-                                [svgIcon]="'heroicons_outline:eye'"
-                            ></mat-icon>
-                            <mat-icon
-                                class="icon-size-5 text-black"
-                                *ngIf="passwordField.type === 'text'"
-                                [svgIcon]="'heroicons_outline:eye-slash'"
-                            ></mat-icon>
-                        </button>
-                        <mat-icon
-                            matPrefix
-                            class="icon-size-5 text-black"
-                            [svgIcon]="'heroicons_outline:password'"
-                        ></mat-icon>
-                        <mat-error> Password is required </mat-error>
-                    </mat-form-field>
-
-                    <!-- Submit button -->
-                    <button
-                        class="fuse-mat-button-large w-full mt-6 bg-black rounded-lg text-white"
-                        mat-flat-button
-                        [disabled]="signInForm.disabled"
-                        (click)="signIn()"
+                    <form
+                        class="flex flex-col gap-6"
+                        [formGroup]="signInForm"
+                        #signInNgForm="ngForm"
                     >
-                        <span *ngIf="!signInForm.disabled"> Sign in </span>
-                        <mat-progress-spinner
-                            *ngIf="signInForm.disabled"
-                            [diameter]="24"
-                            [mode]="'indeterminate'"
-                        ></mat-progress-spinner>
-                    </button>
-                </form>
+                        <!-- Username field -->
+                         <div class="w-full">
+                             <label for="username" class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" i18n>Email or username</label>
+                             <div class="relative">
+                                <input
+                                    id="username"
+                                    class="w-full bg-transparent text-black text-lg border-b border-gray-300 focus:border-black py-2 outline-none transition-colors"
+                                    [formControlName]="'username'"
+                                    autocomplete="username"
+                                />
+                                <!-- Clear Icon (simulated check or clear) -->
+                                @if(signInForm.get('username').value) {
+                                    <mat-icon class="absolute right-0 top-2 icon-size-5 text-gray-400 cursor-pointer" [svgIcon]="'heroicons_solid:x-mark'" (click)="signInForm.get('username').setValue('')"></mat-icon>
+                                }
+                             </div>
+                            @if(signInForm.get('username').touched && signInForm.get('username').hasError('required')) {
+                                <div class="text-red-600 text-xs mt-1" i18n>Username is required</div>
+                            }
+                         </div>
+
+                        <!-- Password field -->
+                         @if(signInForm.get('username').value) {
+                            <div class="w-full animate-fadeIn">
+                                <div class="flex justify-between items-baseline mb-1">
+                                    <label for="password" class="block text-xs font-semibold text-gray-500 uppercase tracking-wider" i18n>Password</label>
+                                    <button
+                                        type="button"
+                                        class="text-xs font-semibold text-gray-500 hover:text-black uppercase tracking-wider hover:underline"
+                                        (click)="
+                                            showForgotPassword.set(true);
+                                            showCreateUser.set(false)
+                                        "
+                                        i18n
+                                    >
+                                        Forgot password?
+                                    </button>
+                                </div>
+                                
+                                <div class="relative">
+                                    <input
+                                        id="password"
+                                        type="password"
+                                        class="w-full bg-transparent text-black text-lg border-b border-gray-300 focus:border-black py-2 outline-none transition-colors pr-8"
+                                        [formControlName]="'password'"
+                                        #passwordField
+                                        autocomplete="current-password"
+                                    />
+                                    <button
+                                        type="button"
+                                        class="absolute right-0 top-2 text-gray-500 hover:text-black focus:outline-none"
+                                        (click)="
+                                            passwordField.type === 'password'
+                                                ? (passwordField.type = 'text')
+                                                : (passwordField.type = 'password')
+                                        "
+                                    >
+                                        <mat-icon
+                                            class="icon-size-5"
+                                            [svgIcon]="passwordField.type === 'password' ? 'heroicons_outline:eye' : 'heroicons_outline:eye-slash'"
+                                        ></mat-icon>
+                                    </button>
+                                </div>
+                                 @if(signInForm.get('password').touched && signInForm.get('password').hasError('required')) {
+                                    <div class="text-red-600 text-xs mt-1" i18n>Password is required</div>
+                                }
+                            </div>
+                        }
+
+                        <!-- Submit button -->
+                        <button
+                            class="w-full h-[88px] bg-black text-white text-xl font-bold rounded-lg hover:bg-gray-900 transition-colors disabled:opacity-50 mt-4 flex items-center justify-center"
+                            [disabled]="signInForm.disabled"
+                            (click)="signIn()"
+                        >
+                            @if(!signInForm.disabled) {
+                                <span i18n>Sign in</span>
+                            } @else {
+                                <mat-progress-spinner
+                                    [diameter]="24"
+                                    [mode]="'indeterminate'"
+                                    class="circle-white" 
+                                ></mat-progress-spinner>
+                            }
+                        </button>
+                    </form>
                 }
 
-                <!--Forgot password-->
+                <!-- Forgot password -->
                 @else if (showForgotPassword()) {
-                <div class="text-3xl font-semibold">Forgot password?</div>
+                    <h2 class="text-3xl font-bold text-black mb-2" i18n>Forgot password?</h2>
+                    <p class="text-gray-600 mb-8" i18n>Enter your email to reset your password.</p>
 
-                <div class="text-3xl font-semibold">Let's create a new one</div>
+                    <form [formGroup]="forgotPasswordForm" class="flex flex-col gap-6">
+                        <div class="w-full">
+                             <label for="email" class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" i18n>Email</label>
+                             <input
+                                id="email"
+                                class="w-full bg-transparent text-black text-lg border-b border-gray-300 focus:border-black py-2 outline-none transition-colors"
+                                [formControlName]="'email'"
+                            />
+                            @if(forgotPasswordForm.get('email').touched && forgotPasswordForm.get('email').hasError('required')) {
+                                <div class="text-red-600 text-xs mt-1" i18n>Email is required</div>
+                            }
+                        </div>
 
-                <form [formGroup]="forgotPasswordForm" #signInNgForm="ngForm">
-                    <!-- Email field -->
-                    <mat-form-field appearance="outline" class="w-full">
-                        <mat-label>Email</mat-label>
-                        <input
-                            id="email"
-                            matInput
-                            [formControlName]="'email'"
-                        />
-                        @if(forgotPasswordForm.get('email').hasError('required'))
-                        {
-                        <mat-error> Email address is required </mat-error>
-                        } @if(forgotPasswordForm.get('email').hasError('email'))
-                        {
-                        <mat-error>
-                            Please enter a valid email address
-                        </mat-error>
-                        }
-                    </mat-form-field>
-
-                    <div class="text-base font-semibold">
-                        We will send link to your email
-                    </div>
-
-                    <!-- Submit button -->
-                    <button
-                        class="fuse-mat-button-large w-full mt-6 bg-black rounded-lg text-white"
-                        mat-flat-button
-                        [disabled]="forgotPasswordForm.disabled"
-                        (click)="sendForgotPassword()"
-                    >
-                        <span *ngIf="!forgotPasswordForm.disabled"> Send </span>
-                        <mat-progress-spinner
-                            *ngIf="forgotPasswordForm.disabled"
-                            [diameter]="24"
-                            [mode]="'indeterminate'"
-                        ></mat-progress-spinner>
-                    </button>
-                </form>
+                        <button
+                            class="w-full h-[60px] bg-black text-white text-lg font-bold rounded-lg hover:bg-gray-900 transition-colors disabled:opacity-50 mt-4 flex items-center justify-center"
+                            [disabled]="forgotPasswordForm.disabled"
+                            (click)="sendForgotPassword()"
+                        >
+                             @if(!forgotPasswordForm.disabled) {
+                                <span i18n>Send Reset Link</span>
+                            } @else {
+                                <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+                            }
+                        </button>
+                    </form>
                 }
 
                 <!-- Create user -->
                 @else if (showCreateUser()) {
-                <div class="text-3xl font-semibold">Create user</div>
+                    <h2 class="text-3xl font-bold text-black mb-8" i18n>Create account</h2>
 
-                <form
-                    class="flex flex-col gap-2"
-                    [formGroup]="createUserForm"
-                    #signInNgForm="ngForm"
-                >
-                    <div class="w-full flex gap-2">
-                        <!-- First name field -->
-                        <mat-form-field appearance="outline" class="w-1/2">
-                            <mat-label>First name</mat-label>
-                            <input
-                                id="firstName"
-                                matInput
-                                [formControlName]="'firstName'"
-                            />
-                            @if(createUserForm.get('firstName').hasError('required'))
-                            {
-                            <mat-error> First name is required </mat-error>
-                            }
-                            @if(createUserForm.get('firstName').hasError('maxlength'))
-                            {
-                            <mat-error>
-                                First name must be less than 255 characters
-                            </mat-error>
-                            }
-                        </mat-form-field>
-
-                        <!-- Last name field -->
-                        <mat-form-field appearance="outline" class="w-1/2">
-                            <mat-label>Last name</mat-label>
-                            <input
-                                id="lastName"
-                                matInput
-                                [formControlName]="'lastName'"
-                            />
-                            @if(createUserForm.get('lastName').hasError('required'))
-                            {
-                            <mat-error> Last name is required </mat-error>
-                            }
-                            @if(createUserForm.get('lastName').hasError('maxlength'))
-                            {
-                            <mat-error>
-                                Last name must be less than 255 characters
-                            </mat-error>
-                            }
-                        </mat-form-field>
-                    </div>
-
-                    <!-- Email field -->
-                    <mat-form-field appearance="outline" class="w-full">
-                        <mat-label>Email</mat-label>
-                        <input
-                            id="email"
-                            matInput
-                            [formControlName]="'email'"
-                        />
-                        @if(createUserForm.get('email').hasError('required')) {
-                        <mat-error> Email is required </mat-error>
-                        } @if(createUserForm.get('email').hasError('email')) {
-                        <mat-error>
-                            Please enter a valid email address
-                        </mat-error>
-                        }
-                    </mat-form-field>
-
-                    <!-- Username field -->
-                    <mat-form-field appearance="outline" class="w-full">
-                        <mat-label>Username</mat-label>
-                        <input
-                            id="username"
-                            matInput
-                            [formControlName]="'username'"
-                        />
-                        @if(createUserForm.get('username').hasError('required'))
-                        {
-                        <mat-error> Username is required </mat-error>
-                        }
-                        @if(createUserForm.get('username').hasError('minlength'))
-                        {
-                        <mat-error>
-                            Username must be at least 3 characters
-                        </mat-error>
-                        }
-                    </mat-form-field>
-
-                    <!-- Password field -->
-                    <mat-form-field appearance="outline" class="w-full">
-                        <mat-label>Password</mat-label>
-                        <input
-                            id="password"
-                            matInput
-                            type="password"
-                            [formControlName]="'password'"
-                            #passwordField
-                        />
-                        @if(createUserForm.get('password').hasError('required'))
-                        {
-                        <mat-error> Password is required </mat-error>
-                        }
-                        @if(createUserForm.get('password').hasError('minlength'))
-                        {
-                        <mat-error>
-                            Password must be at least 8 characters
-                        </mat-error>
-                        }
-                    </mat-form-field>
-
-                    <!-- Submit button -->
-                    <button
-                        class="fuse-mat-button-large w-full mt-6 bg-black rounded-lg text-white"
-                        mat-flat-button
-                        [disabled]="createUserForm.disabled"
-                        (click)="createUser()"
+                    <form
+                        class="flex flex-col gap-4"
+                        [formGroup]="createUserForm"
                     >
-                        <span *ngIf="!createUserForm.disabled">
-                            Create user
-                        </span>
-                        <mat-progress-spinner
-                            *ngIf="createUserForm.disabled"
-                            [diameter]="24"
-                            [mode]="'indeterminate'"
-                        ></mat-progress-spinner>
-                    </button>
-                </form>
+                        <div class="flex gap-4">
+                            <div class="w-1/2">
+                                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" i18n>First Name</label>
+                                <input class="w-full bg-transparent text-black border-b border-gray-300 focus:border-black py-2 outline-none" [formControlName]="'firstName'">
+                            </div>
+                            <div class="w-1/2">
+                                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" i18n>Last Name</label>
+                                <input class="w-full bg-transparent text-black border-b border-gray-300 focus:border-black py-2 outline-none" [formControlName]="'lastName'">
+                            </div>
+                        </div>
+
+                         <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" i18n>Email</label>
+                            <input class="w-full bg-transparent text-black border-b border-gray-300 focus:border-black py-2 outline-none" [formControlName]="'email'">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" i18n>Username</label>
+                            <input class="w-full bg-transparent text-black border-b border-gray-300 focus:border-black py-2 outline-none" [formControlName]="'username'">
+                        </div>
+
+                         <div>
+                            <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1" i18n>Password</label>
+                            <input type="password" class="w-full bg-transparent text-black border-b border-gray-300 focus:border-black py-2 outline-none" [formControlName]="'password'">
+                        </div>
+
+                        <button
+                            class="w-full h-[60px] bg-black text-white text-lg font-bold rounded-lg hover:bg-gray-900 transition-colors disabled:opacity-50 mt-4 flex items-center justify-center"
+                            [disabled]="createUserForm.disabled"
+                            (click)="createUser()"
+                        >
+                            @if(!createUserForm.disabled) {
+                                <span i18n>Create Account</span>
+                            } @else {
+                                <mat-progress-spinner [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+                            }
+                        </button>
+                    </form>
                 }
             </div>
         </div>
     </div>
 </div>
+<!-- Minimal global overrides for this component if needed, though Tailwind handles most -->
+<style>
+    /* Ensure spinners are visible on black backgrounds if needed, though we handled it */
+    .circle-white circle {
+        stroke: white !important;
+    }
+    
+    .animate-fadeIn {
+        animation: fadeIn 0.5s ease-out;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo-font {
+        font-family: 'Sora', sans-serif !important;
+    }
+</style>

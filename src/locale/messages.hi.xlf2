@@ -297,69 +297,6 @@
         <target> विवरण </target>
       </segment>
     </unit>
-    <unit id="4760173033440473119">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:125,127</note>
-      </notes>
-      <segment>
-        <source> Project Name </source>
-        <target>परियोजना का नाम</target>
-      </segment>
-    </unit>
-    <unit id="9193001935256028830">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:135,137</note>
-      </notes>
-      <segment>
-        <source> Owner </source>
-        <target> मालिक </target>
-      </segment>
-    </unit>
-    <unit id="4810347345927320513">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:145,147</note>
-      </notes>
-      <segment>
-        <source> Assignee </source>
-        <target>समनुदेशिती</target>
-      </segment>
-    </unit>
-    <unit id="8825952487324912813">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:156,158</note>
-      </notes>
-      <segment>
-        <source> Annotation </source>
-        <target>एनोटेशन</target>
-      </segment>
-    </unit>
-    <unit id="3091819333763458246">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:163</note>
-      </notes>
-      <segment>
-        <source>Frames</source>
-        <target>फ्रेम्स</target>
-      </segment>
-    </unit>
-    <unit id="4282587102956396340">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:169,171</note>
-      </notes>
-      <segment>
-        <source> Status </source>
-        <target> स्थिति </target>
-      </segment>
-    </unit>
-    <unit id="5689202800227799783">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:179,181</note>
-      </notes>
-      <segment>
-        <source> Create Date </source>
-        <target> तिथि बनाएं </target>
-      </segment>
-    </unit>
     <unit id="1763705795920808112">
       <notes>
         <note>src/app/modules/admin/dashboard/task-details/task-details.component.html:192,194</note>
@@ -477,33 +414,6 @@
         <target>अगला फ़्रेम</target>
       </segment>
     </unit>
-    <unit id="1356460275822781324">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:144</note>
-      </notes>
-      <segment>
-        <source>Zoom Out</source>
-        <target>ज़ूम आउट</target>
-      </segment>
-    </unit>
-    <unit id="1470758907984185227">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:161</note>
-      </notes>
-      <segment>
-        <source>Zoom In</source>
-        <target>ज़ूम इन</target>
-      </segment>
-    </unit>
-    <unit id="8791824480246623851">
-      <notes>
-        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:172</note>
-      </notes>
-      <segment>
-        <source>Reset Zoom</source>
-        <target>ज़ूम रीसेट करें</target>
-      </segment>
-    </unit>
     <unit id="3234422121509216221">
       <notes>
         <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:77</note>
@@ -604,6 +514,240 @@
           <ph id="1" equiv="PH_1" disp="endIndex"/> का 
           <ph id="2" equiv="PH_2" disp="length"/>
         </target>
+      </segment>
+    </unit>
+    <unit id="7233038032926777706">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:49</note>
+      </notes>
+      <segment>
+        <source>Close (ESC)</source>
+        <target>बंद करें (ESC)</target>
+      </segment>
+    </unit>
+    <unit id="4818804396674444968">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:57</note>
+      </notes>
+      <segment>
+        <source>Previous Video</source>
+        <target>पिछला वीडियो</target>
+      </segment>
+    </unit>
+    <unit id="5410268042281979662">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:62</note>
+      </notes>
+      <segment>
+        <source>Next Video</source>
+        <target>अगला वीडियो</target>
+      </segment>
+    </unit>
+    <unit id="4580988005648117665">
+      <notes>
+        <note>src/app/modules/admin/dashboard/dashboard.component.html:115</note>
+      </notes>
+      <segment>
+        <source>Search</source>
+        <target>खोज</target>
+      </segment>
+    </unit>
+    <unit id="7307822829282369259">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:44</note>
+      </notes>
+      <segment>
+        <source>New user?</source>
+        <target>नए उपयोगकर्ता?</target>
+      </segment>
+    </unit>
+    <unit id="5579867071769973287">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:52,54</note>
+      </notes>
+      <segment>
+        <source> Create an account </source>
+        <target> खाता बनाएं </target>
+      </segment>
+    </unit>
+    <unit id="5207635742003539443">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:147</note>
+      </notes>
+      <segment>
+        <source>Sign in</source>
+        <target>दाखिल करना</target>
+      </segment>
+    </unit>
+    <unit id="7169763988476671054">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:74</note>
+      </notes>
+      <segment>
+        <source>Email or username</source>
+        <target>ईमेल या उपयोगकर्ता का नाम</target>
+      </segment>
+    </unit>
+    <unit id="3702338872876040900">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:88</note>
+      </notes>
+      <segment>
+        <source>Username is required</source>
+        <target>उपयोगकर्ता नाम आवश्यक है</target>
+      </segment>
+    </unit>
+    <unit id="1431416938026210429">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:221</note>
+      </notes>
+      <segment>
+        <source>Password</source>
+        <target>पासवर्ड</target>
+      </segment>
+    </unit>
+    <unit id="3035570095838445091">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:105,107</note>
+      </notes>
+      <segment>
+        <source> Forgot password? </source>
+        <target>पासवर्ड भूल गए?</target>
+      </segment>
+    </unit>
+    <unit id="205044832662301680">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:135</note>
+      </notes>
+      <segment>
+        <source>Password is required</source>
+        <target>पासवर्ड आवश्यक है</target>
+      </segment>
+    </unit>
+    <unit id="2727496946419791472">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:161</note>
+      </notes>
+      <segment>
+        <source>Forgot password?</source>
+        <target>पासवर्ड भूल गए?</target>
+      </segment>
+    </unit>
+    <unit id="6233874611659035041">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:162</note>
+      </notes>
+      <segment>
+        <source>Enter your email to reset your password.</source>
+        <target>अपना पासवर्ड रीसेट करने के लिए अपना ईमेल प्रविष्ट करें।</target>
+      </segment>
+    </unit>
+    <unit id="4768749765465246664">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:211</note>
+      </notes>
+      <segment>
+        <source>Email</source>
+        <target>ईमेल</target>
+      </segment>
+    </unit>
+    <unit id="8552587679160911578">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:173</note>
+      </notes>
+      <segment>
+        <source>Email is required</source>
+        <target>ईमेल की जरूरत है</target>
+      </segment>
+    </unit>
+    <unit id="5508458189651454018">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:183</note>
+      </notes>
+      <segment>
+        <source>Send Reset Link</source>
+        <target>रीसेट लिंक भेजें</target>
+      </segment>
+    </unit>
+    <unit id="5907476126990913307">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:193</note>
+      </notes>
+      <segment>
+        <source>Create account</source>
+        <target>खाता बनाएं</target>
+      </segment>
+    </unit>
+    <unit id="6028371114637047813">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:201</note>
+      </notes>
+      <segment>
+        <source>First Name</source>
+        <target>पहला नाम</target>
+      </segment>
+    </unit>
+    <unit id="4407559560004943843">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:205</note>
+      </notes>
+      <segment>
+        <source>Last Name</source>
+        <target>उपनाम</target>
+      </segment>
+    </unit>
+    <unit id="5248717555542428023">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:216</note>
+      </notes>
+      <segment>
+        <source>Username</source>
+        <target>उपयोगकर्ता नाम</target>
+      </segment>
+    </unit>
+    <unit id="1267967133679326155">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:231</note>
+      </notes>
+      <segment>
+        <source>Create Account</source>
+        <target>खाता बनाएं</target>
+      </segment>
+    </unit>
+    <unit id="8387821074976463719">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.ts:148</note>
+      </notes>
+      <segment>
+        <source>Wrong email or password</source>
+        <target>गलत ईमेल या पासवर्ड</target>
+      </segment>
+    </unit>
+    <unit id="6286035857631834761">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.ts:176</note>
+      </notes>
+      <segment>
+        <source>Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder.</source>
+        <target>अपना पासवर्ड रीसेट करने के लिए ईमेल में दिए गए लिंक को देखें। यदि कुछ मिनटों के भीतर लिंक नहीं मिलता है, तो स्पैम फ़ोल्डर देखें।</target>
+      </segment>
+    </unit>
+    <unit id="8583750011528095760">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.ts:185</note>
+      </notes>
+      <segment>
+        <source>Something went wrong, please try again.</source>
+        <target>कुछ गड़बड़ हुई है। कृपया दोबारा प्रयास करें।</target>
+      </segment>
+    </unit>
+    <unit id="7077694213809290564">
+      <notes>
+        <note>src/app/modules/auth/sign-in/sign-in.component.html:17</note>
+      </notes>
+      <segment>
+        <source>An Proprietary Intelligent Integrated Platform Ecosystem for Video Analytics, Monitoring, and Annotation</source>
+        <target>वीडियो विश्लेषण, निगरानी और एनोटेशन के लिए एक स्वामित्वयुक्त बुद्धिमान एकीकृत प्लेटफ़ॉर्म पारिस्थितिकी तंत्र</target>
       </segment>
     </unit>
   </file>

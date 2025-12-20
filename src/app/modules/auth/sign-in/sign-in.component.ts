@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import {
     Component,
     OnInit,
@@ -35,7 +35,6 @@ import { environment } from 'environments/environment';
     animations: fuseAnimations,
     standalone: true,
     imports: [
-        NgIf,
         FormsModule,
         ReactiveFormsModule,
         MatFormFieldModule,
@@ -146,7 +145,7 @@ export class AuthSignInComponent implements OnInit {
                 // Set the alert
                 this.alert = {
                     type: 'error',
-                    message: 'Wrong email or password',
+                    message: $localize`Wrong email or password`,
                 };
 
                 // Show the alert
@@ -174,8 +173,7 @@ export class AuthSignInComponent implements OnInit {
                         id: MessageIds.SNACKBAR_TRIGGERED,
                         data: {
                             type: 'info',
-                            description:
-                                "Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder.",
+                            description: $localize`Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder.`,
                         },
                     });
                 },
@@ -184,8 +182,7 @@ export class AuthSignInComponent implements OnInit {
                         id: MessageIds.SNACKBAR_TRIGGERED,
                         data: {
                             type: 'error',
-                            description:
-                                'Something went wrong, please try again.',
+                            description: $localize`Something went wrong, please try again.`,
                         },
                     });
                 },
