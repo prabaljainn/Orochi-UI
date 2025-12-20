@@ -187,7 +187,7 @@ This solution provides a complete implementation of the `/dashboard/en/` URL str
 2. **Nginx Routing**: Serves the correct build for each language path
 3. **Language Support**: Handles en/ja languages with proper i18n
 4. **Performance**: Optimized static asset serving and caching
-5. **Docker Support**: Container-ready deployment configuration
+5. **Docker Support**: **Container**-ready deployment configuration
 6. **PREFIX Support**: Flexible deployment with configurable PREFIX (like GCS project)
 
 ### NEW: PREFIX-Based Routing (Like GCS Project)
@@ -242,3 +242,531 @@ npm run build-prefix
 - ✅ Consolidated build scripts into single flexible solution
 
 The implementation follows industry best practices, maintains SOLID principles, and provides maximum flexibility for different deployment scenarios.
+
+---
+
+## Comprehensive Code Review: Performance & Styling Recommendations
+
+**Date**: December 21, 2025  
+**Task**: Extensive code review focusing on performance optimizations and styling improvements
+
+### Executive Summary
+
+After a thorough review of the Orochi UI codebase, I've identified several performance bottlenecks, code quality issues, and styling improvements. The application is well-structured using Angular 19 with Material Design and Tailwind CSS, but there are opportunities for optimization.
+
+---
+
+## 🚀 Performance Issues & Fixes
+
+### 1. **Large Bundle Size (HIGH PRIORITY)**
+
+**Current State:**
+- Initial bundle: **3.41 MB** (raw) / **478 KB** (transfer)
+- main.js: 1.87 MB
+- styles.css: 1.45 MB
+
+**Recommendations:**
+
+```typescript
+// app.config.ts - Enable preloading for faster navigation
+import { PreloadAllModules } from '@angular/router';
+
+provideRouter(
+    appRoutes,
+    withPreloading(PreloadAllModules),  // Currently commented out - ENABLE THIS
+    withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })
+),
+```
+
+**Additional bundle optimizations in angular.json:**
+```json
+{
+    "budgets": [
+        {
+            "type": "initial",
+            "maximumWarning": "2mb",  // Reduce from 3mb
+            "maximumError": "3mb"     // Reduce from 5mb
+        }
+    ]
+}
+```
+
+---
+
+### 2. **Memory Leaks - Missing Unsubscribe (HIGH PRIORITY)**
+
+**Issue in `polar-area-chart.component.ts`:**
+```typescript
+// ❌ CURRENT - No unsubscribe
+ngOnInit(): void {
+    this._fuseConfigService.config$.subscribe((config) => {
+        this.isDarkMode.set(config.scheme === 'dark');
+        this._changeDetectorRef.detectChanges();
+    });
+}
+```
+
+**✅ FIX:**
+```typescript
+import { DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+
+export class PolarAreaChartComponent {
+    private destroyRef = inject(DestroyRef);
+
+    ngOnInit(): void {
+        this._fuseConfigService.config$
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((config) => {
+                this.isDarkMode.set(config.scheme === 'dark');
+                this._changeDetectorRef.detectChanges();
+            });
+    }
+}
+```
+
+**Issue in `snackbar.component.ts`:**
+```typescript
+// ❌ CURRENT - No unsubscribe
+ngOnInit(): void {
+    this._dataService.currentMessage$.subscribe((res: any) => { ... });
+}
+```
+
+**✅ FIX:**
+```typescript
+export class SnackbarComponent implements OnInit, OnDestroy {
+    private destroy$ = new Subject<void>();
+
+    ngOnInit(): void {
+        this._dataService.currentMessage$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((res: any) => { ... });
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+    }
+}
+```
+
+---
+
+### 3. **Console.log Statements in Production (MEDIUM PRIORITY)**
+
+Remove all console.log statements before production:
+
+| File | Line | Statement |
+|------|------|-----------|
+| `auth.service.ts` | 82 | `console.log(user);` |
+| `frame-annotator.component.ts` | 50-53, 155-158, 180-185 | Multiple debug logs |
+| `task-details.component.ts` | 113, 546 | Debug logs |
+| `comments.component.ts` | 88 | `console.log(this.comments());` |
+| `video-grid.component.ts` | 265, 373, 434 | Play error logs |
+
+**✅ FIX - Create a logger service:**
+```typescript
+// src/app/services/logger.service.ts
+import { Injectable, isDevMode } from '@angular/core';
+
+@Injectable({ providedIn: 'root' })
+export class LoggerService {
+    log(...args: any[]): void {
+        if (isDevMode()) {
+            console.log(...args);
+        }
+    }
+
+    error(...args: any[]): void {
+        if (isDevMode()) {
+            console.error(...args);
+        }
+    }
+}
+```
+
+---
+
+### 4. **Excessive Change Detection (MEDIUM PRIORITY)**
+
+**Issue in `dashboard.component.ts`:**
+```typescript
+// ❌ Multiple setTimeout + detectChanges calls
+setTimeout(() => {
+    let totalTasks = res?.analytics?.summary?.total_tasks || 0;
+    this.paginator.length = totalTasks;
+    this._cdr.detectChanges();
+}, 100);
+```
+
+**✅ FIX - Use OnPush change detection:**
+```typescript
+@Component({
+    selector: 'dashboard',
+    changeDetection: ChangeDetectionStrategy.OnPush,  // Add this
+    ...
+})
+export class DashboardComponent {
+    // Convert to signals for better reactivity
+    verdictInfo = signal({
+        total: 0,
+        accepted: 0,
+        rejected: 0,
+        notAnnotated: 0,
+    });
+}
+```
+
+---
+
+### 5. **Problematic Map Key (MEDIUM PRIORITY)**
+
+**Issue in `dashboard.component.ts`:**
+```typescript
+// ❌ Objects as Map keys don't work by value equality
+taskAndProjectIdToTrainDateTimeMap: Map<
+    { taskId: string; projectId: string },
+    string
+> = new Map();
+```
+
+**✅ FIX:**
+```typescript
+// Use a composite string key instead
+taskAndProjectIdToTrainDateTimeMap: Map<string, string> = new Map();
+
+// When setting:
+const key = `${result.task_id}_${result.project_id}`;
+this.taskAndProjectIdToTrainDateTimeMap.set(key, trainDateTime);
+
+// When getting:
+const key = `${taskId}_${projectId}`;
+const value = this.taskAndProjectIdToTrainDateTimeMap.get(key);
+```
+
+---
+
+### 6. **Duplicate Provider (LOW PRIORITY)**
+
+**Issue in `app.config.ts`:**
+```typescript
+// ❌ Two providers for the same token - second one wins
+{ provide: API_BASE_HREF, useFactory: getBaseLocation },
+{ provide: API_BASE_HREF, useFactory: getApiBase },  // This overwrites the first
+```
+
+**✅ FIX - Remove duplicate:**
+```typescript
+// Keep only one
+{ provide: API_BASE_HREF, useFactory: getApiBase },
+```
+
+---
+
+### 7. **CSRF Interceptor Issue (LOW PRIORITY)**
+
+**Issue in `csrf.interceptor.ts`:**
+```typescript
+// ❌ GET requests don't need CSRF tokens
+const needsCsrfToken = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].includes(
+    req.method.toUpperCase()
+);
+```
+
+**✅ FIX:**
+```typescript
+// GET requests are safe - remove from list
+const needsCsrfToken = ['POST', 'PUT', 'PATCH', 'DELETE'].includes(
+    req.method.toUpperCase()
+);
+```
+
+---
+
+### 8. **Missing trackBy in Tables (LOW PRIORITY)**
+
+**Issue in `dashboard.component.html`:**
+```html
+<!-- ❌ No trackBy - causes unnecessary re-renders -->
+<tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+```
+
+**✅ FIX:**
+```html
+<tr mat-row *matRowDef="let row; columns: displayedColumns; trackBy: trackByTaskId"></tr>
+```
+
+```typescript
+// In dashboard.component.ts
+trackByTaskId(index: number, task: TaskElement): string {
+    return task.taskId;
+}
+```
+
+---
+
+## 🎨 Styling Issues & Improvements
+
+### 1. **Build Warnings - Empty CSS Selectors (HIGH PRIORITY)**
+
+The build shows 8 CSS rules with empty sub-selectors in dark theme. These are in the Angular Material overrides.
+
+**Location:** `src/@fuse/styles/overrides/angular-material.scss`
+
+**Issue:**
+```scss
+// These selectors have line breaks causing "Empty sub-selector" warnings
+.dark 
+.mat-mdc-form-field.mat-form-field-appearance-fill ...
+```
+
+**✅ FIX:** Remove line breaks in selectors or fix the syntax.
+
+---
+
+### 2. **Hidden Scrollbars - Accessibility Concern (MEDIUM PRIORITY)**
+
+**Issue in `styles.scss`:**
+```scss
+// ❌ This hides scrollbars which can harm accessibility
+*::-webkit-scrollbar {
+    display: none;
+}
+```
+
+**✅ FIX - Use a more accessible approach:**
+```scss
+// Show scrollbars only on hover for better UX
+*::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 3px;
+    
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+}
+
+.dark *::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.4);
+    }
+}
+```
+
+---
+
+### 3. **Inline Styles in HTML (MEDIUM PRIORITY)**
+
+**Issue in `sign-in.component.html`:**
+```html
+<!-- ❌ Multiple inline <style> tags -->
+<style>
+    .glow-overlay { ... }
+    @keyframes breathe { ... }
+</style>
+```
+
+**✅ FIX - Move to component SCSS file:**
+```scss
+// sign-in.component.scss
+:host {
+    .glow-overlay {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        animation: breathe 4s ease-in-out infinite;
+    }
+
+    @keyframes breathe {
+        0%, 100% {
+            box-shadow: inset 0 0 10px 0px var(--login-glow-color, #412515);
+        }
+        50% {
+            box-shadow: inset 0 0 400px 15px var(--login-glow-color, #412515);
+        }
+    }
+
+    .animate-fadeIn {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+}
+```
+
+---
+
+### 4. **Hardcoded Colors (LOW PRIORITY)**
+
+**Issue:** Colors like `#412515` should be CSS variables for theming consistency.
+
+**✅ FIX - Add to tailwind.config.js:**
+```javascript
+// tailwind.config.js
+const customPalettes = {
+    brandPrimary: generatePalette('#CD791D'),
+    brandAccent: generatePalette('#185CA7'),
+    loginGlow: '#412515',  // Add this
+};
+
+// In your styles, use:
+// Tailwind: bg-[var(--login-glow)]
+// CSS: var(--login-glow-color)
+```
+
+---
+
+### 5. **Typography - Sora Font Loading (LOW PRIORITY)**
+
+**Current:** Loading from Google Fonts with potential FOUT (Flash of Unstyled Text)
+
+**✅ FIX - Add font-display:**
+```html
+<!-- index.html -->
+<link
+    href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Sora:wght@400;700&display=swap"
+    rel="stylesheet">
+```
+
+Consider self-hosting fonts for better performance:
+```css
+@font-face {
+    font-family: 'Sora';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url('/assets/fonts/sora/sora-regular.woff2') format('woff2');
+}
+```
+
+---
+
+## 🔧 Code Quality Improvements
+
+### 1. **Use Typed Forms (RECOMMENDED)**
+
+**Current:**
+```typescript
+signInForm: UntypedFormGroup;
+```
+
+**✅ FIX:**
+```typescript
+interface SignInForm {
+    username: FormControl<string>;
+    password: FormControl<string>;
+    rememberMe: FormControl<boolean>;
+}
+
+signInForm = new FormGroup<SignInForm>({
+    username: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    password: new FormControl('', { nonNullable: true, validators: [Validators.required] }),
+    rememberMe: new FormControl(false, { nonNullable: true }),
+});
+```
+
+---
+
+### 2. **Use Angular 19 Signal-based APIs**
+
+Leverage Angular 19's signal-based features more:
+
+```typescript
+// Instead of BehaviorSubject + Observable
+private _fontSize = new BehaviorSubject<'normal' | 'large' | 'xl'>('normal');
+get fontSize$(): Observable<'normal' | 'large' | 'xl'> {
+    return this._fontSize.asObservable();
+}
+
+// ✅ Use signals
+fontSize = signal<'normal' | 'large' | 'xl'>('normal');
+```
+
+---
+
+### 3. **Add Error Boundaries for Better UX**
+
+Create a global error handler:
+
+```typescript
+// src/app/core/error-handler/global-error-handler.ts
+@Injectable()
+export class GlobalErrorHandler implements ErrorHandler {
+    constructor(private dataService: DataService) {}
+
+    handleError(error: any): void {
+        console.error('Global error:', error);
+        
+        this.dataService.changeMessage({
+            id: MessageIds.SNACKBAR_TRIGGERED,
+            data: {
+                type: 'error',
+                title: 'An error occurred',
+                description: 'Please try again or contact support.',
+            },
+        });
+    }
+}
+
+// In app.config.ts
+{ provide: ErrorHandler, useClass: GlobalErrorHandler }
+```
+
+---
+
+## 📊 Summary of Recommendations
+
+| Priority | Category | Issue | Impact |
+|----------|----------|-------|--------|
+| 🔴 High | Performance | Enable PreloadAllModules | Faster navigation |
+| 🔴 High | Performance | Fix memory leaks (unsubscribe) | Prevents memory issues |
+| 🔴 High | Styling | Fix empty CSS selectors | Cleaner build |
+| 🟡 Medium | Performance | Remove console.logs | Smaller bundle, security |
+| 🟡 Medium | Performance | Use OnPush change detection | Better performance |
+| 🟡 Medium | Performance | Fix Map with object keys | Correct behavior |
+| 🟡 Medium | Styling | Hidden scrollbars accessibility | Better UX |
+| 🟡 Medium | Styling | Move inline styles to SCSS | Maintainability |
+| 🟢 Low | Code Quality | Use typed forms | Type safety |
+| 🟢 Low | Performance | Fix duplicate provider | Clean config |
+| 🟢 Low | Performance | Fix CSRF interceptor | Correct behavior |
+| 🟢 Low | Performance | Add trackBy to tables | Better performance |
+
+---
+
+## ✅ What's Working Well
+
+1. **Modern Angular 19** - Using latest Angular features including signals
+2. **Clean component architecture** - Standalone components with proper separation
+3. **Good theming system** - Fuse theme with Tailwind CSS integration
+4. **Proper lazy loading** - Routes are lazy loaded
+5. **Beautiful login page** - The breathing glow effect is visually appealing
+6. **Responsive design** - Good mobile responsiveness
+7. **i18n support** - Internationalization is properly implemented
+8. **TypeScript signals** - Good use of Angular signals for state management
+
+---
+
+## 🚧 Implementation Priority
+
+1. **Week 1:** Fix memory leaks and enable PreloadAllModules
+2. **Week 2:** Remove console.logs and fix CSS warnings
+3. **Week 3:** Implement OnPush change detection
+4. **Week 4:** Code quality improvements (typed forms, error handling)
+
+This review maintains the existing functionality while significantly improving performance and maintainability.
