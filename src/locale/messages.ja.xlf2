@@ -606,5 +606,312 @@
         </target>
       </segment>
     </unit>
+    <unit id="4147991352124878020">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:12</note>
+      </notes>
+      <segment>
+        <source>Synced 
+          <ph id="0" equiv="INTERPOLATION" disp="{{ lastSyncedAgo }}"/>s ago
+        </source>
+        <target>同期済み
+          <ph id="0" equiv="INTERPOLATION" disp="{{ lastSyncedAgo }}"/>数秒前
+        </target>
+      </segment>
+    </unit>
+    <unit id="6505695176413676434">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:33</note>
+      </notes>
+      <segment>
+        <source>Edge Server Unreachable</source>
+        <target>エッジサーバーに到達できません</target>
+      </segment>
+    </unit>
+    <unit id="617414340583357402">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:35</note>
+      </notes>
+      <segment>
+        <source>· last data from 
+          <ph id="0" equiv="INTERPOLATION" disp="{{ lastSyncedAgo }}"/>s ago
+        </source>
+        <target>・最新のデータ
+          <ph id="0" equiv="INTERPOLATION" disp="{{ lastSyncedAgo }}"/>数秒前
+        </target>
+      </segment>
+    </unit>
+    <unit id="2188854519574316630">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:50</note>
+      </notes>
+      <segment>
+        <source>Server</source>
+        <target>サーバ</target>
+      </segment>
+    </unit>
+    <unit id="1929039531311944328">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:57</note>
+      </notes>
+      <segment>
+        <source>Uptime</source>
+        <target>稼働時間</target>
+      </segment>
+    </unit>
+    <unit id="8846933906710806951">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:91</note>
+      </notes>
+      <segment>
+        <source>RFID Reader</source>
+        <target>RFIDリーダー</target>
+      </segment>
+    </unit>
+    <unit id="6043538417132864290">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:193</note>
+      </notes>
+      <segment>
+        <source>Cameras</source>
+        <target>カメラ</target>
+      </segment>
+    </unit>
+    <unit id="4293299255453095257">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:79</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ cameraCount('online') }}"/> / 
+          <ph id="1" equiv="INTERPOLATION_1" disp="{{ data.cameras.length }}"/> Online
+        </source>
+        <target>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ cameraCount('online') }}"/>/
+          <ph id="1" equiv="INTERPOLATION_1" disp="{{ data.cameras.length }}"/>オンライン
+        </target>
+      </segment>
+    </unit>
+    <unit id="7816827595236338953">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:97</note>
+      </notes>
+      <segment>
+        <source>Last Train Detected</source>
+        <target>最後に検出された列車</target>
+      </segment>
+    </unit>
+    <unit id="1830011131009481980">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:104</note>
+      </notes>
+      <segment>
+        <source>Train ID</source>
+        <target>列車ID</target>
+      </segment>
+    </unit>
+    <unit id="400132642251674859">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:109</note>
+      </notes>
+      <segment>
+        <source>No trains detected yet</source>
+        <target>列車はまだ検出されていません</target>
+      </segment>
+    </unit>
+    <unit id="241582562804618446">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:113</note>
+      </notes>
+      <segment>
+        <source>Reader IP</source>
+        <target>リーダーIPアドレス</target>
+      </segment>
+    </unit>
+    <unit id="2055202912972664247">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:117</note>
+      </notes>
+      <segment>
+        <source>Service Uptime</source>
+        <target>サービス稼働時間</target>
+      </segment>
+    </unit>
+    <unit id="1964404405625196040">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:121</note>
+      </notes>
+      <segment>
+        <source>Tag Valid</source>
+        <target>タグ有効</target>
+      </segment>
+    </unit>
+    <unit id="4867063114033618707">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:127</note>
+      </notes>
+      <segment>
+        <source>Read Cycle</source>
+        <target>読み取りサイクル</target>
+      </segment>
+    </unit>
+    <unit id="2343308361364436535">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:138</note>
+      </notes>
+      <segment>
+        <source>Laser Sensors</source>
+        <target>レーザーセンサー</target>
+      </segment>
+    </unit>
+    <unit id="6872830176616230588">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:142</note>
+      </notes>
+      <segment>
+        <source>TRAIN PASSING</source>
+        <target>列車通過</target>
+      </segment>
+    </unit>
+    <unit id="9137648463096385200">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:151</note>
+      </notes>
+      <segment>
+        <source>Entry Sensor (DI0)</source>
+        <target>侵入センサー（DI0）</target>
+      </segment>
+    </unit>
+    <unit id="1490888698162416300">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:162</note>
+      </notes>
+      <segment>
+        <source>Exit Sensor (DI2)</source>
+        <target>出口センサー（DI2）</target>
+      </segment>
+    </unit>
+    <unit id="3793879371425529594">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:173</note>
+      </notes>
+      <segment>
+        <source>Last Train Session</source>
+        <target>最後の列車セッション</target>
+      </segment>
+    </unit>
+    <unit id="1946568698566399919">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:194</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ cameraCount('online') }}"/>/
+          <ph id="1" equiv="INTERPOLATION_1" disp="{{ data.cameras.length }}"/> online
+        </source>
+        <target>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ cameraCount('online') }}"/>/
+          <ph id="1" equiv="INTERPOLATION_1" disp="{{ data.cameras.length }}"/>オンライン
+        </target>
+      </segment>
+    </unit>
+    <unit id="7483844707525716185">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:196,198</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ cameraCount('offline') }}"/> offline 
+        </source>
+        <target>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ cameraCount('offline') }}"/>オフライン
+        </target>
+      </segment>
+    </unit>
+    <unit id="5821442435758069792">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:226</note>
+      </notes>
+      <segment>
+        <source>Server Resources</source>
+        <target>サーバーリソース</target>
+      </segment>
+    </unit>
+    <unit id="2885840307007437390">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:230</note>
+      </notes>
+      <segment>
+        <source>CPU</source>
+        <target>CPU</target>
+      </segment>
+    </unit>
+    <unit id="8499600723628159115">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:235</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ data.edge_server.cpu_count }}"/> cores
+        </source>
+        <target>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ data.edge_server.cpu_count }}"/>コア
+        </target>
+      </segment>
+    </unit>
+    <unit id="1548129644093494406">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:238</note>
+      </notes>
+      <segment>
+        <source>Memory</source>
+        <target>メモリ</target>
+      </segment>
+    </unit>
+    <unit id="3333453926782750251">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:246</note>
+      </notes>
+      <segment>
+        <source>System Disk</source>
+        <target>システムディスク</target>
+      </segment>
+    </unit>
+    <unit id="170488173222239491">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:254</note>
+      </notes>
+      <segment>
+        <source>Recording Disk</source>
+        <target>記録ディスク</target>
+      </segment>
+    </unit>
+    <unit id="7143579180750436311">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:268</note>
+      </notes>
+      <segment>
+        <source>Services</source>
+        <target>サービス</target>
+      </segment>
+    </unit>
+    <unit id="4893616715766810081">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:296</note>
+      </notes>
+      <segment>
+        <source>No data available</source>
+        <target>データがありません</target>
+      </segment>
+    </unit>
+    <unit id="4240085715823937626">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:297</note>
+      </notes>
+      <segment>
+        <source>Click Sync Now or wait for the next auto-refresh.</source>
+        <target>「今すぐ同期」をクリックするか、次回の自動更新までお待ちください。</target>
+      </segment>
+    </unit>
   </file>
 </xliff>
