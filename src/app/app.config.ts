@@ -29,7 +29,7 @@ import { csrfInterceptor } from './core/auth/csrf.interceptor';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginator } from './utils/CustomPaginatorConfiguration';
-import { environment } from '../environments/environment';
+
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -104,13 +104,10 @@ export const appConfig: ApplicationConfig = {
         provideAuth(),
         provideIcons(),
         provideFuse({
-            // Only load mock API services in non-production builds
-            ...(environment.production ? {} : {
-                mockApi: {
-                    delay: 0,
-                    services: mockApiServices,
-                },
-            }),
+            mockApi: {
+                delay: 0,
+                services: mockApiServices,
+            },
             fuse: {
                 layout: 'dense',
                 scheme: 'light',
