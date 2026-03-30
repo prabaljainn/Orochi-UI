@@ -1,75 +1,95 @@
 <div class="flex flex-col flex-auto w-full min-w-0">
-    <!-- Header -->
-    <div
-        class="relative flex flex-0 items-center w-full h-16 px-4 md:px-6 z-49 shadow dark:shadow-none dark:-b bg-card dark:bg-app-bar print:hidden"
-    >
-        <div class="flex flex-row items-center pr-2 space-x-2">
-            <div class="text-xl text-default font-semibold">{{ title }}</div>
-        </div>
-        <div class="flex items-center pl-2 ml-auto space-x-3">
-            <span class="text-sm text-secondary">
-                @if (lastSyncTimestamp) {
-                    <ng-container i18n>Synced {{ lastSyncedAgo }}s ago</ng-container>
-                }
-            </span>
+
+    <!-- ══════════════════════════════════════════════════════════
+         HEADER
+         ══════════════════════════════════════════════════════════ -->
+    <div class="flex items-center justify-between w-full h-16 px-6 bg-card shadow-sm dark:shadow-none dark:border-b dark:border-gray-800 z-49 print:hidden">
+        <div class="text-xl font-semibold text-default tracking-tight">{{ title }}</div>
+        <div class="flex items-center gap-4">
+            @if (lastSyncTimestamp) {
+                <span class="text-sm text-hint tabular-nums" i18n>
+                    Synced {{ lastSyncedAgo }}s ago
+                </span>
+            }
             <button
                 mat-flat-button
-                class="!bg-primary !text-white !rounded-lg !px-4 !py-1 !text-sm !font-medium"
+                class="!bg-primary !text-white !rounded-lg !px-4 !py-1 !text-sm !font-medium !min-w-[100px]"
                 (click)="onSync()"
                 [disabled]="loading"
             >
                 @if (loading) {
-                    <mat-spinner diameter="16" class="inline-block mr-1.5"></mat-spinner>
+                    <mat-spinner diameter="14" class="inline-block mr-1.5"></mat-spinner>
                 }
-                Sync Now
+                <ng-container i18n>Sync Now</ng-container>
             </button>
         </div>
     </div>
 
-    <!-- Edge Offline Banner -->
+    <!-- ══════════════════════════════════════════════════════════
+         EDGE OFFLINE BANNER
+         ══════════════════════════════════════════════════════════ -->
     @if (edgeOffline) {
-        <div class="flex items-center gap-3 bg-red-500/10 border-b border-red-500/30 text-red-500 px-6 py-3 text-base font-semibold">
+        <div class="flex items-center gap-3 bg-red-500/10 border-b border-red-500/20 text-red-500 px-6 py-3 text-sm font-medium">
             <mat-icon class="icon-size-5" svgIcon="heroicons_solid:exclamation-triangle"></mat-icon>
             <span i18n>Edge Server Unreachable</span>
             @if (lastSyncTimestamp) {
-                <span class="text-red-400 ml-1 text-sm font-normal" i18n>· last data from {{ lastSyncedAgo }}s ago</span>
+                <span class="text-red-400 text-xs font-normal" i18n>
+                    &middot; last data from {{ lastSyncedAgo }}s ago
+                </span>
             }
         </div>
     }
 
-    <!-- Content -->
-    <div class="flex flex-col flex-auto gap-5 p-5">
+    <!-- ══════════════════════════════════════════════════════════
+         MAIN CONTENT
+         ══════════════════════════════════════════════════════════ -->
+    <div class="flex flex-col flex-auto gap-6 p-6">
 
         @if (data) {
 
-            <!-- ═══ Top row: 4 status summary cards ═══ -->
+            <!-- ═══════════════════════════════════════════════════
+                 STATUS SUMMARY (top row)
+                 ═══════════════════════════════════════════════════ -->
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 flex items-center gap-3">
-                    <div class="w-3 h-3 rounded-full flex-shrink-0" [ngClass]="edgeOffline ? 'bg-red-500' : 'bg-emerald-500'"></div>
+
+                <!-- Server -->
+                <div class="bg-card rounded-xl border border-gray-100 dark:border-gray-800 p-4 flex items-center gap-3">
+                    <div class="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                         [ngClass]="edgeOffline ? 'bg-red-500' : 'bg-emerald-500'"></div>
                     <div>
-                        <div class="text-sm text-secondary leading-tight" i18n>Server</div>
-                        <div class="text-xl font-bold leading-tight" [ngClass]="edgeOffline ? 'text-red-500' : 'text-emerald-500'">
-                            @if (edgeOffline) {
-                                <ng-container i18n>Offline</ng-container>
-                            } @else {
-                                <ng-container i18n>Online</ng-container>
-                            }
+                        <div class="text-xs text-hint uppercase tracking-wider" i18n>Server</div>
+                        <div class="text-lg font-bold leading-tight"
+                             [ngClass]="edgeOffline ? 'text-red-500' : 'text-emerald-500'">
+                            {{ edgeOffline ? 'Offline' : 'Online' }}
                         </div>
                     </div>
                 </div>
-                <div class="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4">
-                    <div class="text-sm text-secondary leading-tight" i18n>Uptime</div>
-                    <div class="text-xl font-bold leading-tight">{{ data.edge_server.uptime_human }}</div>
+
+                <!-- Uptime -->
+                <div class="bg-card rounded-xl border border-gray-100 dark:border-gray-800 p-4">
+                    <div class="text-xs text-hint uppercase tracking-wider" i18n>Uptime</div>
+                    <div class="text-lg font-bold leading-tight mt-0.5">
+                        {{ data.edge_server.uptime_human }}
+                    </div>
                     <div class="text-xs text-hint mt-0.5">{{ data.edge_server.hostname }}</div>
                 </div>
-                <div class="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 flex items-center gap-3">
-                    <div class="w-3 h-3 rounded-full flex-shrink-0"
-                         [ngClass]="(data.rfid.service_alive && data.rfid.connected) ? 'bg-emerald-500' : (!data.rfid.service_alive ? 'bg-red-500' : 'bg-amber-500')">
-                    </div>
+
+                <!-- RFID -->
+                <div class="bg-card rounded-xl border border-gray-100 dark:border-gray-800 p-4 flex items-center gap-3">
+                    <div class="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                         [ngClass]="{
+                             'bg-emerald-500': data.rfid.service_alive && data.rfid.connected,
+                             'bg-red-500': !data.rfid.service_alive,
+                             'bg-amber-500': data.rfid.service_alive && !data.rfid.connected
+                         }"></div>
                     <div>
-                        <div class="text-sm text-secondary leading-tight" i18n>RFID Reader</div>
-                        <div class="text-xl font-bold leading-tight"
-                             [ngClass]="(data.rfid.service_alive && data.rfid.connected) ? 'text-emerald-500' : (!data.rfid.service_alive ? 'text-red-500' : 'text-amber-500')">
+                        <div class="text-xs text-hint uppercase tracking-wider" i18n>RFID Reader</div>
+                        <div class="text-lg font-bold leading-tight"
+                             [ngClass]="{
+                                 'text-emerald-500': data.rfid.service_alive && data.rfid.connected,
+                                 'text-red-500': !data.rfid.service_alive,
+                                 'text-amber-500': data.rfid.service_alive && !data.rfid.connected
+                             }">
                             @if (!data.rfid.service_alive) {
                                 <ng-container i18n>Down</ng-container>
                             } @else if (!data.rfid.connected) {
@@ -80,89 +100,95 @@
                         </div>
                     </div>
                 </div>
-                <div class="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 p-4 flex items-center gap-3">
-                    <div class="w-3 h-3 rounded-full flex-shrink-0"
-                         [ngClass]="cameraSummaryDotClass">
-                    </div>
+
+                <!-- Cameras -->
+                <div class="bg-card rounded-xl border border-gray-100 dark:border-gray-800 p-4 flex items-center gap-3">
+                    <div class="w-2.5 h-2.5 rounded-full flex-shrink-0"
+                         [ngClass]="cameraSummaryDotClass"></div>
                     <div>
-                        <div class="text-sm text-secondary leading-tight" i18n>Cameras</div>
-                        <div class="text-xl font-bold leading-tight" i18n>{{ onlineCameraCount }} / {{ data.cameras.length }} Online</div>
+                        <div class="text-xs text-hint uppercase tracking-wider" i18n>Cameras</div>
+                        <div class="text-lg font-bold leading-tight" i18n>
+                            {{ onlineCameraCount }}/{{ data.cameras.length }} Online
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ═══ RFID + Laser side-by-side ═══ -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <!-- ═══════════════════════════════════════════════════
+                 RFID + LASER SENSORS (side-by-side)
+                 ═══════════════════════════════════════════════════ -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                <!-- RFID Reader -->
-                <div class="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-                    <div class="px-5 py-3 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
+                <!-- RFID Reader ─────────────────────────────────── -->
+                <div class="bg-card rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                    <div class="px-5 py-3.5 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
                         <mat-icon class="icon-size-5 text-primary" svgIcon="heroicons_solid:identification"></mat-icon>
-                        <span class="text-lg font-semibold" i18n>RFID Reader</span>
+                        <span class="text-base font-semibold" i18n>RFID Reader</span>
                     </div>
                     <div class="p-5 flex flex-col gap-4">
                         @if (data.rfid.last_tag) {
-                            <div class="flex items-start justify-between">
+                            <div class="flex items-start justify-between gap-4">
                                 <div>
-                                    <div class="text-sm text-secondary" i18n>Last Train Detected</div>
-                                    <div class="text-2xl font-bold mt-0.5">{{ data.rfid.last_tag.decoded_data }}</div>
+                                    <div class="text-xs text-hint uppercase tracking-wider" i18n>Last Train Detected</div>
+                                    <div class="text-2xl font-bold mt-1">{{ data.rfid.last_tag.decoded_data }}</div>
                                     <div class="text-sm text-secondary mt-0.5">
-                                        {{ rfidCompanyLabel }} · {{ rfidTimeAgo }}
+                                        {{ rfidCompanyLabel }} &middot; {{ rfidTimeAgo }}
                                     </div>
                                 </div>
-                                <div class="text-right">
-                                    <div class="text-sm text-secondary" i18n>Train ID</div>
-                                    <div class="text-lg font-semibold">{{ data.rfid.last_tag.train_id }}</div>
+                                <div class="text-right flex-shrink-0">
+                                    <div class="text-xs text-hint uppercase tracking-wider" i18n>Train ID</div>
+                                    <div class="text-lg font-semibold mt-1">{{ data.rfid.last_tag.train_id }}</div>
                                 </div>
                             </div>
                         } @else {
-                            <div class="text-lg text-hint" i18n>No trains detected yet</div>
+                            <div class="text-base text-hint py-2" i18n>No trains detected yet</div>
                         }
+
                         <div class="grid grid-cols-2 gap-3">
                             <div class="bg-card-third rounded-lg p-3">
-                                <div class="text-xs text-hint uppercase tracking-wide" i18n>Reader IP</div>
-                                <div class="text-sm font-medium mt-0.5">{{ data.rfid.reader_ip }}:{{ data.rfid.reader_port }}</div>
-                            </div>
-                            <div class="bg-card-third rounded-lg p-3">
-                                <div class="text-xs text-hint uppercase tracking-wide" i18n>Service Uptime</div>
-                                <div class="text-sm font-medium mt-0.5">{{ rfidUptimeFormatted }}</div>
-                            </div>
-                            <div class="bg-card-third rounded-lg p-3">
-                                <div class="text-xs text-hint uppercase tracking-wide" i18n>Tag Valid</div>
-                                <div class="text-sm font-medium mt-0.5" [ngClass]="data.rfid.last_tag?.valid ? 'text-emerald-500' : 'text-red-500'">
-                                    @if (data.rfid.last_tag?.valid) {
-                                        <ng-container i18n>Yes</ng-container>
-                                    } @else {
-                                        <ng-container i18n>No</ng-container>
-                                    }
+                                <div class="text-[11px] text-hint uppercase tracking-wider" i18n>Reader IP</div>
+                                <div class="text-sm font-medium mt-1">
+                                    {{ data.rfid.reader_ip }}:{{ data.rfid.reader_port }}
                                 </div>
                             </div>
                             <div class="bg-card-third rounded-lg p-3">
-                                <div class="text-xs text-hint uppercase tracking-wide" i18n>Read Cycle</div>
-                                <div class="text-sm font-medium mt-0.5">{{ data.rfid.last_tag?.cycle ?? '--' }}</div>
+                                <div class="text-[11px] text-hint uppercase tracking-wider" i18n>Service Uptime</div>
+                                <div class="text-sm font-medium mt-1">{{ rfidUptimeFormatted }}</div>
+                            </div>
+                            <div class="bg-card-third rounded-lg p-3">
+                                <div class="text-[11px] text-hint uppercase tracking-wider" i18n>Tag Valid</div>
+                                <div class="text-sm font-medium mt-1"
+                                     [ngClass]="data.rfid.last_tag?.valid ? 'text-emerald-500' : 'text-red-500'">
+                                    {{ data.rfid.last_tag?.valid ? 'Yes' : 'No' }}
+                                </div>
+                            </div>
+                            <div class="bg-card-third rounded-lg p-3">
+                                <div class="text-[11px] text-hint uppercase tracking-wider" i18n>Read Cycle</div>
+                                <div class="text-sm font-medium mt-1">{{ data.rfid.last_tag?.cycle ?? '--' }}</div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Laser Sensors -->
-                <div class="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-                    <div class="px-5 py-3 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
+                <!-- Laser Sensors ───────────────────────────────── -->
+                <div class="bg-card rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                    <div class="px-5 py-3.5 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
                         <mat-icon class="icon-size-5 text-primary" svgIcon="heroicons_solid:bolt"></mat-icon>
-                        <span class="text-lg font-semibold" i18n>Laser Sensors</span>
+                        <span class="text-base font-semibold" i18n>Laser Sensors</span>
                         @if (data.laser_sensors.session_active) {
-                            <span class="flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 rounded-full px-2.5 py-0.5 text-xs font-bold text-blue-500 ml-2">
-                                <span class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+                            <span class="flex items-center gap-1.5 bg-blue-500/10 border border-blue-500/30 rounded-full px-2.5 py-0.5 text-xs font-bold text-blue-500 ml-auto">
+                                <span class="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse"></span>
                                 <span i18n>TRAIN PASSING</span>
                             </span>
                         }
                     </div>
                     <div class="p-5 flex flex-col gap-4">
                         <div class="grid grid-cols-2 gap-3">
+                            <!-- DI0 -->
                             <div class="bg-card-third rounded-lg p-3">
-                                <div class="flex items-center gap-2 mb-1.5">
-                                    <div class="w-2.5 h-2.5 rounded-full" [ngClass]="channelDI0Color"></div>
-                                    <span class="text-sm font-semibold" i18n>Entry Sensor (DI0)</span>
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="w-2 h-2 rounded-full" [ngClass]="channelDI0Color"></div>
+                                    <span class="text-xs font-semibold uppercase tracking-wider" i18n>Entry (DI0)</span>
                                 </div>
                                 <div class="text-xl font-bold"
                                      [ngClass]="data.laser_sensors.channel_states.DI0 === 'ON' ? 'text-emerald-500' : 'text-secondary'">
@@ -170,10 +196,11 @@
                                 </div>
                                 <div class="text-xs text-hint mt-1">{{ data.laser_sensors.channels.DI0.peer_ip }}</div>
                             </div>
+                            <!-- DI2 -->
                             <div class="bg-card-third rounded-lg p-3">
-                                <div class="flex items-center gap-2 mb-1.5">
-                                    <div class="w-2.5 h-2.5 rounded-full" [ngClass]="channelDI2Color"></div>
-                                    <span class="text-sm font-semibold" i18n>Exit Sensor (DI2)</span>
+                                <div class="flex items-center gap-2 mb-2">
+                                    <div class="w-2 h-2 rounded-full" [ngClass]="channelDI2Color"></div>
+                                    <span class="text-xs font-semibold uppercase tracking-wider" i18n>Exit (DI2)</span>
                                 </div>
                                 <div class="text-xl font-bold"
                                      [ngClass]="data.laser_sensors.channel_states.DI2 === 'ON' ? 'text-emerald-500' : 'text-secondary'">
@@ -182,30 +209,38 @@
                                 <div class="text-xs text-hint mt-1">{{ data.laser_sensors.channels.DI2.peer_ip }}</div>
                             </div>
                         </div>
+
                         @if (data.laser_sensors.last_session) {
                             <div class="bg-card-third rounded-lg p-3">
-                                <div class="text-xs text-hint uppercase tracking-wide mb-1" i18n>Last Train Session</div>
+                                <div class="text-[11px] text-hint uppercase tracking-wider mb-1.5" i18n>Last Train Session</div>
                                 <div class="flex items-center gap-3 text-sm">
-                                    <span class="font-medium">{{ lastSessionStart }}</span>
-                                    <span class="text-hint">→</span>
-                                    <span class="font-medium">{{ lastSessionEnd }}</span>
-                                    <span class="ml-auto font-semibold">{{ data.laser_sensors.last_session.duration_seconds | number:'1.0-0' }}s</span>
+                                    <span class="font-medium tabular-nums">{{ lastSessionStart }}</span>
+                                    <mat-icon class="icon-size-3.5 text-hint" svgIcon="heroicons_solid:arrow-right"></mat-icon>
+                                    <span class="font-medium tabular-nums">{{ lastSessionEnd }}</span>
+                                    <span class="ml-auto font-semibold tabular-nums">
+                                        {{ data.laser_sensors.last_session.duration_seconds | number:'1.0-0' }}s
+                                    </span>
                                 </div>
                             </div>
                         }
+
                         @if (data.laser_sensors.error) {
-                            <div class="text-sm text-red-500 font-medium">⚠ {{ data.laser_sensors.error }}</div>
+                            <div class="text-sm text-red-500 font-medium px-1">{{ data.laser_sensors.error }}</div>
                         }
                     </div>
                 </div>
             </div>
 
-            <!-- ═══ Cameras ═══ -->
-            <div class="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-                <div class="px-5 py-3 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
+            <!-- ═══════════════════════════════════════════════════
+                 CAMERAS
+                 ═══════════════════════════════════════════════════ -->
+            <div class="bg-card rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                <div class="px-5 py-3.5 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
                     <mat-icon class="icon-size-5 text-primary" svgIcon="heroicons_solid:video-camera"></mat-icon>
-                    <span class="text-lg font-semibold" i18n>Cameras</span>
-                    <span class="text-sm text-secondary ml-1" i18n>{{ onlineCameraCount }}/{{ data.cameras.length }} online</span>
+                    <span class="text-base font-semibold" i18n>Cameras</span>
+                    <span class="text-sm text-secondary ml-1" i18n>
+                        {{ onlineCameraCount }}/{{ data.cameras.length }} online
+                    </span>
                     @if (offlineCameraCount > 0) {
                         <span class="text-xs font-semibold text-red-500 bg-red-500/10 rounded-full px-2 py-0.5 ml-1" i18n>
                             {{ offlineCameraCount }} offline
@@ -215,17 +250,23 @@
                 <div class="p-5">
                     <div class="grid grid-cols-3 sm:grid-cols-6 gap-3">
                         @for (cam of data.cameras; track cam.id) {
-                            <div class="bg-card-third rounded-lg p-3 flex flex-col items-center gap-1.5 relative">
+                            <div class="bg-card-third rounded-lg p-3 flex flex-col items-center gap-2 relative">
                                 @if (cam.recording) {
-                                    <span class="absolute top-2 right-2 text-[10px] font-bold text-red-500 bg-red-500/15 rounded px-1.5 py-0.5 leading-none">REC</span>
+                                    <span class="absolute top-2 right-2 text-[10px] font-bold text-red-500 bg-red-500/15 rounded px-1.5 py-0.5 leading-none">
+                                        REC
+                                    </span>
                                 }
-                                <div class="w-3 h-3 rounded-full" [ngClass]="dotClass(cam.status === 'online')"></div>
+                                <div class="w-2.5 h-2.5 rounded-full" [ngClass]="dotClass(cam.status === 'online')"></div>
                                 <div class="text-sm font-semibold uppercase">{{ cam.id }}</div>
-                                <div class="text-xs font-medium" [ngClass]="cam.status === 'online' ? 'text-emerald-500' : 'text-red-500'">
+                                <div class="text-xs font-medium"
+                                     [ngClass]="cam.status === 'online' ? 'text-emerald-500' : 'text-red-500'">
                                     {{ cam.status === 'online' ? 'Online' : 'Offline' }}
                                 </div>
                                 @if (cam.error_message) {
-                                    <div class="text-[10px] text-red-400 text-center leading-tight" [matTooltip]="cam.error_message">{{ cam.error_message }}</div>
+                                    <div class="text-[10px] text-red-400 text-center leading-tight truncate w-full"
+                                         [matTooltip]="cam.error_message">
+                                        {{ cam.error_message }}
+                                    </div>
                                 }
                             </div>
                         }
@@ -233,141 +274,351 @@
                 </div>
             </div>
 
-            <!-- ═══ Server Resources ═══ -->
-            <div class="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-                <div class="px-5 py-3 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
+            <!-- ═══════════════════════════════════════════════════
+                 SERVER RESOURCES
+                 ═══════════════════════════════════════════════════ -->
+            <div class="bg-card rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                <div class="px-5 py-3.5 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
                     <mat-icon class="icon-size-5 text-primary" svgIcon="heroicons_solid:cpu-chip"></mat-icon>
-                    <span class="text-lg font-semibold" i18n>Server Resources</span>
+                    <span class="text-base font-semibold" i18n>Server Resources</span>
                 </div>
                 <div class="p-5 grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div class="bg-card-third rounded-lg p-3">
-                        <div class="text-sm text-secondary mb-1.5" i18n>CPU</div>
-                        <div class="text-2xl font-bold" [ngClass]="cpuTextClass">{{ data.edge_server.cpu_pct }}%</div>
-                        <div class="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-2">
-                            <div class="h-full rounded-full transition-all duration-500" [ngClass]="cpuBarClass" [style.width.%]="data.edge_server.cpu_pct"></div>
+                    <!-- CPU -->
+                    <div class="bg-card-third rounded-lg p-4">
+                        <div class="text-xs text-hint uppercase tracking-wider mb-2" i18n>CPU</div>
+                        <div class="text-2xl font-bold tabular-nums" [ngClass]="cpuTextClass">
+                            {{ data.edge_server.cpu_pct }}%
                         </div>
-                        <div class="text-xs text-hint mt-1" i18n>{{ data.edge_server.cpu_count }} cores</div>
+                        <div class="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-3">
+                            <div class="h-full rounded-full transition-all duration-500"
+                                 [ngClass]="cpuBarClass"
+                                 [style.width.%]="data.edge_server.cpu_pct"></div>
+                        </div>
+                        <div class="text-xs text-hint mt-1.5" i18n>{{ data.edge_server.cpu_count }} cores</div>
                     </div>
-                    <div class="bg-card-third rounded-lg p-3">
-                        <div class="text-sm text-secondary mb-1.5" i18n>Memory</div>
-                        <div class="text-2xl font-bold" [ngClass]="memoryTextClass">{{ data.edge_server.memory_pct }}%</div>
-                        <div class="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-2">
-                            <div class="h-full rounded-full transition-all duration-500" [ngClass]="memoryBarClass" [style.width.%]="data.edge_server.memory_pct"></div>
+
+                    <!-- Memory -->
+                    <div class="bg-card-third rounded-lg p-4">
+                        <div class="text-xs text-hint uppercase tracking-wider mb-2" i18n>Memory</div>
+                        <div class="text-2xl font-bold tabular-nums" [ngClass]="memoryTextClass">
+                            {{ data.edge_server.memory_pct }}%
                         </div>
-                        <div class="text-xs text-hint mt-1">{{ data.edge_server.memory_used_gb }} / {{ data.edge_server.memory_total_gb }} GB</div>
+                        <div class="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-3">
+                            <div class="h-full rounded-full transition-all duration-500"
+                                 [ngClass]="memoryBarClass"
+                                 [style.width.%]="data.edge_server.memory_pct"></div>
+                        </div>
+                        <div class="text-xs text-hint mt-1.5">
+                            {{ data.edge_server.memory_used_gb }} / {{ data.edge_server.memory_total_gb }} GB
+                        </div>
                     </div>
-                    <div class="bg-card-third rounded-lg p-3">
-                        <div class="text-sm text-secondary mb-1.5" i18n>System Disk</div>
-                        <div class="text-2xl font-bold" [ngClass]="diskRootTextClass">{{ data.edge_server.disk_root_pct }}%</div>
-                        <div class="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-2">
-                            <div class="h-full rounded-full transition-all duration-500" [ngClass]="diskRootBarClass" [style.width.%]="data.edge_server.disk_root_pct"></div>
+
+                    <!-- System Disk -->
+                    <div class="bg-card-third rounded-lg p-4">
+                        <div class="text-xs text-hint uppercase tracking-wider mb-2" i18n>System Disk</div>
+                        <div class="text-2xl font-bold tabular-nums" [ngClass]="diskRootTextClass">
+                            {{ data.edge_server.disk_root_pct }}%
                         </div>
-                        <div class="text-xs text-hint mt-1">{{ data.edge_server.disk_root.used_gb }} / {{ data.edge_server.disk_root.total_gb }} GB</div>
+                        <div class="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-3">
+                            <div class="h-full rounded-full transition-all duration-500"
+                                 [ngClass]="diskRootBarClass"
+                                 [style.width.%]="data.edge_server.disk_root_pct"></div>
+                        </div>
+                        <div class="text-xs text-hint mt-1.5">
+                            {{ data.edge_server.disk_root.used_gb }} / {{ data.edge_server.disk_root.total_gb }} GB
+                        </div>
                     </div>
-                    <div class="bg-card-third rounded-lg p-3">
-                        <div class="text-sm text-secondary mb-1.5" i18n>Recording Disk</div>
-                        <div class="text-2xl font-bold" [ngClass]="diskDataTextClass">{{ data.edge_server.disk_data_pct }}%</div>
-                        <div class="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-2">
-                            <div class="h-full rounded-full transition-all duration-500" [ngClass]="diskDataBarClass" [style.width.%]="data.edge_server.disk_data_pct"></div>
+
+                    <!-- Recording Disk -->
+                    <div class="bg-card-third rounded-lg p-4">
+                        <div class="text-xs text-hint uppercase tracking-wider mb-2" i18n>Recording Disk</div>
+                        <div class="text-2xl font-bold tabular-nums" [ngClass]="diskDataTextClass">
+                            {{ data.edge_server.disk_data_pct }}%
                         </div>
-                        <div class="text-xs text-hint mt-1">{{ data.edge_server.disk_data.used_gb }} / {{ data.edge_server.disk_data.total_gb }} GB</div>
+                        <div class="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden mt-3">
+                            <div class="h-full rounded-full transition-all duration-500"
+                                 [ngClass]="diskDataBarClass"
+                                 [style.width.%]="data.edge_server.disk_data_pct"></div>
+                        </div>
+                        <div class="text-xs text-hint mt-1.5">
+                            {{ data.edge_server.disk_data.used_gb }} / {{ data.edge_server.disk_data.total_gb }} GB
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ═══ Services ═══ -->
-            <div class="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden">
-                <div class="px-5 py-3 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
-                    <mat-icon class="icon-size-5 text-primary" svgIcon="heroicons_solid:server-stack"></mat-icon>
-                    <span class="text-lg font-semibold" i18n>Services</span>
-                    <span class="text-sm ml-1" [ngClass]="servicesHealthy ? 'text-emerald-500' : 'text-red-500'">
-                        @if (servicesHealthy) {
-                            <ng-container i18n>All healthy</ng-container>
-                        } @else {
-                            <ng-container i18n>Issues detected</ng-container>
-                        }
-                    </span>
-                </div>
-                <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    @for (svc of data.services; track svc.name) {
-                        <div class="bg-card-third rounded-lg p-3 flex items-center gap-3">
-                            <div class="w-2.5 h-2.5 rounded-full flex-shrink-0" [ngClass]="dotClass(svc.healthy)"></div>
-                            <div class="flex-1 min-w-0">
-                                <div class="text-sm font-semibold">{{ svc.name }}</div>
-                                <div class="text-xs text-hint">
-                                    @if (svc.details?.['version']) { v{{ svc.details['version'] }} }
-                                    @if (svc.details?.['active_recordings'] !== undefined) { · {{ svc.details['active_recordings'] }} active recordings }
-                                    @if (svc.details?.['url']) { · {{ svc.details['url'] }} }
+            <!-- ═══════════════════════════════════════════════════
+                 SERVICES + EXTERNAL SERVICES (side-by-side)
+                 ═══════════════════════════════════════════════════ -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+                <!-- Internal Services ───────────────────────────── -->
+                <div class="bg-card rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                    <div class="px-5 py-3.5 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
+                        <mat-icon class="icon-size-5 text-primary" svgIcon="heroicons_solid:server-stack"></mat-icon>
+                        <span class="text-base font-semibold" i18n>Services</span>
+                        <span class="text-xs font-semibold ml-auto px-2 py-0.5 rounded-full"
+                              [ngClass]="servicesHealthy
+                                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                  : 'bg-red-500/10 text-red-600 dark:text-red-400'">
+                            {{ servicesHealthy ? 'All healthy' : 'Issues detected' }}
+                        </span>
+                    </div>
+                    <div class="p-5 flex flex-col gap-3">
+                        @for (svc of data.services; track svc.name) {
+                            <div class="bg-card-third rounded-lg p-3 flex items-center gap-3">
+                                <div class="w-2 h-2 rounded-full flex-shrink-0" [ngClass]="dotClass(svc.healthy)"></div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="text-sm font-semibold">{{ svc.name }}</div>
+                                    <div class="text-xs text-hint truncate">
+                                        @if (svc.details?.['version']) {
+                                            v{{ svc.details['version'] }}
+                                        }
+                                        @if (svc.details?.['active_recordings'] !== undefined) {
+                                            &middot; {{ svc.details['active_recordings'] }} active recordings
+                                        }
+                                        @if (svc.details?.['available_cameras'] !== undefined) {
+                                            &middot; {{ svc.details['available_cameras'] }}/{{ svc.details['total_cameras'] }} cameras
+                                        }
+                                        @if (svc.details?.['url']) {
+                                            &middot; {{ svc.details['url'] }}
+                                        }
+                                    </div>
+                                    @if (svc.details?.['issue']) {
+                                        <div class="text-xs text-red-500 mt-0.5">{{ svc.details['issue'] }}</div>
+                                    }
                                 </div>
+                                <span class="text-xs font-semibold flex-shrink-0"
+                                      [ngClass]="svc.healthy ? 'text-emerald-500' : 'text-red-500'">
+                                    {{ svc.healthy ? 'Healthy' : 'Unhealthy' }}
+                                </span>
                             </div>
-                            <span class="text-sm font-semibold flex-shrink-0" [ngClass]="svc.healthy ? 'text-emerald-500' : 'text-red-500'">
-                                {{ svc.healthy ? 'Healthy' : 'Unhealthy' }}
+                        }
+                    </div>
+                </div>
+
+                <!-- External Services ───────────────────────────── -->
+                @if (data.external_services && data.external_services.length > 0) {
+                    <div class="bg-card rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                        <div class="px-5 py-3.5 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
+                            <mat-icon class="icon-size-5 text-primary" svgIcon="heroicons_solid:globe-alt"></mat-icon>
+                            <span class="text-base font-semibold" i18n>External Services</span>
+                            <span class="text-xs font-semibold ml-auto px-2 py-0.5 rounded-full"
+                                  [ngClass]="externalServicesHealthy
+                                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                      : 'bg-red-500/10 text-red-600 dark:text-red-400'">
+                                {{ externalServicesHealthy ? 'All healthy' : 'Issues detected' }}
                             </span>
                         </div>
-                    }
-                </div>
+                        <div class="p-5 flex flex-col gap-3">
+                            @for (svc of data.external_services; track svc.name) {
+                                <div class="bg-card-third rounded-lg p-3.5">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <div class="w-2 h-2 rounded-full flex-shrink-0"
+                                             [ngClass]="svc.healthy ? 'bg-emerald-500' : 'bg-red-500'"></div>
+                                        <div class="text-sm font-semibold flex-1 truncate">{{ svc.name }}</div>
+                                        <span class="text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0"
+                                              [ngClass]="svc.healthy
+                                                  ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                                  : 'bg-red-500/10 text-red-600 dark:text-red-400'">
+                                            {{ svc.healthy ? 'Healthy' : 'Error' }}
+                                        </span>
+                                    </div>
+                                    <div class="text-xs text-secondary truncate" [title]="svc.url">{{ svc.url }}</div>
+                                    <div class="text-xs text-hint mt-1 tabular-nums">
+                                        {{ svc.response_time_ms | number:'1.0-1' }}ms response
+                                    </div>
+                                    @if (svc.name === 'aws_s3' && svc.details) {
+                                        <div class="text-xs text-hint mt-1.5 pt-1.5 border-t border-gray-200 dark:border-gray-700">
+                                            <span i18n>Bucket:</span> {{ svc.details['bucket'] }}
+                                            &middot; <span i18n>Region:</span> {{ svc.details['region'] }}
+                                        </div>
+                                    }
+                                    @if (svc.error) {
+                                        <div class="text-xs text-red-500 mt-1.5 line-clamp-2" [title]="svc.error">
+                                            {{ svc.error }}
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
+                    </div>
+                }
             </div>
 
-            <!-- ═══ External Services ═══ -->
-            @if (data.external_services && data.external_services.length > 0) {
-            <div class="bg-card rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden mt-6">
-                <div class="px-5 py-3 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
-                    <mat-icon class="icon-size-5 text-primary" svgIcon="heroicons_solid:globe-alt"></mat-icon>
-                    <span class="text-lg font-semibold" i18n>External Services</span>
-                    <span class="text-sm ml-1" [ngClass]="externalServicesHealthy ? 'text-emerald-500' : 'text-red-500'">
-                        @if (externalServicesHealthy) {
-                            <ng-container i18n>All healthy</ng-container>
-                        } @else {
-                            <ng-container i18n>Issues detected</ng-container>
+            <!-- ═══════════════════════════════════════════════════
+                 INFRASTRUCTURE
+                 ═══════════════════════════════════════════════════ -->
+            @if (data.infrastructure && data.infrastructure.length > 0) {
+                <div class="bg-card rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                    <div class="px-5 py-3.5 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
+                        <mat-icon class="icon-size-5 text-primary" svgIcon="heroicons_solid:server-stack"></mat-icon>
+                        <span class="text-base font-semibold" i18n>Infrastructure</span>
+                        <span class="text-sm text-secondary ml-1" i18n>
+                            {{ infraReachableCount }}/{{ infraTotalCount }} reachable
+                        </span>
+                        @if (infraReachableCount < infraTotalCount) {
+                            <span class="text-xs font-semibold text-red-500 bg-red-500/10 rounded-full px-2 py-0.5 ml-1">
+                                {{ infraTotalCount - infraReachableCount }} unreachable
+                            </span>
                         }
-                    </span>
-                </div>
-                <div class="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    @for (svc of data.external_services; track svc.name) {
-                        <div class="bg-card-third rounded-lg p-3 flex items-start gap-3">
-                            <div class="w-2.5 h-2.5 rounded-full mt-1 flex-shrink-0" [ngClass]="svc.healthy ? 'bg-emerald-500' : 'bg-red-500'"></div>
-                            <div class="min-w-0 flex-1">
-                                <div class="flex items-center justify-between mb-1">
-                                    <div class="text-sm font-semibold truncate">{{ svc.name }}</div>
-                                    <div class="text-xs font-semibold px-2 py-0.5 rounded-full"
-                                         [ngClass]="svc.healthy ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400' : 'bg-red-500/10 text-red-600 dark:text-red-400'">
-                                        @if (svc.healthy) {
-                                            <ng-container i18n>Healthy</ng-container>
-                                        } @else {
-                                            <ng-container i18n>Error</ng-container>
+                    </div>
+                    <div class="p-5">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            @for (device of data.infrastructure; track device.id) {
+                                <div class="bg-card-third rounded-lg p-3.5 flex items-start gap-3">
+                                    <div class="flex-shrink-0 mt-0.5">
+                                        <div class="w-2 h-2 rounded-full"
+                                             [ngClass]="device.reachable ? 'bg-emerald-500' : 'bg-red-500'"></div>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <div class="flex items-center justify-between gap-2 mb-1">
+                                            <div class="text-sm font-semibold truncate">{{ device.name }}</div>
+                                            <span class="text-[10px] font-semibold text-hint bg-gray-100 dark:bg-gray-800 rounded px-1.5 py-0.5 flex-shrink-0 uppercase">
+                                                {{ device.id }}
+                                            </span>
+                                        </div>
+                                        <div class="text-xs text-hint mb-1">
+                                            {{ infraTypeLabel(device.type) }} &middot; {{ device.ip }}
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs tabular-nums"
+                                                  [ngClass]="device.reachable ? 'text-emerald-500' : 'text-red-500'">
+                                                @if (device.reachable) {
+                                                    {{ device.response_time_ms | number:'1.0-0' }}ms
+                                                } @else {
+                                                    Unreachable
+                                                }
+                                            </span>
+                                            <span class="text-[10px] text-hint uppercase">{{ device.check_method }}</span>
+                                        </div>
+                                        @if (device.error) {
+                                            <div class="text-[11px] text-red-400 mt-1 truncate" [matTooltip]="device.error">
+                                                {{ device.error }}
+                                            </div>
                                         }
                                     </div>
                                 </div>
-                                <div class="text-xs text-secondary truncate mb-1" [title]="svc.url">{{ svc.url }}</div>
-                                <div class="text-xs text-secondary mb-1">
-                                    <span i18n>Response Time:</span> {{ svc.response_time_ms }}<span i18n>ms</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- ═══════════════════════════════════════════════════
+                 iDRAC / HARDWARE HEALTH
+                 ═══════════════════════════════════════════════════ -->
+            @if (data.idrac) {
+                <div class="bg-card rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                    <div class="px-5 py-3.5 flex items-center gap-2.5 border-b border-gray-100 dark:border-gray-800">
+                        <mat-icon class="icon-size-5 text-primary" svgIcon="heroicons_solid:wrench-screwdriver"></mat-icon>
+                        <span class="text-base font-semibold" i18n>Hardware Health</span>
+                        <span class="text-xs font-semibold ml-auto px-2 py-0.5 rounded-full"
+                              [ngClass]="{
+                                  'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400': data.idrac.system_health === 'OK',
+                                  'bg-yellow-500/10 text-yellow-600 dark:text-yellow-400': data.idrac.system_health === 'Warning',
+                                  'bg-red-500/10 text-red-600 dark:text-red-400': data.idrac.system_health !== 'OK' && data.idrac.system_health !== 'Warning'
+                              }">
+                            {{ idracStatusLabel(data.idrac.system_health) }}
+                        </span>
+                    </div>
+                    <div class="p-5">
+
+                        <!-- Model + meta row -->
+                        <div class="flex items-center gap-4 mb-4 text-sm">
+                            <span class="font-semibold">{{ data.idrac.model }}</span>
+                            <span class="text-hint">&middot;</span>
+                            <span class="text-secondary">BIOS {{ data.idrac.bios_version }}</span>
+                            <span class="text-hint">&middot;</span>
+                            <span class="text-secondary">Tag: {{ data.idrac.service_tag }}</span>
+                            <span class="ml-auto text-xs font-medium px-2 py-0.5 rounded-full"
+                                  [ngClass]="data.idrac.power_state === 'On'
+                                      ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+                                      : 'bg-red-500/10 text-red-600 dark:text-red-400'">
+                                Power {{ data.idrac.power_state }}
+                            </span>
+                        </div>
+
+                        <!-- Metric tiles -->
+                        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+                            <!-- CPU Temp -->
+                            <div class="bg-card-third rounded-lg p-3 text-center">
+                                <div class="text-[11px] text-hint uppercase tracking-wider" i18n>CPU Temp</div>
+                                <div class="text-xl font-bold mt-1 tabular-nums" [ngClass]="idracHealthClass">
+                                    @if (data.idrac.cpu_temp_celsius != null) {
+                                        {{ data.idrac.cpu_temp_celsius }}&deg;C
+                                    } @else {
+                                        --
+                                    }
                                 </div>
-                                @if (svc.name === 'aws_s3' && svc.details) {
-                                    <div class="text-xs text-secondary mt-1 pt-1 border-t border-gray-200 dark:border-gray-700">
-                                        <span i18n>Bucket:</span> {{ svc.details['bucket'] }}<br/>
-                                        <span i18n>Region:</span> {{ svc.details['region'] }}
-                                    </div>
-                                }
-                                @if (svc.error) {
-                                    <div class="text-xs text-red-500 mt-1 line-clamp-2" [title]="svc.error">{{ svc.error }}</div>
-                                }
+                            </div>
+                            <!-- Inlet Temp -->
+                            <div class="bg-card-third rounded-lg p-3 text-center">
+                                <div class="text-[11px] text-hint uppercase tracking-wider" i18n>Inlet Temp</div>
+                                <div class="text-xl font-bold mt-1 tabular-nums">
+                                    @if (data.idrac.inlet_temp_celsius != null) {
+                                        {{ data.idrac.inlet_temp_celsius }}&deg;C
+                                    } @else {
+                                        --
+                                    }
+                                </div>
+                            </div>
+                            <!-- Fans -->
+                            <div class="bg-card-third rounded-lg p-3 text-center">
+                                <div class="text-[11px] text-hint uppercase tracking-wider" i18n>Fans</div>
+                                <div class="text-xl font-bold mt-1"
+                                     [ngClass]="data.idrac.fan_status === 'OK' ? 'text-emerald-500' : 'text-red-500'">
+                                    {{ data.idrac.fan_status }}
+                                </div>
+                            </div>
+                            <!-- PSU -->
+                            <div class="bg-card-third rounded-lg p-3 text-center">
+                                <div class="text-[11px] text-hint uppercase tracking-wider" i18n>PSU</div>
+                                <div class="text-xl font-bold mt-1"
+                                     [ngClass]="data.idrac.psu_status === 'OK' ? 'text-emerald-500' : 'text-red-500'">
+                                    {{ data.idrac.psu_status }}
+                                </div>
+                            </div>
+                            <!-- Disks -->
+                            <div class="bg-card-third rounded-lg p-3 text-center">
+                                <div class="text-[11px] text-hint uppercase tracking-wider" i18n>Disks</div>
+                                <div class="text-xl font-bold mt-1"
+                                     [ngClass]="data.idrac.disk_status === 'OK' ? 'text-emerald-500' : 'text-red-500'">
+                                    {{ data.idrac.disk_status }}
+                                </div>
+                            </div>
+                            <!-- System Health -->
+                            <div class="bg-card-third rounded-lg p-3 text-center">
+                                <div class="text-[11px] text-hint uppercase tracking-wider" i18n>Overall</div>
+                                <div class="text-xl font-bold mt-1" [ngClass]="idracHealthClass">
+                                    {{ data.idrac.system_health }}
+                                </div>
                             </div>
                         </div>
-                    }
+
+                        @if (data.idrac.error) {
+                            <div class="text-sm text-red-500 font-medium mt-4 px-1">
+                                {{ data.idrac.error }}
+                            </div>
+                        }
+                    </div>
                 </div>
-            </div>
             }
 
         } @else if (!loading) {
-            <div class="flex flex-col items-center justify-center py-20 text-secondary">
-                <mat-icon class="icon-size-12 mb-4 opacity-30" svgIcon="heroicons_outline:signal-slash"></mat-icon>
-                <div class="text-xl font-semibold" i18n>Monitoring not available</div>
-                <div class="text-sm mt-2 text-center max-w-md leading-relaxed" i18n>
-                    Edge server monitoring is not enabled or the connection could not be established. Please check the server configuration or try again.
+
+            <!-- ═══════════════════════════════════════════════════
+                 EMPTY STATE
+                 ═══════════════════════════════════════════════════ -->
+            <div class="flex flex-col items-center justify-center py-24 text-secondary">
+                <mat-icon class="icon-size-12 mb-4 opacity-20" svgIcon="heroicons_outline:signal-slash"></mat-icon>
+                <div class="text-lg font-semibold" i18n>Monitoring not available</div>
+                <div class="text-sm mt-2 text-center max-w-sm leading-relaxed text-hint" i18n>
+                    The edge server could not be reached. Check the connection or try again.
                 </div>
                 <button
                     mat-stroked-button
-                    class="!mt-5 !rounded-lg !px-5 !py-1 !text-sm !font-medium"
+                    class="!mt-6 !rounded-lg !px-5 !py-1 !text-sm !font-medium"
                     (click)="onSync()"
                     [disabled]="loading"
                     i18n

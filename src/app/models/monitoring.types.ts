@@ -1,3 +1,5 @@
+// ── System Status (GET /api/v1/system/status) ──────────────────
+
 export interface SystemStatus {
     timestamp: string;
     edge_server: EdgeServerInfo;
@@ -6,8 +8,12 @@ export interface SystemStatus {
     cameras: CameraStatusSummary[];
     services: ServiceHealth[];
     external_services?: ExternalServiceHealth[];
+    infrastructure: InfrastructureDevice[];
+    idrac: IdracStatus | null;
     containers: ContainerStatus[];
 }
+
+// ── Edge Server ─────────────────────────────────────────────────
 
 export interface EdgeServerInfo {
     hostname: string;
@@ -33,29 +39,37 @@ export interface DiskInfo {
     use_pct: number;
 }
 
+// ── RFID ────────────────────────────────────────────────────────
+
 export interface RfidStatus {
     reader_ip: string;
     reader_port: number;
     service_alive: boolean;
     connected: boolean;
-    last_tag: {
-        train_id: string;
-        company: string;
-        decoded_data: string;
-        valid: boolean;
-        timestamp: string;
-        cycle: number;
-    } | null;
+    last_tag: RfidTag | null;
     seconds_since_last_tag: number | null;
-    heartbeat: {
-        connected: boolean;
-        reader_ip: string;
-        reader_port: number;
-        is_running: boolean;
-        timestamp: string;
-        uptime_s: number;
-    } | null;
+    heartbeat: RfidHeartbeat | null;
 }
+
+export interface RfidTag {
+    train_id: string;
+    company: string;
+    decoded_data: string;
+    valid: boolean;
+    timestamp: string;
+    cycle: number;
+}
+
+export interface RfidHeartbeat {
+    connected: boolean;
+    reader_ip: string;
+    reader_port: number;
+    is_running: boolean;
+    timestamp: string;
+    uptime_s: number;
+}
+
+// ── Laser Sensors ───────────────────────────────────────────────
 
 export interface LaserChannelStatus {
     port: number;
@@ -77,15 +91,19 @@ export interface LaserStatus {
         DI0: string;
         DI2: string;
     };
-    last_session: {
-        start_time: string;
-        end_time: string;
-        duration_seconds: number;
-        trigger_events: string;
-    } | null;
+    last_session: LaserSession | null;
     session_active: boolean;
     error: string | null;
 }
+
+export interface LaserSession {
+    start_time: string;
+    end_time: string;
+    duration_seconds: number;
+    trigger_events: string;
+}
+
+// ── Cameras ─────────────────────────────────────────────────────
 
 export interface CameraStatusSummary {
     id: string;
@@ -95,16 +113,12 @@ export interface CameraStatusSummary {
     recording: boolean;
 }
 
+// ── Services ────────────────────────────────────────────────────
+
 export interface ServiceHealth {
     name: string;
     healthy: boolean;
     details: Record<string, any>;
-}
-
-export interface ContainerStatus {
-    name: string;
-    status: string;
-    health: string | null;
 }
 
 export interface ExternalServiceHealth {
@@ -115,4 +129,58 @@ export interface ExternalServiceHealth {
     response_time_ms: number;
     error: string | null;
     details: Record<string, any>;
+}
+
+// ── Infrastructure ──────────────────────────────────────────────
+
+export type InfrastructureType =
+    | 'switch'
+    | 'router'
+    | 'io_module'
+    | 'serial_bridge'
+    | 'server_mgmt';
+
+export interface InfrastructureDevice {
+    id: string;
+    name: string;
+    type: InfrastructureType;
+    ip: string;
+    reachable: boolean;
+    check_method: string;
+    response_time_ms: number;
+    error: string | null;
+    details: Record<string, any>;
+}
+
+// ── iDRAC ───────────────────────────────────────────────────────
+
+export interface IdracStatus {
+    system_health: string;
+    cpu_temp_celsius: number | null;
+    inlet_temp_celsius: number | null;
+    power_state: string;
+    fan_status: string;
+    psu_status: string;
+    disk_status: string;
+    model: string;
+    bios_version: string;
+    service_tag: string;
+    error: string | null;
+}
+
+// ── Containers ──────────────────────────────────────────────────
+
+export interface ContainerStatus {
+    name: string;
+    status: string;
+    health: string | null;
+}
+
+// ── Health Check (GET /api/v1/health) ───────────────────────────
+
+export interface HealthCheckResponse {
+    status: 'healthy' | 'degraded' | 'unhealthy';
+    version: string;
+    active_recordings: number;
+    total_cameras: number;
 }
