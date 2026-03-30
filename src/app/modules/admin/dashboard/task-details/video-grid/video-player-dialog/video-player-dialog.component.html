@@ -24,14 +24,20 @@
             (pointercancel)="onPointerUp($event)" -->
         <div
             #videoWrapper
-            class="w-full h-[70vh] flex items-center justify-center bg-black touch-none"
+            class="w-full h-[70vh] flex items-center justify-center bg-black touch-none relative"
             style="transition: transform 0.08s linear"
         >
+            <!-- Loader -->
+             <div *ngIf="isLoading" class="absolute inset-0 flex items-center justify-center z-50 pointer-events-none">
+                <app-bouncy-loader></app-bouncy-loader>
+             </div>
+
             <video
                 #videoRef
                 [src]="safeUrl"
                 playsinline
                 autoplay
+                preload="auto"
                 muted
                 loop
                 class="w-full h-full object-contain"

@@ -117,15 +117,6 @@
         <target>譲受人</target>
       </segment>
     </unit>
-    <unit id="3308546607246356732">
-      <notes>
-        <note>src/app/modules/admin/dashboard/dashboard.component.html:216</note>
-      </notes>
-      <segment>
-        <source>ACTION</source>
-        <target>アクション</target>
-      </segment>
-    </unit>
     <unit id="6882901562096359676">
       <notes>
         <note>src/app/modules/admin/dashboard/dashboard.component.ts:65</note>
@@ -421,6 +412,505 @@
       <segment>
         <source>Dashboard</source>
         <target>ダッシュボード</target>
+      </segment>
+    </unit>
+    <unit id="3080483882937310852">
+      <notes>
+        <note>src/@fuse/components/navigation/vertical/vertical.component.ts:147</note>
+      </notes>
+      <segment>
+        <source>Normal</source>
+        <target>普通</target>
+      </segment>
+    </unit>
+    <unit id="3905533329051691155">
+      <notes>
+        <note>src/@fuse/components/navigation/vertical/vertical.component.ts:151</note>
+      </notes>
+      <segment>
+        <source>Large</source>
+        <target>大きい</target>
+      </segment>
+    </unit>
+    <unit id="1067433641518800382">
+      <notes>
+        <note>src/@fuse/components/navigation/vertical/vertical.component.ts:155</note>
+      </notes>
+      <segment>
+        <source>Extra Large</source>
+        <target>特大</target>
+      </segment>
+    </unit>
+    <unit id="7078707660902818442">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:58</note>
+      </notes>
+      <segment>
+        <source>Previous Frame</source>
+        <target>前のフレーム</target>
+      </segment>
+    </unit>
+    <unit id="8564202903947049539">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:72</note>
+      </notes>
+      <segment>
+        <source>Play</source>
+        <target>遊ぶ</target>
+      </segment>
+    </unit>
+    <unit id="9042260521669277115">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:81</note>
+      </notes>
+      <segment>
+        <source>Pause</source>
+        <target>一時停止</target>
+      </segment>
+    </unit>
+    <unit id="1941817722784982167">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:92</note>
+      </notes>
+      <segment>
+        <source>Next Frame</source>
+        <target>次のフレーム</target>
+      </segment>
+    </unit>
+    <unit id="1356460275822781324">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:144</note>
+      </notes>
+      <segment>
+        <source>Zoom Out</source>
+        <target>ズームアウト</target>
+      </segment>
+    </unit>
+    <unit id="1470758907984185227">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:161</note>
+      </notes>
+      <segment>
+        <source>Zoom In</source>
+        <target>ズームイン</target>
+      </segment>
+    </unit>
+    <unit id="8791824480246623851">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-player-dialog/video-player-dialog.component.html:172</note>
+      </notes>
+      <segment>
+        <source>Reset Zoom</source>
+        <target>ズームをリセット</target>
+      </segment>
+    </unit>
+    <unit id="3234422121509216221">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:77</note>
+      </notes>
+      <segment>
+        <source>Previous 10 Frames</source>
+        <target>前の10フレーム</target>
+      </segment>
+    </unit>
+    <unit id="6132512480620384313">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:142</note>
+      </notes>
+      <segment>
+        <source>Next 10 Frames</source>
+        <target>次の10フレーム</target>
+      </segment>
+    </unit>
+    <unit id="7279502880466273282">
+      <notes>
+        <note>src/app/modules/admin/dashboard/task-details/video-grid/video-grid.component.html:156</note>
+      </notes>
+      <segment>
+        <source>Reset Video</source>
+        <target>ビデオをリセット</target>
+      </segment>
+    </unit>
+    <unit id="4743002849260529978">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:6</note>
+      </notes>
+      <segment>
+        <source>Items per page:</source>
+        <target>1ページあたりの項目数:</target>
+      </segment>
+    </unit>
+    <unit id="8642445555713453888">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:7</note>
+      </notes>
+      <segment>
+        <source>First page</source>
+        <target>最初のページ</target>
+      </segment>
+    </unit>
+    <unit id="6784758141439994527">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:8</note>
+      </notes>
+      <segment>
+        <source>Last page</source>
+        <target>最後のページ</target>
+      </segment>
+    </unit>
+    <unit id="3337301694210287595">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:9</note>
+      </notes>
+      <segment>
+        <source>Next page</source>
+        <target>次のページ</target>
+      </segment>
+    </unit>
+    <unit id="3629960544875360046">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:10</note>
+      </notes>
+      <segment>
+        <source>Previous page</source>
+        <target>前のページ</target>
+      </segment>
+    </unit>
+    <unit id="3522470007354852946">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:17</note>
+      </notes>
+      <segment>
+        <source>0 of 
+          <ph id="0" equiv="PH" disp="length"/>
+        </source>
+        <target>0 の
+          <ph id="0" equiv="PH" disp="length"/>
+        </target>
+      </segment>
+    </unit>
+    <unit id="6884890780315204652">
+      <notes>
+        <note>src/app/utils/CustomPaginatorConfiguration.ts:25</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="PH" disp="startIndex + 1"/> - 
+          <ph id="1" equiv="PH_1" disp="endIndex"/> of 
+          <ph id="2" equiv="PH_2" disp="length"/>
+        </source>
+        <target>
+          <ph id="0" equiv="PH" disp="startIndex + 1"/>-
+          <ph id="1" equiv="PH_1" disp="endIndex"/> の 
+          <ph id="2" equiv="PH_2" disp="length"/>
+        </target>
+      </segment>
+    </unit>
+    <unit id="4147991352124878020">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:12</note>
+      </notes>
+      <segment>
+        <source>Synced 
+          <ph id="0" equiv="INTERPOLATION" disp="{{ lastSyncedAgo }}"/>s ago
+        </source>
+        <target>同期済み
+          <ph id="0" equiv="INTERPOLATION" disp="{{ lastSyncedAgo }}"/>数秒前
+        </target>
+      </segment>
+    </unit>
+    <unit id="6505695176413676434">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:33</note>
+      </notes>
+      <segment>
+        <source>Edge Server Unreachable</source>
+        <target>エッジサーバーに到達できません</target>
+      </segment>
+    </unit>
+    <unit id="617414340583357402">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:35</note>
+      </notes>
+      <segment>
+        <source>· last data from 
+          <ph id="0" equiv="INTERPOLATION" disp="{{ lastSyncedAgo }}"/>s ago
+        </source>
+        <target>・最新のデータ
+          <ph id="0" equiv="INTERPOLATION" disp="{{ lastSyncedAgo }}"/>数秒前
+        </target>
+      </segment>
+    </unit>
+    <unit id="2188854519574316630">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:50</note>
+      </notes>
+      <segment>
+        <source>Server</source>
+        <target>サーバ</target>
+      </segment>
+    </unit>
+    <unit id="1929039531311944328">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:57</note>
+      </notes>
+      <segment>
+        <source>Uptime</source>
+        <target>稼働時間</target>
+      </segment>
+    </unit>
+    <unit id="8846933906710806951">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:91</note>
+      </notes>
+      <segment>
+        <source>RFID Reader</source>
+        <target>RFIDリーダー</target>
+      </segment>
+    </unit>
+    <unit id="6043538417132864290">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:193</note>
+      </notes>
+      <segment>
+        <source>Cameras</source>
+        <target>カメラ</target>
+      </segment>
+    </unit>
+    <unit id="4293299255453095257">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:79</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ cameraCount('online') }}"/> / 
+          <ph id="1" equiv="INTERPOLATION_1" disp="{{ data.cameras.length }}"/> Online
+        </source>
+        <target>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ cameraCount('online') }}"/>/
+          <ph id="1" equiv="INTERPOLATION_1" disp="{{ data.cameras.length }}"/>オンライン
+        </target>
+      </segment>
+    </unit>
+    <unit id="7816827595236338953">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:97</note>
+      </notes>
+      <segment>
+        <source>Last Train Detected</source>
+        <target>最後に検出された列車</target>
+      </segment>
+    </unit>
+    <unit id="1830011131009481980">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:104</note>
+      </notes>
+      <segment>
+        <source>Train ID</source>
+        <target>列車ID</target>
+      </segment>
+    </unit>
+    <unit id="400132642251674859">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:109</note>
+      </notes>
+      <segment>
+        <source>No trains detected yet</source>
+        <target>列車はまだ検出されていません</target>
+      </segment>
+    </unit>
+    <unit id="241582562804618446">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:113</note>
+      </notes>
+      <segment>
+        <source>Reader IP</source>
+        <target>リーダーIPアドレス</target>
+      </segment>
+    </unit>
+    <unit id="2055202912972664247">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:117</note>
+      </notes>
+      <segment>
+        <source>Service Uptime</source>
+        <target>サービス稼働時間</target>
+      </segment>
+    </unit>
+    <unit id="1964404405625196040">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:121</note>
+      </notes>
+      <segment>
+        <source>Tag Valid</source>
+        <target>タグ有効</target>
+      </segment>
+    </unit>
+    <unit id="4867063114033618707">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:127</note>
+      </notes>
+      <segment>
+        <source>Read Cycle</source>
+        <target>読み取りサイクル</target>
+      </segment>
+    </unit>
+    <unit id="2343308361364436535">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:138</note>
+      </notes>
+      <segment>
+        <source>Laser Sensors</source>
+        <target>レーザーセンサー</target>
+      </segment>
+    </unit>
+    <unit id="6872830176616230588">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:142</note>
+      </notes>
+      <segment>
+        <source>TRAIN PASSING</source>
+        <target>列車通過</target>
+      </segment>
+    </unit>
+    <unit id="9137648463096385200">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:151</note>
+      </notes>
+      <segment>
+        <source>Entry Sensor (DI0)</source>
+        <target>侵入センサー（DI0）</target>
+      </segment>
+    </unit>
+    <unit id="1490888698162416300">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:162</note>
+      </notes>
+      <segment>
+        <source>Exit Sensor (DI2)</source>
+        <target>出口センサー（DI2）</target>
+      </segment>
+    </unit>
+    <unit id="3793879371425529594">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:173</note>
+      </notes>
+      <segment>
+        <source>Last Train Session</source>
+        <target>最後の列車セッション</target>
+      </segment>
+    </unit>
+    <unit id="1946568698566399919">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:194</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ cameraCount('online') }}"/>/
+          <ph id="1" equiv="INTERPOLATION_1" disp="{{ data.cameras.length }}"/> online
+        </source>
+        <target>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ cameraCount('online') }}"/>/
+          <ph id="1" equiv="INTERPOLATION_1" disp="{{ data.cameras.length }}"/>オンライン
+        </target>
+      </segment>
+    </unit>
+    <unit id="7483844707525716185">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:196,198</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ cameraCount('offline') }}"/> offline 
+        </source>
+        <target>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ cameraCount('offline') }}"/>オフライン
+        </target>
+      </segment>
+    </unit>
+    <unit id="5821442435758069792">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:226</note>
+      </notes>
+      <segment>
+        <source>Server Resources</source>
+        <target>サーバーリソース</target>
+      </segment>
+    </unit>
+    <unit id="2885840307007437390">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:230</note>
+      </notes>
+      <segment>
+        <source>CPU</source>
+        <target>CPU</target>
+      </segment>
+    </unit>
+    <unit id="8499600723628159115">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:235</note>
+      </notes>
+      <segment>
+        <source>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ data.edge_server.cpu_count }}"/> cores
+        </source>
+        <target>
+          <ph id="0" equiv="INTERPOLATION" disp="{{ data.edge_server.cpu_count }}"/>コア
+        </target>
+      </segment>
+    </unit>
+    <unit id="1548129644093494406">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:238</note>
+      </notes>
+      <segment>
+        <source>Memory</source>
+        <target>メモリ</target>
+      </segment>
+    </unit>
+    <unit id="3333453926782750251">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:246</note>
+      </notes>
+      <segment>
+        <source>System Disk</source>
+        <target>システムディスク</target>
+      </segment>
+    </unit>
+    <unit id="170488173222239491">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:254</note>
+      </notes>
+      <segment>
+        <source>Recording Disk</source>
+        <target>記録ディスク</target>
+      </segment>
+    </unit>
+    <unit id="7143579180750436311">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:268</note>
+      </notes>
+      <segment>
+        <source>Services</source>
+        <target>サービス</target>
+      </segment>
+    </unit>
+    <unit id="4893616715766810081">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:296</note>
+      </notes>
+      <segment>
+        <source>No data available</source>
+        <target>データがありません</target>
+      </segment>
+    </unit>
+    <unit id="4240085715823937626">
+      <notes>
+        <note>src/app/modules/admin/monitoring/monitoring.component.html:297</note>
+      </notes>
+      <segment>
+        <source>Click Sync Now or wait for the next auto-refresh.</source>
+        <target>「今すぐ同期」をクリックするか、次回の自動更新までお待ちください。</target>
       </segment>
     </unit>
   </file>

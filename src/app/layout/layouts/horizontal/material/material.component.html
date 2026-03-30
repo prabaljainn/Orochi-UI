@@ -7,7 +7,7 @@
         class="dark bg-gray-900 print:hidden"
         [mode]="'over'"
         [name]="'mainNavigation'"
-        [navigation]="navigation.default"
+        [navigation]="navigation?.default || []"
         [opened]="false">
         <!-- Navigation header hook -->
         <ng-container fuseVerticalNavigationContentHeader>
@@ -69,7 +69,7 @@
                 <div class="relative flex flex-auto flex-0 items-center h-16 px-4">
                     <fuse-horizontal-navigation
                         [name]="'mainNavigation'"
-                        [navigation]="navigation.horizontal"></fuse-horizontal-navigation>
+                        [navigation]="navigation?.horizontal || []"></fuse-horizontal-navigation>
                 </div>
             </ng-container>
         </div>

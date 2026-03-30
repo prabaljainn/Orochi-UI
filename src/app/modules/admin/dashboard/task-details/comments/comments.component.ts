@@ -84,7 +84,6 @@ export class CommentsComponent {
             .getTaskComments(this.taskId())
             .subscribe((res: any) => {
                 this.comments.set(this.buildCommentsTree(res.results));
-                console.log(this.comments());
             });
     }
 

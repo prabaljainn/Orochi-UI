@@ -8,6 +8,13 @@ export const defaultNavigation: FuseNavigationItem[] = [
         type : 'basic',
         icon : 'sudocode:dashboard',
         link : '/dashboard'
+    },
+    {
+        id   : 'monitoring',
+        title: 'Monitoring',
+        type : 'basic',
+        icon : 'heroicons_outline:signal',
+        link : '/monitoring'
     }
 ];
 export const compactNavigation: FuseNavigationItem[] = [

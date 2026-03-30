@@ -1,12 +1,11 @@
-import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { ENVIRONMENT_INITIALIZER, EnvironmentProviders, inject, Provider } from '@angular/core';
-import { authInterceptor } from 'app/core/auth/auth.interceptor';
 import { AuthService } from 'app/core/auth/auth.service';
 
 export const provideAuth = (): Array<Provider | EnvironmentProviders> =>
 {
     return [
-        provideHttpClient(withInterceptors([authInterceptor])),
+        // NOTE: authInterceptor is already registered in appConfig's provideHttpClient.
+        // Registering it here again would cause double interception on every HTTP request.
         {
             provide : ENVIRONMENT_INITIALIZER,
             useValue: () => inject(AuthService),

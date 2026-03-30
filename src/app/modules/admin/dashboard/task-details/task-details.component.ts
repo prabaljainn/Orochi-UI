@@ -109,7 +109,6 @@ export class TaskDetailsComponent implements OnInit {
         this._trainAnalyticsService
             .getTaskAnalysis(this.projectId(), this.taskId())
             .subscribe((res: any) => {
-				console.log(res?.videos?.videos ?? []);
 				this.videoList.set(res?.videos?.videos ?? []);
                 let totalFrames = 0;
                 res.jobs.forEach((job: any) => {

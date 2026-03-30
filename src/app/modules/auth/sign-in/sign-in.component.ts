@@ -159,7 +159,7 @@ export class AuthSignInComponent implements OnInit {
      * Create user
      */
     createUser(): void {
-        console.log(this.createUserForm.value);
+        // TODO: implement user creation API call
     }
 
     /**

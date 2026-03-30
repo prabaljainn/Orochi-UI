@@ -82,12 +82,7 @@ export class LanguagesComponent implements OnInit, OnDestroy {
 
             //0) Check if the currently loaded language is the same as what is requested
             if (language != currentLanguage) {
-                console.log(
-                    'Switching the language from ',
-                    currentLanguage,
-                    ' to ',
-                    language
-                );
+
                 //1) Set the preference to local storage
                 localStorage.setItem('userPreference', language);
 

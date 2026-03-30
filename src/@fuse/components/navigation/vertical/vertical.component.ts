@@ -30,7 +30,9 @@ import {
     ViewChildren,
     ViewEncapsulation,
 } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { NavigationEnd, Router } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseNavigationService } from '@fuse/components/navigation/navigation.service';
@@ -51,6 +53,7 @@ import { FuseConfigService } from '@fuse/services/config';
 import { FuseUtilsService } from '@fuse/services/utils/utils.service';
 import { LanguagesComponent } from 'app/layout/common/languages/languages.component';
 import { UserComponent } from 'app/layout/common/user/user.component';
+import { FontSizeService } from 'app/services/font-size.service';
 import {
     delay,
     filter,
@@ -83,6 +86,8 @@ import {
         MatIconModule,
         LanguagesComponent,
         UserComponent,
+        MatMenuModule,
+		MatButtonModule
     ],
 })
 export class FuseVerticalNavigationComponent
@@ -135,7 +140,23 @@ export class FuseVerticalNavigationComponent
     private _fuseScrollbarDirectivesSubscription: Subscription;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-	isDarkMode= signal<boolean>(false);
+    isDarkMode = signal<boolean>(false);
+    selectedFontSize: 'normal' | 'large' | 'xl' = 'normal';
+
+    fontSizeList = [
+        {
+            code: 'normal',
+            name: $localize`Normal`,
+        },
+        {
+            code: 'large',
+            name: $localize`Large`,
+        },
+        {
+            code: 'xl',
+            name: $localize`Extra Large`,
+        },
+    ];
 
     /**
      * Constructor
@@ -150,7 +171,8 @@ export class FuseVerticalNavigationComponent
         private _scrollStrategyOptions: ScrollStrategyOptions,
         private _fuseNavigationService: FuseNavigationService,
         private _fuseUtilsService: FuseUtilsService,
-		private _fuseConfigService: FuseConfigService,
+        private _fuseConfigService: FuseConfigService,
+        private _fontService: FontSizeService
     ) {
         this._handleAsideOverlayClick = (): void => {
             this.closeAside();
@@ -381,6 +403,14 @@ export class FuseVerticalNavigationComponent
                     this.closeAside();
                 }
             });
+
+        // Subscribe to font size changes
+        this._fontService.fontSize$
+            .pipe(takeUntil(this._unsubscribeAll))
+            .subscribe((size) => {
+                this.selectedFontSize = size;
+                this._changeDetectorRef.markForCheck();
+            });
     }
 
     /**
@@ -601,6 +631,13 @@ export class FuseVerticalNavigationComponent
      */
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    /**
+     * Handle font size selection
+     */
+    handleFontSizeSelection(size: 'normal' | 'large' | 'xl'): void {
+        this._fontService.setFontSize(size);
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -855,3 +892,4 @@ export class FuseVerticalNavigationComponent
         this._fuseConfigService.config = { scheme };
     }
 }
+  

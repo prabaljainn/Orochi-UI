@@ -5,6 +5,9 @@
         [filterByList]="filterByList"
         [showDateRange]="true"
         [timeZone]="timeZone"
+        [startDate]="fromTime"
+        [endDate]="toTime"
+        [selectedFilter]="filtersForm.get('dateType')?.value"
         (onDateRangeChange)="onDateRangeChange($event)"
         (onFilterByChange)="onFilterByChange($event)"
     ></app-top-bar>
@@ -146,7 +149,12 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             <span i18n>TRAIN ID</span>
                         </th>
-                        <td mat-cell *matCellDef="let element">
+                        <td
+                            mat-cell
+                            *matCellDef="let element"
+                            class="group-hover:bg-table-header transition-colors duration-300"
+                            (click)="gotoTaskDetails(element)"
+                        >
                             {{ element.trainId ?? "- -" }}
                         </td>
                     </ng-container>
@@ -156,7 +164,12 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             <span i18n>TIME AND DATE</span>
                         </th>
-                        <td mat-cell *matCellDef="let element">
+                        <td
+                            mat-cell
+                            *matCellDef="let element"
+                            class="group-hover:bg-table-header transition-colors duration-300"
+                            (click)="gotoTaskDetails(element)"
+                        >
                             {{ element.timeAndDate ?? "- -" }}
                         </td>
                     </ng-container>
@@ -166,7 +179,12 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             <span i18n>STATUS</span>
                         </th>
-                        <td mat-cell *matCellDef="let element">
+                        <td
+                            mat-cell
+                            *matCellDef="let element"
+                            class="group-hover:bg-table-header transition-colors duration-300"
+                            (click)="gotoTaskDetails(element)"
+                        >
                             {{ element.status ?? "- -" }}
                         </td>
                     </ng-container>
@@ -176,7 +194,12 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             <span i18n>VERDICT</span>
                         </th>
-                        <td mat-cell *matCellDef="let element">
+                        <td
+                            mat-cell
+                            *matCellDef="let element"
+                            class="group-hover:bg-table-header transition-colors duration-300"
+                            (click)="gotoTaskDetails(element)"
+                        >
                             <span
                                 class="rounded-lg px-2 py-1"
                                 [ngClass]="{
@@ -195,7 +218,12 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             <span i18n>ANNOTATION</span>
                         </th>
-                        <td mat-cell *matCellDef="let element">
+                        <td
+                            mat-cell
+                            *matCellDef="let element"
+                            class="group-hover:bg-table-header transition-colors duration-300"
+                            (click)="gotoTaskDetails(element)"
+                        >
                             {{ element.annotation ?? "- -" }}
                         </td>
                     </ng-container>
@@ -205,29 +233,13 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             <span i18n>ASSIGNEE</span>
                         </th>
-                        <td mat-cell *matCellDef="let element">
+                        <td
+                            mat-cell
+                            *matCellDef="let element"
+                            class="group-hover:bg-table-header transition-colors duration-300"
+                            (click)="gotoTaskDetails(element)"
+                        >
                             {{ element.assignee ?? "- -" }}
-                        </td>
-                    </ng-container>
-
-                    <!-- Action Column -->
-                    <ng-container matColumnDef="action">
-                        <th mat-header-cell *matHeaderCellDef>
-                            <span i18n>ACTION</span>
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            <button
-                                mat-icon-button
-                                class="flex justify-center items-center rounded-full p-1 w-6 h-6 border border-primary"
-                                (click)="gotoTaskDetails(element)"
-                            >
-                                <mat-icon
-                                    class="icon-size-4 text-primary"
-                                    [svgIcon]="
-                                        'heroicons_outline:chevron-right'
-                                    "
-                                ></mat-icon>
-                            </button>
                         </td>
                     </ng-container>
 
@@ -237,7 +249,7 @@
                         *matHeaderRowDef="displayedColumns"
                     ></tr>
                     <tr
-                        class="text-md bg-card font-sans font-normal w-fit"
+                        class="text-md bg-card font-sans font-normal w-fit cursor-pointer group"
                         mat-row
                         *matRowDef="let row; columns: displayedColumns"
                     ></tr>

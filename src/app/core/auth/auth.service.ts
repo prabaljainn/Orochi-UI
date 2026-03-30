@@ -79,7 +79,7 @@ export class AuthService
                 // Store user
                 this._userService.user = user;
 
-				console.log(user);
+
             })
         );
     }

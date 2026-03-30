@@ -57,6 +57,11 @@ export interface ScaledShape extends Shape {
     scaledPoints: number[];
     color: string;
     svgPath?: string;
+    trackId?: number;
+    // Pre-computed props for template performance (avoid method calls in @for loops)
+    rectProps?: { x: number; y: number; width: number; height: number };
+    ellipseProps?: { cx: number; cy: number; rx: number; ry: number };
+    pointPairs?: Array<{ x: number; y: number }>;
 }
 
 export interface Label {

@@ -1,5 +1,11 @@
-import { CommonModule } from '@angular/common';
-import { Component, effect, input, OnInit, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    effect,
+    input,
+    OnDestroy,
+    signal,
+} from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
     FrameData,
@@ -12,11 +18,13 @@ import { forkJoin } from 'rxjs';
 
 @Component({
     selector: 'app-frame-annotator',
-    imports: [CommonModule],
+    standalone: true,
+    imports: [],
     templateUrl: './frame-annotator.component.html',
     styleUrl: './frame-annotator.component.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FrameAnnotatorComponent implements OnInit {
+export class FrameAnnotatorComponent implements OnDestroy {
     jobId = input<number>();
     frameNumber = input<number>();
     labelNameToLabelMap = input<Map<string, Label>>();
@@ -42,21 +50,23 @@ export class FrameAnnotatorComponent implements OnInit {
     ellipses: ScaledShape[] = [];
     cuboids: ScaledShape[] = [];
 
+    // Track the current ObjectURL for cleanup
+    private _currentObjectUrl: string | null = null;
+
     constructor(
         private _frameApiService: FrameApiService,
         private _sanitizer: DomSanitizer
     ) {
         effect(() => {
-            console.log(
-                'label map in frame annotator',
-                this.labelNameToLabelMap()
-            );
+            // Access signals to track them
+            this.labelNameToLabelMap();
             this.loadFrameData();
         });
     }
 
-    ngOnInit() {
-        // this.loadFrameData();
+    ngOnDestroy(): void {
+        // Revoke any outstanding ObjectURL to prevent memory leak
+        this._revokeObjectUrl();
     }
 
     async loadFrameData() {
@@ -85,7 +95,9 @@ export class FrameAnnotatorComponent implements OnInit {
                     meta.frame_meta.height
                 );
 
-                // Image processing
+                // Image processing — revoke previous ObjectURL first
+                this._revokeObjectUrl();
+
                 const fileType = imageBlob.type;
                 const extension = fileType.split('/')[1];
                 const file = new File(
@@ -96,15 +108,15 @@ export class FrameAnnotatorComponent implements OnInit {
                     }
                 );
 
+                this._currentObjectUrl = window.URL.createObjectURL(file);
                 this.frameImageUrl = this._sanitizer.bypassSecurityTrustUrl(
-                    window.URL.createObjectURL(file)
+                    this._currentObjectUrl
                 );
 
                 // Process annotations only after both are ready
                 this.processAnnotations();
             },
             error: (err) => {
-                console.error('Failed to load frame data:', err);
                 this.error = `Failed to load frame data: ${err}`;
             },
             complete: () => {
@@ -134,13 +146,35 @@ export class FrameAnnotatorComponent implements OnInit {
         const scaledPoints = this.scaleCoordinates(shape.points);
         const color = this.labelNameToLabelMap()?.get(shape.label)?.label_color;
 
-        return {
+        const scaled: ScaledShape = {
             ...shape,
             scaledPoints,
             color,
             svgPath: this.createSvgPath(shape.type, scaledPoints),
             trackId,
         };
+
+        // Pre-compute shape-specific props for template performance
+        if (shape.type === 'rectangle') {
+            const [x1, y1, x2, y2] = scaledPoints;
+            scaled.rectProps = {
+                x: Math.min(x1, x2),
+                y: Math.min(y1, y2),
+                width: Math.abs(x2 - x1),
+                height: Math.abs(y2 - y1),
+            };
+        } else if (shape.type === 'ellipse') {
+            const [cx, cy, rx, ry] = scaledPoints;
+            scaled.ellipseProps = { cx, cy, rx, ry };
+        } else if (shape.type === 'points') {
+            const pairs = [];
+            for (let i = 0; i < scaledPoints.length; i += 2) {
+                pairs.push({ x: scaledPoints[i], y: scaledPoints[i + 1] });
+            }
+            scaled.pointPairs = pairs;
+        }
+
+        return scaled;
     }
 
     private calculateDisplayDimensions(
@@ -148,50 +182,31 @@ export class FrameAnnotatorComponent implements OnInit {
         originalHeight: number
     ) {
         if (!this.maxDisplayWidth() || !this.maxDisplayHeight()) {
-            // Fallback to original dimensions if max dimensions not provided
             this.displayWidth.set(originalWidth);
             this.displayHeight.set(originalHeight);
             this.scaleFactor.set(1);
-            console.log('Using original dimensions:', {
-                originalWidth,
-                originalHeight,
-            });
             return;
         }
 
         const maxWidth = this.maxDisplayWidth();
         const maxHeight = this.maxDisplayHeight();
 
-        // Calculate scale factors for both dimensions
         const scaleX = maxWidth / originalWidth;
         const scaleY = maxHeight / originalHeight;
-
-        // Use the smaller scale factor to ensure image fits within both dimensions
         const scale = Math.min(scaleX, scaleY);
 
-        // Calculate final display dimensions
         const displayWidth = Math.round(originalWidth * scale);
         const displayHeight = Math.round(originalHeight * scale);
 
         this.displayWidth.set(displayWidth);
         this.displayHeight.set(displayHeight);
         this.scaleFactor.set(scale);
-
-        console.log('Calculated display dimensions:', {
-            original: { width: originalWidth, height: originalHeight },
-            max: { width: maxWidth, height: maxHeight },
-            scale: { x: scaleX, y: scaleY, final: scale },
-            display: { width: displayWidth, height: displayHeight },
-        });
     }
 
     private scaleCoordinates(points: number[]): number[] {
         if (!this.frameData || points.length === 0) return points;
-
-        // Use the scale factor for consistent scaling
         const scale = this.scaleFactor();
-
-        return points.map((point, index) => point * scale);
+        return points.map((point) => point * scale);
     }
 
     private createSvgPath(type: ShapeType, points: number[]): string {
@@ -214,7 +229,7 @@ export class FrameAnnotatorComponent implements OnInit {
         for (let i = 2; i < points.length; i += 2) {
             path += ` L ${points[i]} ${points[i + 1]}`;
         }
-        path += ' Z'; // Close path
+        path += ' Z';
         return path;
     }
 
@@ -225,27 +240,16 @@ export class FrameAnnotatorComponent implements OnInit {
         for (let i = 2; i < points.length; i += 2) {
             path += ` L ${points[i]} ${points[i + 1]}`;
         }
-        return path; // Don't close path for polyline
+        return path;
     }
 
     private createCuboidPath(points: number[]): string {
         if (points.length !== 16) return '';
 
-        // Cuboid is 8 points (16 coordinates) representing 8 corners of 3D box
-        // Connect them to form visible edges
         const connections = [
-            [0, 1],
-            [1, 2],
-            [2, 3],
-            [3, 0], // Front face
-            [4, 5],
-            [5, 6],
-            [6, 7],
-            [7, 4], // Back face
-            [0, 4],
-            [1, 5],
-            [2, 6],
-            [3, 7], // Connecting edges
+            [0, 1], [1, 2], [2, 3], [3, 0],
+            [4, 5], [5, 6], [6, 7], [7, 4],
+            [0, 4], [1, 5], [2, 6], [3, 7],
         ];
 
         let path = '';
@@ -269,45 +273,15 @@ export class FrameAnnotatorComponent implements OnInit {
         this.cuboids = shapes.filter((s) => s.type === 'cuboid');
     }
 
-    // Template helper methods
-    getRectangleProps(shape: ScaledShape) {
-        const [x1, y1, x2, y2] = shape.scaledPoints;
-        return {
-            x: Math.min(x1, x2),
-            y: Math.min(y1, y2),
-            width: Math.abs(x2 - x1),
-            height: Math.abs(y2 - y1),
-        };
-    }
-
-    getEllipseProps(shape: ScaledShape) {
-        const [cx, cy, rx, ry] = shape.scaledPoints;
-        return { cx, cy, rx, ry };
-    }
-
-    getPointPairs(points: number[]): Array<{ x: number; y: number }> {
-        const pairs = [];
-        for (let i = 0; i < points.length; i += 2) {
-            pairs.push({ x: points[i], y: points[i + 1] });
-        }
-        return pairs;
-    }
-
-    // Template helper methods
-    trackByShapeId(index: number, shape: ScaledShape): string {
-        return shape.id.toString();
-    }
-
-    trackByTrackId(index: number, track: ScaledShape): string {
-        return track.id.toString();
-    }
-
-    trackByTagId(index: number, tag: any): string {
-        return tag.id || index.toString();
-    }
-
     getLabelColor(labelName: string): string {
         const label = this.labelNameToLabelMap()?.get(labelName);
         return label?.label_color || '#000000';
+    }
+
+    private _revokeObjectUrl(): void {
+        if (this._currentObjectUrl) {
+            window.URL.revokeObjectURL(this._currentObjectUrl);
+            this._currentObjectUrl = null;
+        }
     }
 }

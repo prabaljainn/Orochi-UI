@@ -12,14 +12,23 @@ const PROXY_CONFIG = [
             "/websocket",
             "/login",
 			"/api",
+			"/edge",
         ],
-        target: "https://sudocodes.com/",
+        target: "https://OKKUNsys.tokyu.co.jp/",
         changeOrigin: true,
-        secure: true,
+        secure: false,
         logLevel: "debug",
         ws: true,
         xfwd: true,
-        onProxyRes: function onProxyRes(proxyRes, req, res) {},
+        headers: {
+            "Origin": "https://OKKUNsys.tokyu.co.jp",
+            "Referer": "https://OKKUNsys.tokyu.co.jp/",
+            "X-Forwarded-Host": "OKKUNsys.tokyu.co.jp",
+            "X-Forwarded-Proto": "https"
+        },
+        onProxyRes: function onProxyRes(proxyRes, req, res) {
+            proxyRes.headers['Access-Control-Allow-Origin'] = '*';
+        },
     },
 ];
 

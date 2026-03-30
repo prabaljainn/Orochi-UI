@@ -94,11 +94,39 @@
     <!-- Footer -->
     <div class="fuse-vertical-navigation-footer">
         <ng-content select="[fuseVerticalNavigationFooter]"></ng-content>
+        <div class="px-5">
+            <button mat-icon-button [matMenuTriggerFor]="fontSizeMenu">
+                <mat-icon
+                    class="cursor-pointer text-[#94A3B8] icon-size-8"
+                    svgIcon="sudocode:font"
+                ></mat-icon>
+            </button>
+
+            <mat-menu [xPosition]="'before'" #fontSizeMenu="matMenu">
+                @for (fontSize of fontSizeList; track fontSize.code) {
+                <button
+                    mat-menu-item
+                    (click)="handleFontSizeSelection(fontSize.code)"
+                >
+                    @if (selectedFontSize === fontSize.code) {
+                    <mat-icon
+                        class="cursor-pointer text-primary icon-size-3"
+                        [svgIcon]="'heroicons_solid:check'"
+                    ></mat-icon>
+                    }
+                    <span class="flex items-center">
+                        {{ fontSize.name }}
+                    </span>
+                </button>
+                }
+            </mat-menu>
+        </div>
+
         <!-- Theme toggle -->
         <div class="px-5">
-            <button class="ml-2" mat-icon-button (click)="toggleScheme()">
+            <button mat-icon-button (click)="toggleScheme()">
                 <mat-icon
-                    class="cursor-pointer text-[#94A3B8] icon-size-6"
+                    class="cursor-pointer text-[#94A3B8] icon-size-5"
                     [svgIcon]="
                         isDarkMode()
                             ? 'heroicons_outline:sun'
