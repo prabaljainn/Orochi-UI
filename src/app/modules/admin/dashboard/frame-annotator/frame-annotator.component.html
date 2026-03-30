@@ -107,7 +107,7 @@
                             [attr.d]="shape.svgPath"
                             [attr.stroke]="shape.color"
                             [attr.stroke-width]="2"
-                            [attr.fill]="none"
+                            fill="none"
                             [class.occluded]="shape.occluded"
                             class="annotation-polyline"
                         />
@@ -194,7 +194,7 @@
                                 5
                             "
                             [attr.fill]="shape.color"
-                            [attr.text-anchor]="middle"
+                            text-anchor="middle"
                             class="annotation-label"
                         >
                             {{ shape.label }}
@@ -211,7 +211,7 @@
                             [attr.d]="shape.svgPath"
                             [attr.stroke]="shape.color"
                             [attr.stroke-width]="2"
-                            [attr.fill]="none"
+                            fill="none"
                             [class.occluded]="shape.occluded"
                             class="annotation-cuboid"
                         />
@@ -238,7 +238,7 @@
                             [attr.cy]="track.scaledPoints[1]"
                             [attr.r]="6"
                             [attr.fill]="track.color"
-                            [attr.stroke]="white"
+                            stroke="white"
                             [attr.stroke-width]="2"
                             class="track-indicator"
                         >
@@ -248,8 +248,8 @@
                         <text
                             [attr.x]="track.scaledPoints[0]"
                             [attr.y]="track.scaledPoints[1] + 4"
-                            [attr.text-anchor]="middle"
-                            [attr.fill]="white"
+                            text-anchor="middle"
+                            fill="white"
                             class="track-id"
                         >
                             {{ track.trackId }}
