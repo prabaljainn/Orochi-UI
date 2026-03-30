@@ -1,5 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import {
+    ChangeDetectionStrategy,
     Component,
     Input,
     ViewChildren,
@@ -13,7 +14,6 @@ import {
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { VideoPlayerDialogComponent } from './video-player-dialog/video-player-dialog.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -31,12 +31,13 @@ export interface VideoItem {
 @Component({
     selector: 'app-video-grid',
     imports: [
-        CommonModule,
-        MatProgressSpinnerModule,
+        NgFor,
+        NgIf,
         MatIconModule,
         MatTooltipModule,
-		BouncyLoaderComponent
+		BouncyLoaderComponent,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './video-grid.component.html',
 })
 export class VideoGridComponent implements AfterViewInit, OnChanges, OnDestroy {

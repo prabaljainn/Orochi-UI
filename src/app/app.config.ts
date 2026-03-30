@@ -1,5 +1,4 @@
 import {
-    HTTP_INTERCEPTORS,
     provideHttpClient,
     withInterceptors,
 } from '@angular/common/http';
@@ -24,13 +23,13 @@ import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
 import {
     API_BASE_HREF,
     getApiBase,
-    getBaseLocation,
 } from './services/base-url.service';
 import { authInterceptor } from './core/auth/auth.interceptor';
 import { csrfInterceptor } from './core/auth/csrf.interceptor';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { CustomPaginator } from './utils/CustomPaginatorConfiguration';
+import { environment } from '../environments/environment';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -38,10 +37,10 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(withInterceptors([csrfInterceptor, authInterceptor])),
         provideRouter(
             appRoutes,
-            // withPreloading(PreloadAllModules),
+            withPreloading(PreloadAllModules),
             withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })
         ),
-        { provide: API_BASE_HREF, useFactory: getBaseLocation },
+        // Fix #18: Removed duplicate provider — only getApiBase is needed
         { provide: API_BASE_HREF, useFactory: getApiBase },
         // Material Date Adapter
         {
@@ -105,10 +104,13 @@ export const appConfig: ApplicationConfig = {
         provideAuth(),
         provideIcons(),
         provideFuse({
-            mockApi: {
-                delay: 0,
-                services: mockApiServices,
-            },
+            // Only load mock API services in non-production builds
+            ...(environment.production ? {} : {
+                mockApi: {
+                    delay: 0,
+                    services: mockApiServices,
+                },
+            }),
             fuse: {
                 layout: 'dense',
                 scheme: 'light',

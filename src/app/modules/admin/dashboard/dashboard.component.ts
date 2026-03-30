@@ -1,10 +1,11 @@
 import {
     AfterViewInit,
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
+    OnDestroy,
     OnInit,
     ViewChild,
-    ViewEncapsulation,
 } from '@angular/core';
 import {
     FormControl,
@@ -24,7 +25,6 @@ import { TrainAnalyticsService } from 'app/services/train-analytics.service';
 import { DateTime } from 'luxon';
 import { debounceTime, distinctUntilChanged, Subject, takeUntil } from 'rxjs';
 import { NgClass } from '@angular/common';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { PolarAreaChartComponent } from 'app/widgets/polar-area-chart/polar-area-chart.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TopBarComponent } from 'app/widgets/top-bar/top-bar.component';
@@ -46,14 +46,13 @@ const DASHBOARD_KEY = 'dashboard_filters';
         MatPaginatorModule,
         MatSortModule,
         NgClass,
-        MatDatepickerModule,
         PolarAreaChartComponent,
         TopBarComponent,
     ],
     templateUrl: './dashboard.component.html',
-    encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class DashboardComponent implements AfterViewInit, OnInit {
+export class DashboardComponent implements AfterViewInit, OnInit, OnDestroy {
     title: string = $localize`Dashboard`;
     displayedColumns: string[] = [
         'trainId',
@@ -543,6 +542,6 @@ export class DashboardComponent implements AfterViewInit, OnInit {
             task.taskId,
         ]);
 
-        console.log(this.taskAndProjectIdToTrainDateTimeMap);
+
     }
 }

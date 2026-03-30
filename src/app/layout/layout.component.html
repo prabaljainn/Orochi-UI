@@ -1,47 +1,58 @@
-<!-- ----------------------------------------------------------------------------------------------------- -->
-<!-- Empty layout -->
-<!-- ----------------------------------------------------------------------------------------------------- -->
-<empty-layout *ngIf="layout === 'empty'"></empty-layout>
+<!-- Use @switch for cleaner layout selection. Only 'empty' and 'dense' are eagerly loaded.
+     Other layouts are wrapped in @defer to lazy-load their bundles only when needed. -->
+@switch (layout) {
+    @case ('empty') {
+        <empty-layout></empty-layout>
+    }
+    @case ('dense') {
+        <dense-layout></dense-layout>
+    }
+    @case ('centered') {
+        @defer {
+            <centered-layout></centered-layout>
+        }
+    }
+    @case ('enterprise') {
+        @defer {
+            <enterprise-layout></enterprise-layout>
+        }
+    }
+    @case ('material') {
+        @defer {
+            <material-layout></material-layout>
+        }
+    }
+    @case ('modern') {
+        @defer {
+            <modern-layout></modern-layout>
+        }
+    }
+    @case ('classic') {
+        @defer {
+            <classic-layout></classic-layout>
+        }
+    }
+    @case ('classy') {
+        @defer {
+            <classy-layout></classy-layout>
+        }
+    }
+    @case ('compact') {
+        @defer {
+            <compact-layout></compact-layout>
+        }
+    }
+    @case ('futuristic') {
+        @defer {
+            <futuristic-layout></futuristic-layout>
+        }
+    }
+    @case ('thin') {
+        @defer {
+            <thin-layout></thin-layout>
+        }
+    }
+}
 
-<!-- ----------------------------------------------------------------------------------------------------- -->
-<!-- Layouts with horizontal navigation -->
-<!-- ----------------------------------------------------------------------------------------------------- -->
-
-<!-- Centered -->
-<centered-layout *ngIf="layout === 'centered'"></centered-layout>
-
-<!-- Enterprise -->
-<enterprise-layout *ngIf="layout === 'enterprise'"></enterprise-layout>
-
-<!-- Material -->
-<material-layout *ngIf="layout === 'material'"></material-layout>
-
-<!-- Modern -->
-<modern-layout *ngIf="layout === 'modern'"></modern-layout>
-
-<!-- ----------------------------------------------------------------------------------------------------- -->
-<!-- Layouts with vertical navigation -->
-<!-- ----------------------------------------------------------------------------------------------------- -->
-
-<!-- Classic -->
-<classic-layout *ngIf="layout === 'classic'"></classic-layout>
-
-<!-- Classy -->
-<classy-layout *ngIf="layout === 'classy'"></classy-layout>
-
-<!-- Compact -->
-<compact-layout *ngIf="layout === 'compact'"></compact-layout>
-
-<!-- Dense -->
-<dense-layout *ngIf="layout === 'dense'"></dense-layout>
-
-<!-- Futuristic -->
-<futuristic-layout *ngIf="layout === 'futuristic'"></futuristic-layout>
-
-<!-- Thin -->
-<thin-layout *ngIf="layout === 'thin'"></thin-layout>
-
-<!-- ----------------------------------------------------------------------------------------------------- -->
 <!-- Settings drawer - Remove this to remove the drawer and its button -->
-<!-- ----------------------------------------------------------------------------------------------------- -->
 <!-- <settings></settings> -->

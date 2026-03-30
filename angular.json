@@ -33,7 +33,6 @@
                 "build": {
                     "builder": "@angular-devkit/build-angular:browser",
                     "options": {
-                        "localize": true,
                         "outputPath": "dist",
                         "index": "src/index.html",
                         "main": "src/main.ts",
@@ -83,11 +82,12 @@
                             "localize": ["hi"]
                         },
                         "production": {
+                            "localize": true,
                             "budgets": [
                                 {
                                     "type": "initial",
-                                    "maximumWarning": "3mb",
-                                    "maximumError": "5mb"
+                                    "maximumWarning": "2.5mb",
+                                    "maximumError": "3.5mb"
                                 },
                                 {
                                     "type": "anyComponentStyle",
@@ -102,6 +102,7 @@
                             "extractLicenses": true,
                             "vendorChunk": false,
                             "buildOptimizer": true,
+                            "subresourceIntegrity": true,
                             "fileReplacements": [
                                 {
                                     "replace": "src/environments/environment.ts",

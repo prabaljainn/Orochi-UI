@@ -1,5 +1,6 @@
-import { CommonModule } from '@angular/common';
+import { DecimalPipe, NgIf } from '@angular/common';
 import {
+    ChangeDetectionStrategy,
     Component,
     Inject,
     ViewChild,
@@ -25,7 +26,8 @@ export interface VideoDialogData {
 @Component({
     selector: 'app-video-player-dialog',
     standalone: true,
-    imports: [CommonModule, MatIconModule, MatTooltipModule, BouncyLoaderComponent],
+    imports: [NgIf, DecimalPipe, MatIconModule, MatTooltipModule, BouncyLoaderComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './video-player-dialog.component.html',
 })
 export class VideoPlayerDialogComponent implements AfterViewInit, OnDestroy {

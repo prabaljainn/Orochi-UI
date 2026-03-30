@@ -1,5 +1,6 @@
-import { DOCUMENT, NgIf } from '@angular/common';
+import { DOCUMENT } from '@angular/common';
 import {
+    ChangeDetectionStrategy,
     Component,
     Inject,
     OnDestroy,
@@ -13,37 +14,22 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FusePlatformService } from '@fuse/services/platform';
 import { FUSE_VERSION } from '@fuse/version';
 import { combineLatest, filter, map, Subject, takeUntil } from 'rxjs';
+
+// Lazy-loaded layout imports — only the active layout is rendered via @switch + @defer
 import { EmptyLayoutComponent } from './layouts/empty/empty.component';
-import { CenteredLayoutComponent } from './layouts/horizontal/centered/centered.component';
-import { EnterpriseLayoutComponent } from './layouts/horizontal/enterprise/enterprise.component';
-import { MaterialLayoutComponent } from './layouts/horizontal/material/material.component';
-import { ModernLayoutComponent } from './layouts/horizontal/modern/modern.component';
-import { ClassicLayoutComponent } from './layouts/vertical/classic/classic.component';
-import { ClassyLayoutComponent } from './layouts/vertical/classy/classy.component';
-import { CompactLayoutComponent } from './layouts/vertical/compact/compact.component';
 import { DenseLayoutComponent } from './layouts/vertical/dense/dense.component';
-import { FuturisticLayoutComponent } from './layouts/vertical/futuristic/futuristic.component';
-import { ThinLayoutComponent } from './layouts/vertical/thin/thin.component';
 
 @Component({
     selector: 'layout',
     templateUrl: './layout.component.html',
     styleUrls: ['./layout.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
     imports: [
-        NgIf,
+        // Only eagerly import the two most commonly used layouts
         EmptyLayoutComponent,
-        CenteredLayoutComponent,
-        EnterpriseLayoutComponent,
-        MaterialLayoutComponent,
-        ModernLayoutComponent,
-        ClassicLayoutComponent,
-        ClassyLayoutComponent,
-        CompactLayoutComponent,
         DenseLayoutComponent,
-        FuturisticLayoutComponent,
-        ThinLayoutComponent,
     ],
 })
 export class LayoutComponent implements OnInit, OnDestroy {
@@ -187,20 +173,6 @@ export class LayoutComponent implements OnInit, OnDestroy {
 
         // 3. Iterate through the paths and change the layout as we find
         // a config for it.
-        //
-        // The reason we do this is that there might be empty grouping
-        // paths or componentless routes along the path. Because of that,
-        // we cannot just assume that the layout configuration will be
-        // in the last path's config or in the first path's config.
-        //
-        // So, we get all the paths that matched starting from root all
-        // the way to the current activated route, walk through them one
-        // by one and change the layout as we find the layout config. This
-        // way, layout configuration can live anywhere within the path and
-        // we won't miss it.
-        //
-        // Also, this will allow overriding the layout in any time so we
-        // can have different layouts for different routes.
         const paths = route.pathFromRoot;
         paths.forEach((path) => {
             // Check if there is a 'layout' data
