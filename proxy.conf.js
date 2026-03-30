@@ -12,6 +12,7 @@ const PROXY_CONFIG = [
             "/websocket",
             "/login",
 			"/api",
+			"/edge",
         ],
         target: "https://OKKUNsys.tokyu.co.jp/",
         changeOrigin: true,

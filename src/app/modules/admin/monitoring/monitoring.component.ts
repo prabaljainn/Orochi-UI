@@ -14,17 +14,14 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { EdgeMonitoringService } from 'app/services/edge-monitoring.service';
 import {
     SystemStatus,
-    CameraStatusSummary,
     LaserChannelStatus,
 } from 'app/models/monitoring.types';
 import {
     Subject,
     interval,
-    switchMap,
     takeUntil,
     catchError,
     of,
-    tap,
 } from 'rxjs';
 
 @Component({
