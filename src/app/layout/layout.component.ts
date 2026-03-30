@@ -24,7 +24,7 @@ import { DenseLayoutComponent } from './layouts/vertical/dense/dense.component';
     templateUrl: './layout.component.html',
     styleUrls: ['./layout.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     standalone: true,
     imports: [
         // Only eagerly import the two most commonly used layouts

@@ -37,7 +37,7 @@ import { Subject, takeUntil } from 'rxjs';
     ],
 })
 export class DenseLayoutComponent implements OnInit, OnDestroy {
-    isScreenSmall: boolean;
+    isScreenSmall: boolean = false;
     navigation: Navigation;
     navigationAppearance: 'default' | 'dense' = 'dense';
     private _unsubscribeAll: Subject<any> = new Subject<any>();
